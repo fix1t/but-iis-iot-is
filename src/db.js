@@ -1,6 +1,6 @@
-const mysql = require('mysql2');
+import { createConnection } from 'mysql2';
 
-const connection = mysql.createConnection({
+const connection = createConnection({
     host: 'iis-project-db-but-iis-iot.a.aivencloud.com',
     user: 'fituser',
     port: '24776',
@@ -17,4 +17,4 @@ connection.connect((err) => {
     console.log('Connected to MySQL as id', connection.threadId);
 });
 
-module.exports = connection;
+export default connection;

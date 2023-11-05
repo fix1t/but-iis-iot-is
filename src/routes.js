@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const connection = require('./db');
+import { Router } from 'express';
+const router = Router();
+import { query } from './db';
 
 // Create table
 router.get('/createusertable', (req, res) => {
     let sql = 'CREATE TABLE User (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255), mail VARCHAR(255), bio TEXT, created TIMESTAMP NOT NULL DEFAULT NOW())';
-    connection.query(sql, (error, result) => {
+    query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
             res.status(500).send('Internal Server Error');
@@ -18,7 +18,7 @@ router.get('/createusertable', (req, res) => {
 // Drop table
 router.get('/deleteusertable', (req, res) => {
     let sql = 'DROP TABLE User';
-    connection.query(sql, (error, result) => {
+    query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
             res.status(500).send('Internal Server Error');
@@ -30,9 +30,9 @@ router.get('/deleteusertable', (req, res) => {
 
 // Insert user
 router.get('/adduser', (req, res) => {
-    let user = {username:'Gabos', mail:'astrofix@vutbr.cz', bio: 'Hmmmmmmmmm'};
+    let user = {username:'Jakub', mail:'mikynek@vutbr.cz', bio: 'Apes Strong Together'};
     let sql = 'INSERT INTO User SET ?';
-    connection.query(sql, user, (error, result) => {
+    query(sql, user, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
             res.status(500).send('Internal Server Error');
@@ -45,7 +45,7 @@ router.get('/adduser', (req, res) => {
 // Select users
 router.get('/getusers', (req, res) => {
     let sql = 'SELECT * FROM User';
-    connection.query(sql, (error, result) => {
+    query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
             res.status(500).send('Internal Server Error');
@@ -59,7 +59,7 @@ router.get('/getusers', (req, res) => {
 // Select single user
 router.get('/getuser/:id', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.id}`;
-    connection.query(sql, (error, result) => {
+    query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
             res.status(500).send('Internal Server Error');
@@ -70,4 +70,4 @@ router.get('/getuser/:id', (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

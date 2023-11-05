@@ -1,6 +1,6 @@
-const express = require('express');
-const db = require('./db');
-const routes = require('./routes');
+import express from 'express';
+import db from './db';
+import routes from './routes';
 
 const app = express();
 const port = 8000;

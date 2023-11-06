@@ -9,7 +9,7 @@ npm install
 npm run start
 ```
 
-## Develepment Cheat Sheet
+## Development Cheat Sheet
 Add npm library to `package.json`
 ```
 npm install --save mysql2

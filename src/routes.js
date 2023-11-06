@@ -29,8 +29,10 @@ router.get('/deleteusertable', (req, res) => {
 });
 
 // Insert user
-router.get('/adduser', (req, res) => {
-    let user = {username:'Godys', mail:'xgabry01@vutbr.cz', role: 'Registered', bio: 'Life is better without boring socks.'};
+router.post('/adduser', (req, res) => {
+    const { username, email, bio } = req.body;
+    let user = { username, mail: email, role: 'Registered', bio };
+
     let sql = 'INSERT INTO User SET ?';
     db.query(sql, user, (error, result) => {
         if (error) {
@@ -38,7 +40,20 @@ router.get('/adduser', (req, res) => {
             res.status(500).send('Internal Server Error');
             return;
         }
-        res.send('User Added');
+        res.redirect('/');
+    });
+});
+
+// Delete user TO-DO method: get -> delete
+router.get('/users/:id', (req, res) => {
+    let sql = `DELETE FROM User WHERE id = ${req.params.id}`;
+    db.query(sql, (error, result) => {
+        if (error) {
+            console.error('Error executing query:', error.stack);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        res.redirect('/');
     });
 });
 

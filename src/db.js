@@ -1,11 +1,13 @@
-import { createConnection } from 'mysql2';
+const mysql = require('mysql2');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const connection = createConnection({
-    host: 'iis-project-db-but-iis-iot.a.aivencloud.com',
-    user: 'fituser',
-    port: '24776',
-    password: 'AVNS_y267I2ZS8e6KG-UdTz9',
-    database: 'iot',
+const connection = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    port: process.env.MYSQL_PORT,
+    database: process.env.MYSQL_DATABASE,
 });
 
 // Connect
@@ -17,4 +19,4 @@ connection.connect((err) => {
     console.log('Connected to MySQL as id', connection.threadId);
 });
 
-export default connection;
+module.exports = connection;

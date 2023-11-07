@@ -44,8 +44,8 @@ router.post('/adduser', (req, res) => {
     });
 });
 
-// Delete user TO-DO method: get -> delete
-router.get('/users/:id', (req, res) => {
+// Delete user
+router.delete('/users/:id', (req, res) => {
     let sql = `DELETE FROM User WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {
@@ -53,7 +53,7 @@ router.get('/users/:id', (req, res) => {
             res.status(500).send('Internal Server Error');
             return;
         }
-        res.redirect('/');
+        res.status(200).send('User deleted successfully');
     });
 });
 
@@ -66,8 +66,7 @@ router.get('/getusers', (req, res) => {
             res.status(500).send('Internal Server Error');
             return;
         }
-        console.log(result)
-        res.send('Users fetched..');
+        res.json(result);
     });
 });
 

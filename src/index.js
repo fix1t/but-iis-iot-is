@@ -1,7 +1,7 @@
 const express = require('express');
-const db = require('./db');
-const routes = require('./routes');
-const fileRouter = require('./fileRouters');
+const db = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
+const fileRoutes = require('./routes/fileRoutes');
 const path = require('path');
 
 const app = express();
@@ -11,8 +11,8 @@ const port = 8000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/', routes);
-app.use('/', fileRouter);
+app.use('/', userRoutes);
+app.use('/', fileRoutes);
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', () => {

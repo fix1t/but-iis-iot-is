@@ -2,34 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
-// Create table
-router.get('/createusertable', (req, res) => {
-    let sql = 'CREATE TABLE User (id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255), mail VARCHAR(255), role ENUM(\'Admin\', \'Registered\'), bio TEXT, created TIMESTAMP NOT NULL DEFAULT NOW())';
-    db.query(sql, (error, result) => {
-        if (error) {
-            console.error('Error executing query:', error.stack);
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-        res.send('User Table Created...');
-    });
-});
-
-// Drop table
-router.get('/deleteusertable', (req, res) => {
-    let sql = 'DROP TABLE User';
-    db.query(sql, (error, result) => {
-        if (error) {
-            console.error('Error executing query:', error.stack);
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-        res.send('User Table Droped...');
-    });
-});
-
-// Insert user
-router.post('/adduser', (req, res) => {
+// Register user
+router.post('/register', (req, res) => {
     const { username, email, bio } = req.body;
     let user = { username, mail: email, role: 'Registered', bio };
 
@@ -57,8 +31,8 @@ router.delete('/users/:id', (req, res) => {
     });
 });
 
-// Select users
-router.get('/getusers', (req, res) => {
+// Select all users
+router.get('/users/get', (req, res) => {
     let sql = 'SELECT * FROM User';
     db.query(sql, (error, result) => {
         if (error) {
@@ -71,7 +45,7 @@ router.get('/getusers', (req, res) => {
 });
 
 // Select single user
-router.get('/getuser/:id', (req, res) => {
+router.get('/users/:id', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {

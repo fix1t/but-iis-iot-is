@@ -8,8 +8,8 @@ fetch('/api/users/get')
             row.innerHTML = `
                         <td>${user.id}</td>
                         <td>${user.username}</td>
-                        <td>${user.mail}</td>
-                        <td>${user.role}</td>
+                        <td>${user.email}</td>
+                        <td>${user.gender}</td>
                         <td>${user.bio}</td>
                         <td>${new Date(user.created).toLocaleString()}</td>
                         <td>

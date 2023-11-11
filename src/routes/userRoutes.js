@@ -5,9 +5,9 @@ const db = require('../config/db');
 // Register user
 router.post('/register', (req, res) => {
     const { username, email, bio } = req.body;
-    let user = { username, mail: email, role: 'Registered', bio };
+    let user = { username, mail: email, is_admin: false, bio, password: '123456' };
 
-    let sql = 'INSERT INTO User SET ?';
+    let sql = 'INSERT INTO Users SET ?';
     db.query(sql, user, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
@@ -20,7 +20,7 @@ router.post('/register', (req, res) => {
 
 // Delete user
 router.delete('/users/:id', (req, res) => {
-    let sql = `DELETE FROM User WHERE id = ${req.params.id}`;
+    let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
@@ -33,7 +33,7 @@ router.delete('/users/:id', (req, res) => {
 
 // Select all users
 router.get('/users/get', (req, res) => {
-    let sql = 'SELECT * FROM User';
+    let sql = 'SELECT * FROM Users';
     db.query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);
@@ -46,7 +46,7 @@ router.get('/users/get', (req, res) => {
 
 // Select single user
 router.get('/users/:id', (req, res) => {
-    let sql = `SELECT * FROM User WHERE id = ${req.params.id}`;
+    let sql = `SELECT * FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {
             console.error('Error executing query:', error.stack);

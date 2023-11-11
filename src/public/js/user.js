@@ -1,5 +1,5 @@
 // Fetch data from the server and print user table
-fetch('/users/get')
+fetch('/api/users/get')
     .then(response => response.json())
     .then(data => {
         const usersTableBody = document.getElementById('usersTableBody');
@@ -26,7 +26,7 @@ fetch('/users/get')
 
 function deleteUser(userId) {
     // Make a DELETE request to delete the user with the specified userId
-    fetch(`/users/${userId}`, {
+    fetch(`/api/users/${userId}`, {
         method: 'DELETE',
     })
         .then(response => {

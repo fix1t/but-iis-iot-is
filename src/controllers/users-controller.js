@@ -1,9 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../config/db');
+import db from '../config/db.js';
 
-// Register user
-router.post('/register', (req, res) => {
+export const registerUser = async (req, res) => {
     const { username, email, bio } = req.body;
     let user = { username, mail: email, is_admin: false, bio, password: '123456' };
 
@@ -16,10 +13,9 @@ router.post('/register', (req, res) => {
         }
         res.redirect('/');
     });
-});
+};
 
-// Delete user
-router.delete('/users/:id', (req, res) => {
+export const deleteUser = async (req, res) => {
     let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {
@@ -29,10 +25,9 @@ router.delete('/users/:id', (req, res) => {
         }
         res.status(200).send('User deleted successfully');
     });
-});
+};
 
-// Select all users
-router.get('/users/get', (req, res) => {
+export const getAllUsers = async (req, res) => {
     let sql = 'SELECT * FROM Users';
     db.query(sql, (error, result) => {
         if (error) {
@@ -42,10 +37,9 @@ router.get('/users/get', (req, res) => {
         }
         res.json(result);
     });
-});
+};
 
-// Select single user
-router.get('/users/:id', (req, res) => {
+export const getUser = async (req, res) => {
     let sql = `SELECT * FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {
         if (error) {
@@ -56,6 +50,4 @@ router.get('/users/:id', (req, res) => {
         console.log(result)
         res.send('User fetched..');
     });
-});
-
-module.exports = router;
+};

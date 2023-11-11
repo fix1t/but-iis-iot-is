@@ -1,5 +1,5 @@
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const connection = mysql.createConnection({
@@ -19,4 +19,4 @@ connection.connect((err) => {
     console.log('Connected to MySQL as id', connection.threadId);
 });
 
-module.exports = connection;
+export default connection;

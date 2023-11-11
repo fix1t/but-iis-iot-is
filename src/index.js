@@ -1,8 +1,8 @@
-const express = require('express');
-const db = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
-const fileRoutes = require('./routes/fileRoutes');
-const path = require('path');
+import express from 'express'
+import db from './config/db.js'
+import fileRoutes from './routes/files-routes.js'
+import userRoutes from './routes/users-routes.js'
+import path from 'path'
 
 const app = express();
 const port = 8000;
@@ -10,9 +10,10 @@ const port = 8000;
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(path.resolve(), 'public')));
 
-app.use('/', userRoutes);
 app.use('/', fileRoutes);
+app.use('/api/users', userRoutes);
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', () => {

@@ -77,7 +77,7 @@ export const loginUser = async (req, res) => {
         }
 
 		const token = generateToken(user[0]);
-		
+
 		res.cookie('auth-token', token, {
 			httpOnly: true, // Important: This helps mitigate the risk of client side script accessing the protected cookie
 			secure: process.env.NODE_ENV === 'production', // Cookies sent only over HTTPS
@@ -91,6 +91,10 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+export const logoutUser = async (req, res) => {
+	res.status(200).clearCookie('auth-token').redirect('/login');
+}
 
 export const deleteUser = async (req, res) => {
     let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;

@@ -5,61 +5,81 @@ class User {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.is_admin = is_admin;
     this.birth = birth;
     this.gender = gender;
     this.bio = bio;
+    this.is_admin = is_admin;
   }
 
   // Save new user to the database
   save() {
     let sql = `
-      INSERT INTO Users(
-        username,
-        email,
-        password,
-        is_admin,
-        birth,
-        gender,
-        bio
-      ) VALUES (
-        '${this.username}',
-        '${this.email}',
-        '${this.password}',
-        ${this.is_admin},
-        '${this.birth}',
-        '${this.gender}',
-        '${this.bio}'
-      )
+      INSERT INTO Users (
+        username, email, password, is_admin, birth, gender, bio
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    return db.execute(sql);
+    return db.promise().execute(sql, [this.username, this.email, this.password, this.is_admin, this.birth, this.gender, this.bio]);
   }
 
-  static findByUsername(username) {
+  static async findByUsername(username) {
     let sql = `SELECT * FROM Users WHERE username = ?`;
-    return db.execute(sql, [username]);
+    try {
+      const [rows] = await db.promise().query(sql, [username]);
+      console.log(rows);
+      return rows;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error;
+    }
   }
 
-	static findByEmail(email) {
-		let sql = `SELECT * FROM Users WHERE email = ?`;
-		return db.execute(sql, [email]);
-	}
+  static async findById(id) {
+    let sql = `SELECT * FROM Users WHERE id = ?`;
+    try {
+      const [rows] = await db.promise().query(sql, [id]);
+      console.log(rows);
+      return rows;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error;
+    }
+  }
 
-	static findById(id) {
-		let sql = `SELECT * FROM Users WHERE id = ?`;
-		return db.execute(sql, [id]);
-	}
+	static async findByEmail(email) {
+    let sql = `SELECT * FROM Users WHERE email = ?`;
+    try {
+      const [rows, fields] = await db.promise().query(sql, [email]);
+      console.log(rows);
+      return rows;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error; // re-throw the error to be handled by the caller
+    }
+  }
 
-	static findAll() {
-		let sql = 'SELECT * FROM Users';
-		return db.execute(sql);
-	}
+  static async findAll() {
+    let sql = 'SELECT * FROM Users';
+    try {
+      const [rows] = await db.promise().query(sql);
+      console.log(rows);
+      return rows;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error;
+    }
+  }
 
-	static deleteById(id) {
-		let sql = `DELETE FROM Users WHERE id = ?`;
-		return db.execute(sql, [id]);
-	}
-
+  static async deleteById(id) {
+    let sql = `DELETE FROM Users WHERE id = ?`;
+    try {
+      const [result] = await db.promise().query(sql, [id]);
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error;
+    }
+  }
 }
 
 export default User;

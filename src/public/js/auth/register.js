@@ -13,7 +13,7 @@ const handleSubmit = async (event) => {
     const gender = document.getElementById('userGender').value;
 	const bio = document.getElementById('userBio').value;
 
-    const data = { username, email, password, confPassword, birth, gender, bio};
+    const data = { username, email, password, confPassword, birth, gender, bio };
 
     try {
         const response = await fetch('/api/users/register', {
@@ -21,6 +21,7 @@ const handleSubmit = async (event) => {
             headers: {
                 'Content-Type': 'application/json'
             },
+			credentials: 'include', // To ensure cookies are included with the request
             body: JSON.stringify(data)
         });
 

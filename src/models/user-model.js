@@ -53,7 +53,7 @@ class User {
       return rows;
     } catch (error) {
       console.error('Error executing query:', error.stack);
-      throw error; // re-throw the error to be handled by the caller
+      throw error;
     }
   }
 

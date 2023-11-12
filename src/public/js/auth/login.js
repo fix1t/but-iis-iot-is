@@ -4,11 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const handleSubmit = async (event) => {
     event.preventDefault();
-	console.log('submitting form');
     const email = document.getElementById('userEmail').value;
     const password = document.getElementById('userPassword').value;
 
-    const data = { email, password};
+    const data = { email, password };
 
     try {
         const response = await fetch('/api/users/login', {
@@ -16,6 +15,7 @@ const handleSubmit = async (event) => {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include', // To ensure cookies are included with the request
             body: JSON.stringify(data)
         });
 

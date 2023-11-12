@@ -1,4 +1,5 @@
 import express from 'express'
+import cookieParser from 'cookie-parser';
 import db from './config/db.js'
 import fileRoutes from './routes/files-routes.js'
 import userRoutes from './routes/users-routes.js'
@@ -8,6 +9,7 @@ const app = express();
 const port = 8000;
 
 // Middleware
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(path.resolve(), 'public')));

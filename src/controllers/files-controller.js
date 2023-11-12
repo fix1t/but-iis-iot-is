@@ -6,9 +6,17 @@ const __dirname = path.dirname(__filename);
 
 
 export const index = (req, res) => {
-res.sendFile(path.join(__dirname, '../views/index.html'));
+	res.sendFile(path.join(__dirname, '../views/auth/register.html'));
+}
+
+export const login = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/auth/login.html'));
+}
+
+export const register = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/auth/register.html'));
 }
 
 export const users = (req, res) => {
-res.sendFile(path.join(__dirname, '../views/users.html'));
+	res.sendFile(path.join(__dirname, '../views/user/user-list.html'));
 }

@@ -42,7 +42,7 @@ export const registerUser = async (req, res) => {
 
         await user.save();
 
-        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
         res.header('auth-token', token).status(200).json({message: 'User registered successfully'});
     } catch (err) {
         console.log(err);
@@ -50,25 +50,30 @@ export const registerUser = async (req, res) => {
     }
 };
 
-function isMissingRequiredFields(user) {
-	const { username, email, password, confPassword, birth, gender } = user;
-	return !username || !email || !password || !confPassword || !birth || !gender;
-}
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
 
-async function userAlreadyExists(email) {
-	return User.findByEmail(email).length > 0;
-}
+    try {
+        if (!userAlreadyExists(email)) {
+            res.status(400).json({ error: 'User not found' });
+            return;
+        }
 
-function passwordMeetsCriteria(password) {
-	var criteriaRegExp = new RegExp(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
-    );
-    return criteriaRegExp.test(password);
-}
+		const user = await User.findByEmail(email);
 
-function isGenderValid(gender){
-	return gender == 'male' || gender == 'female' || gender == 'other';
-}
+        const validPassword = await bcrypt.compare(password, user[0].password);
+        if (!validPassword) {
+            res.status(400).json({ error: 'Invalid password' });
+            return;
+        }
+
+        const token = jwt.sign({ _id: user[0]._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+        res.header('auth-token', token).status(200).json({ message: 'Logged in successfully' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 export const deleteUser = async (req, res) => {
     let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
@@ -106,3 +111,23 @@ export const getUser = async (req, res) => {
         res.send('User fetched..');
     });
 };
+
+function isMissingRequiredFields(user) {
+	const { username, email, password, confPassword, birth, gender } = user;
+	return !username || !email || !password || !confPassword || !birth || !gender;
+}
+
+async function userAlreadyExists(email) {
+	return User.findByEmail(email).length > 0;
+}
+
+function passwordMeetsCriteria(password) {
+	var criteriaRegExp = new RegExp(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$"
+    );
+    return criteriaRegExp.test(password);
+}
+
+function isGenderValid(gender){
+	return gender == 'male' || gender == 'female' || gender == 'other';
+}

@@ -35,34 +35,29 @@ class User {
     return db.execute(sql);
   }
 
-  // Find a user by their username
   static findByUsername(username) {
-    let sql = `SELECT * FROM Users WHERE username = '${username}'`;
-    return db.execute(sql);
+    let sql = `SELECT * FROM Users WHERE username = ?`;
+    return db.execute(sql, [username]);
   }
 
-	// Find a user by their email
 	static findByEmail(email) {
-		let sql = `SELECT * FROM Users WHERE email = '${email}'`;
-		return db.execute(sql);
+		let sql = `SELECT * FROM Users WHERE email = ?`;
+		return db.execute(sql, [email]);
 	}
 
-	// Find a user by their id
 	static findById(id) {
-		let sql = `SELECT * FROM Users WHERE id = ${id}`;
-		return db.execute(sql);
+		let sql = `SELECT * FROM Users WHERE id = ?`;
+		return db.execute(sql, [id]);
 	}
 
-	// Find all users
 	static findAll() {
 		let sql = 'SELECT * FROM Users';
 		return db.execute(sql);
 	}
 
-	// Delete a user by their id
 	static deleteById(id) {
-		let sql = `DELETE FROM Users WHERE id = ${id}`;
-		return db.execute(sql);
+		let sql = `DELETE FROM Users WHERE id = ?`;
+		return db.execute(sql, [id]);
 	}
 
 }

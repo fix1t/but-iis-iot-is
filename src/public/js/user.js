@@ -1,3 +1,23 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include' // Include cookies with the request
+                });
+                if (response.ok) {
+                    // Redirect to the login page after successful logout
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        });
+    }
+});
+
 // Fetch data from the server and print user table
 fetch('/api/users/get')
     .then(response => response.json())

@@ -5,8 +5,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-export const index = (req, res) => {
-	res.sendFile(path.join(__dirname, '../views/auth/register.html'));
+export const home = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/user/user-list.html'));
 }
 
 export const login = (req, res) => {

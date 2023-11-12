@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 import User from '../models/user-model.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/auth.js';
 
 export const registerUser = async (req, res) => {
 	const { username, email, password, confPassword, birth, gender, bio } = req.body;
@@ -42,8 +42,17 @@ export const registerUser = async (req, res) => {
 
         await user.save();
 
-        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-        res.header('auth-token', token).status(200).json({message: 'User registered successfully'});
+		const createdUser = await User.findByEmail(email);
+		const token = generateToken(createdUser);
+		res.cookie('auth-token', token, {
+			httpOnly: true, // Important: This helps mitigate the risk of client side script accessing the protected cookie
+			secure: process.env.NODE_ENV === 'production', // Cookies sent only over HTTPS
+			sameSite: 'strict', // CSRF protection
+			maxAge: 3600000 
+		  });
+	  
+        
+        res.status(200).json({message: 'User registered successfully'});
     } catch (err) {
         console.log(err);
         res.status(500).json({error: 'Internal Server Error'});
@@ -67,8 +76,16 @@ export const loginUser = async (req, res) => {
             return;
         }
 
-        const token = jwt.sign({ _id: user[0]._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-        res.header('auth-token', token).status(200).json({ message: 'Logged in successfully' });
+		const token = generateToken(user[0]);
+		
+		res.cookie('auth-token', token, {
+			httpOnly: true, // Important: This helps mitigate the risk of client side script accessing the protected cookie
+			secure: process.env.NODE_ENV === 'production', // Cookies sent only over HTTPS
+			sameSite: 'strict', // CSRF protection
+			maxAge: 3600000 
+		  });
+
+        res.status(200).json({ message: 'Logged in successfully' });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Internal Server Error' });

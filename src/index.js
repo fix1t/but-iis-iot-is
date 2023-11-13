@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import db from './config/db.js'
 import fileRoutes from './routes/files-routes.js'
 import userRoutes from './routes/users-routes.js'
+import userSystemRoutes from './routes/users-systems-routes.js'
 import path from 'path'
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 
 app.use('/', fileRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/systems', userSystemRoutes);
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', () => {

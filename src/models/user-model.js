@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 
 class User {
-  constructor(username, email, password, birth, gender, bio, is_admin=false) {
+  constructor(username, email, password, birth, gender, bio, is_admin=false, id=null) {
     this.username = username;
     this.email = email;
     this.password = password;
@@ -9,9 +9,9 @@ class User {
     this.gender = gender;
     this.bio = bio;
     this.is_admin = is_admin;
+		this.id = id;
   }
-
-  // Save new user to the database
+	  // Save new user to the database
   save() {
     let sql = `
       INSERT INTO Users (
@@ -26,11 +26,11 @@ class User {
 		return db.promise().execute(sql, [this, this.id]);
 	}
 
-  static async findByUsername(username) {
+	static async findByUsername(username) {
     let sql = `SELECT * FROM Users WHERE username = ?`;
     try {
       const [rows] = await db.promise().query(sql, [username]);
-      return rows;
+			return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -41,7 +41,7 @@ class User {
     let sql = `SELECT * FROM Users WHERE id = ?`;
     try {
       const [rows] = await db.promise().query(sql, [id]);
-      return rows;
+      return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -51,8 +51,8 @@ class User {
 	static async findByEmail(email) {
     let sql = `SELECT * FROM Users WHERE email = ?`;
     try {
-      const [rows, fields] = await db.promise().query(sql, [email]);
-      return rows;
+      const [rows] = await db.promise().query(sql, [email]);
+      return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -63,7 +63,7 @@ class User {
     let sql = 'SELECT * FROM Users';
     try {
       const [rows] = await db.promise().query(sql);
-      return rows;
+      return rows.map(User.rowToUser);
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -93,6 +93,21 @@ class User {
 			throw error;
 		}
 	}
+
+	// Helper function to convert a database row to a User instance
+	static rowToUser(row) {
+    return new User(
+      row.username,
+      row.email,
+      row.password,
+      row.birth,
+      row.gender,
+      row.bio,
+      row.is_admin,
+			row.id
+    );
+	}
+
 }
 
 export default User;

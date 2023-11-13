@@ -68,13 +68,13 @@ export const loginUser = async (req, res) => {
 
 		const user = await User.findByEmail(email);
 
-        const isValidPassword = await bcrypt.compare(password, user[0].password);
+        const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) {
             res.status(400).json({ error: 'Invalid password' });
             return;
         }
 
-		const token = generateToken(user[0]);
+		const token = generateToken(user);
 
 		res.cookie('auth-token', token, {
 			httpOnly: true, // Important: This helps mitigate the risk of client side script accessing the protected cookie
@@ -99,6 +99,8 @@ export const updateUser = async (req, res) => {
 	const user = req.user;
 	let userToBeUpdated;
 
+	console.log("User " + user.id);
+	console.log("User to be updated " + req.params.id);
 	// fetch user from db
 	try{
 		userToBeUpdated = await User.findById(req.params.id);
@@ -194,7 +196,7 @@ function isMissingRequiredFields(user) {
 async function userAlreadyExists(email, username) {
 	const userByEmail = await User.findByEmail(email);
 	const userByUsername = await User.findByUsername(username);
-	return userByEmail.length > 0 || userByUsername.length > 0;
+	return userByEmail || userByUsername;
 }
 
 function passwordMeetsCriteria(password) {

@@ -1,8 +1,39 @@
 /**
  * @file header.js
- * @author Jakub Mikyšek (xmikys03)
+ * @author Jakub Mikyšek (xmikys03), Gabriel Biel (xbielg00)
  * @brief File for rendering header navigation for HTML files
  */
+
+// Profile
+document.addEventListener('DOMContentLoaded', function() {
+    const editButton = document.getElementById('editUserButton');
+    if (editButton) {
+        editButton.addEventListener('click', async () => {
+            window.location.href = '/users/edit';
+        });
+    }
+});
+
+// Logout
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include' // Include cookies with the request
+                });
+                if (response.ok) {
+                    // Redirect to the login page after successful logout
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        });
+    }
+});
 
 const header = document.getElementById('header');
 header.innerHTML = `
@@ -24,6 +55,9 @@ header.innerHTML = `
             	<a class="nav-link" href="#">About</a>
           	</li>
 		</ul>
+		<button id="editUserButton" class="btn btn-outline-warning my-2 mr-2 my-sm-0" type="button">
+			Profile <i class="fas fa-user"></i>
+		</button>
 		<button id="logoutButton" class="btn btn-outline-danger my-2 my-sm-0" type="button">Logout</button>
 	</div>
 	</nav>`

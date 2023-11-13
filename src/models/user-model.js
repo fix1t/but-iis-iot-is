@@ -21,6 +21,11 @@ class User {
     return db.promise().execute(sql, [this.username, this.email, this.password, this.is_admin, this.birth, this.gender, this.bio]);
   }
 
+	update() {
+		let sql = `UPDATE Users SET ? WHERE id = ?`;
+		return db.promise().execute(sql, [this, this.id]);
+	}
+
   static async findByUsername(username) {
     let sql = `SELECT * FROM Users WHERE username = ?`;
     try {
@@ -76,6 +81,18 @@ class User {
       throw error;
     }
   }
+
+	static async updateById(id, user) {
+		let sql = `UPDATE Users SET ? WHERE id = ?`;
+		try {
+			const [result] = await db.promise().query(sql, [user, id]);
+			console.log(result);
+			return result;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
 }
 
 export default User;

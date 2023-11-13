@@ -9,6 +9,7 @@ export const verifyToken = (req, res, next) => {
   
 	try {
 	  const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+	  // Add user from payload
 	  req.user = verified;
 	  next(); // Continue to the next middleware or route handler
 	} catch (err) {
@@ -31,6 +32,6 @@ export const redirectIfAuthenticated = (req, res, next) => {
 };
 
 export const generateToken = ( user ) => {
-	const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h'});
+	const token = jwt.sign({ id: user.id, is_admin: user.is_admin, username: user.username, email: user.email }, process.env.TOKEN_SECRET, { expiresIn: '1h'});
 	return token;
 }

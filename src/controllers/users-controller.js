@@ -95,6 +95,61 @@ export const logoutUser = async (req, res) => {
 	res.status(200).clearCookie('auth-token').redirect('/login');
 }
 
+export const updateUser = async (req, res) => {
+	const { birth, gender, bio } = req.body;
+	const user = req.user;
+	let userToBeUpdated;
+
+	// fetch user from db
+	try{
+		userToBeUpdated = await User.findById(req.params.id);
+		console.log("User before update " + user);
+		if (!user) {
+			return res.status(400).json({ error: 'User not found' });
+		}
+	} catch(err){
+		console.log(err);
+		return res.status(500).json({error: 'Internal Server Error'});
+
+	}
+
+	//user can only update his own profile or if he is an admin
+	if(user.id != userToBeUpdated.id && !user.is_admin){
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	}
+
+	//validate input
+	if (!userAlreadyExists(req.body.email, req.body.username)) {
+		res.status(400).json({ error: 'User not found' });
+		return;
+	}
+	if (birth > Date.now()) {
+		console.log('birth date is not valid');
+		res.status(400).json({error: 'Birth date is not valid'});
+		return;
+	}
+	if (!isGenderValid(gender)) {
+		console.log('invalid gender')
+		res.status(400).json({error: 'Gender is not valid'});
+	}
+
+	//update user
+	userToBeUpdated.birth = birth;
+	userToBeUpdated.bio = bio;
+	userToBeUpdated.gender = gender;
+
+	try{
+		console.log("User after update " + userToBeUpdated);
+		await userToBeUpdated.update();
+		res.status(200).json({message: 'User updated successfully'});
+	} catch(err){
+		console.log(err);
+		res.status(500).json({error: 'Internal Server Error'});
+	}
+
+}
+
 export const deleteUser = async (req, res) => {
     let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {

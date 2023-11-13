@@ -41,15 +41,14 @@ export const registerUser = async (req, res) => {
 
         await user.save();
 
-		const createdUser = await User.findByEmail(email);
-		const token = generateToken(createdUser);
+		const token = generateToken(user);
 		res.cookie('auth-token', token, {
 			httpOnly: true, // Important: This helps mitigate the risk of client side script accessing the protected cookie
 			secure: process.env.NODE_ENV === 'production', // Cookies sent only over HTTPS
 			sameSite: 'strict', // CSRF protection
 			maxAge: 3600000 
 		  });
-		console.log('user registered successfully'+createdUser);
+		console.log('user registered successfully'+user);
         
         res.status(200).json({message: 'User registered successfully'});
     } catch (err) {

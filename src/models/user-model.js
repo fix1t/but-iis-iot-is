@@ -22,9 +22,23 @@ class User {
   }
 
 	update() {
-		let sql = `UPDATE Users SET ? WHERE id = ?`;
-		return db.promise().execute(sql, [this, this.id]);
-	}
+    const dataToUpdate = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      birth: this.birth,
+      gender: this.gender,
+      bio: this.bio,
+      is_admin: this.is_admin
+    };
+
+    // Generate SQL SET part dynamically based on the object
+    const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(dataToUpdate);
+
+    let sql = `UPDATE Users SET ${updates} WHERE id = ?`;
+    return db.promise().execute(sql, [...values, this.id]);
+  }
 
 	static async findByUsername(username) {
     let sql = `SELECT * FROM Users WHERE username = ?`;

@@ -95,53 +95,58 @@ export const logoutUser = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-	const { birth, gender, bio } = req.body;
+	const { username, email, birth, gender, bio } = req.body;
 	const user = req.user;
 	let userToBeUpdated;
 
-	console.log("User " + user.id);
-	console.log("User to be updated " + req.params.id);
 	// fetch user from db
 	try{
 		userToBeUpdated = await User.findById(req.params.id);
-		console.log("User before update " + user);
-		if (!user) {
-			return res.status(400).json({ error: 'User not found' });
-		}
 	} catch(err){
 		console.log(err);
 		return res.status(500).json({error: 'Internal Server Error'});
 
 	}
 
-	//user can only update his own profile or if he is an admin
+	if(!user || !userToBeUpdated){
+		res.status(400).json({error: 'User not found'});
+		return;
+	}
+
+	//user can only update his own profile, unless he is an admin
 	if(user.id != userToBeUpdated.id && !user.is_admin){
 		res.status(401).json({error: 'Unauthorized'});
 		return;
 	}
 
-	//validate input
-	if (!userAlreadyExists(req.body.email, req.body.username)) {
-		res.status(400).json({ error: 'User not found' });
+	if(userToBeUpdated.username != username && await usernameInUse(username)){
+		res.status(400).json({error: 'Username already in use'});
 		return;
 	}
+
+	if(userToBeUpdated.email != email && await emailInUse(email)){
+		res.status(400).json({error: 'Email already in use'});
+		return;
+	}
+
 	if (birth > Date.now()) {
 		console.log('birth date is not valid');
 		res.status(400).json({error: 'Birth date is not valid'});
 		return;
 	}
+
 	if (!isGenderValid(gender)) {
 		console.log('invalid gender')
 		res.status(400).json({error: 'Gender is not valid'});
 	}
 
-	//update user
+	userToBeUpdated.username = username;
+	userToBeUpdated.email = email;
 	userToBeUpdated.birth = birth;
 	userToBeUpdated.bio = bio;
 	userToBeUpdated.gender = gender;
 
 	try{
-		console.log("User after update " + userToBeUpdated);
 		await userToBeUpdated.update();
 		res.status(200).json({message: 'User updated successfully'});
 	} catch(err){
@@ -154,6 +159,7 @@ export const updateUser = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
 	const user = await User.findById(req.user.id);
 	const data = {
+		id: user.id,
 		username: user.username,
 		email: user.email,
 		gender: user.gender,
@@ -206,9 +212,17 @@ function isMissingRequiredFields(user) {
 }
 
 async function userAlreadyExists(email, username) {
-	const userByEmail = await User.findByEmail(email);
+	return await emailInUse(email) || await usernameInUse(username);
+}
+
+async function usernameInUse(username) {
 	const userByUsername = await User.findByUsername(username);
-	return userByEmail || userByUsername;
+	return userByUsername != null;
+}
+
+async function emailInUse(email) {
+	const userByEmail = await User.findByEmail(email);
+	return userByEmail != null;
 }
 
 function passwordMeetsCriteria(password) {

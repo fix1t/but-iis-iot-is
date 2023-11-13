@@ -17,6 +17,10 @@ export const register = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/auth/register.html'));
 }
 
-export const users = (req, res) => {
+export const userList = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/user/user-list.html'));
+}
+
+export const userEdit = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/user/user-edit.html'));
 }

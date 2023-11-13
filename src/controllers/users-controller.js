@@ -5,7 +5,6 @@ import { generateToken } from '../utils/auth.js';
 
 export const registerUser = async (req, res) => {
 	const { username, email, password, confPassword, birth, gender, bio } = req.body;
-	console.log(req.body);
 	if (isMissingRequiredFields(req.body)) {
 		console.log('missing required fields');
 		res.status(400).json({error: 'Please provide all required fields'});
@@ -16,9 +15,9 @@ export const registerUser = async (req, res) => {
 		res.status(400).json({error: 'Passwords do not match'});
 		return;
 	}
-	if (await userAlreadyExists(email)) {
+	if (await userAlreadyExists(email, username)) {
 		console.log('user already exists');
-		res.status(400).json({error: 'User with that email already exists'});
+		res.status(400).json({error: 'User with that email or username already exists'});
 		return;
 	}
 	if (!passwordMeetsCriteria(password)) {
@@ -50,7 +49,7 @@ export const registerUser = async (req, res) => {
 			sameSite: 'strict', // CSRF protection
 			maxAge: 3600000 
 		  });
-	  
+		console.log('user registered successfully'+createdUser);
         
         res.status(200).json({message: 'User registered successfully'});
     } catch (err) {
@@ -138,8 +137,10 @@ function isMissingRequiredFields(user) {
 	return !username || !email || !password || !confPassword || !birth || !gender;
 }
 
-async function userAlreadyExists(email) {
-	return User.findByEmail(email).length > 0;
+async function userAlreadyExists(email, username) {
+	const userByEmail = await User.findByEmail(email);
+	const userByUsername = await User.findByUsername(username);
+	return userByEmail.length > 0 || userByUsername.length > 0;
 }
 
 function passwordMeetsCriteria(password) {

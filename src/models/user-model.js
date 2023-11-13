@@ -25,7 +25,6 @@ class User {
     let sql = `SELECT * FROM Users WHERE username = ?`;
     try {
       const [rows] = await db.promise().query(sql, [username]);
-      console.log(rows);
       return rows;
     } catch (error) {
       console.error('Error executing query:', error.stack);
@@ -37,7 +36,6 @@ class User {
     let sql = `SELECT * FROM Users WHERE id = ?`;
     try {
       const [rows] = await db.promise().query(sql, [id]);
-      console.log(rows);
       return rows;
     } catch (error) {
       console.error('Error executing query:', error.stack);
@@ -49,7 +47,6 @@ class User {
     let sql = `SELECT * FROM Users WHERE email = ?`;
     try {
       const [rows, fields] = await db.promise().query(sql, [email]);
-      console.log(rows);
       return rows;
     } catch (error) {
       console.error('Error executing query:', error.stack);
@@ -61,7 +58,6 @@ class User {
     let sql = 'SELECT * FROM Users';
     try {
       const [rows] = await db.promise().query(sql);
-      console.log(rows);
       return rows;
     } catch (error) {
       console.error('Error executing query:', error.stack);

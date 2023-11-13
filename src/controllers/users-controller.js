@@ -177,7 +177,7 @@ export const deleteUser = async (req, res) => {
             res.status(500).json({error: 'Internal Server Error'});
             return;
         }
-        res.status(200).json({error: 'User deleted successfully'});
+        res.status(200).json({message: 'User deleted successfully'});
     });
 };
 

@@ -151,6 +151,18 @@ export const updateUser = async (req, res) => {
 
 }
 
+export const getCurrentUser = async (req, res) => {
+	const user = await User.findById(req.user.id);
+	const data = {
+		username: user.username,
+		email: user.email,
+		gender: user.gender,
+		birth: user.birth,
+		bio: user.bio
+	}
+	res.status(200).json(data);
+};
+
 export const deleteUser = async (req, res) => {
     let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
     db.query(sql, (error, result) => {

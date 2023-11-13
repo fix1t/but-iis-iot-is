@@ -1,5 +1,5 @@
 function leaveSystem(systemId) {
-    // Make a DELETE request to delete the user with the specified userId
+    // Make a DELETE request to remove logged user from the system with the specified systemId
     fetch(`/api/systems/${systemId}/leave`, {
         method: 'DELETE',
     })

@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 
 class User {
-  constructor(username, email, password, birth, gender, bio, is_admin=false) {
+  constructor(username, email, password, birth, gender, bio, is_admin=false, id=null) {
     this.username = username;
     this.email = email;
     this.password = password;
@@ -9,10 +9,10 @@ class User {
     this.gender = gender;
     this.bio = bio;
     this.is_admin = is_admin;
+		this.id = id;
   }
-
-  // Save new user to the database
-  save() {
+	  // Save new user to the database
+  async save() {
     let sql = `
       INSERT INTO Users (
         username, email, password, is_admin, birth, gender, bio
@@ -21,11 +21,39 @@ class User {
     return db.promise().execute(sql, [this.username, this.email, this.password, this.is_admin, this.birth, this.gender, this.bio]);
   }
 
-  static async findByUsername(username) {
+	async getId() {
+		if (!this.id) {
+			console.log('id not set');
+			const user = await User.findByEmail(this.email);
+			this.id = user.id;
+		}
+		return this.id;
+	}
+
+	async update() {
+    const dataToUpdate = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      birth: this.birth,
+      gender: this.gender,
+      bio: this.bio,
+      is_admin: this.is_admin
+    };
+
+    // Generate SQL SET part dynamically based on the object
+    const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(dataToUpdate);
+
+    let sql = `UPDATE Users SET ${updates} WHERE id = ?`;
+    return db.promise().execute(sql, [...values, this.id]);
+  }
+
+	static async findByUsername(username) {
     let sql = `SELECT * FROM Users WHERE username = ?`;
     try {
       const [rows] = await db.promise().query(sql, [username]);
-      return rows;
+			return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -36,7 +64,7 @@ class User {
     let sql = `SELECT * FROM Users WHERE id = ?`;
     try {
       const [rows] = await db.promise().query(sql, [id]);
-      return rows;
+      return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -46,8 +74,8 @@ class User {
 	static async findByEmail(email) {
     let sql = `SELECT * FROM Users WHERE email = ?`;
     try {
-      const [rows, fields] = await db.promise().query(sql, [email]);
-      return rows;
+      const [rows] = await db.promise().query(sql, [email]);
+      return rows.length ? User.rowToUser(rows[0]) : null;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -58,7 +86,7 @@ class User {
     let sql = 'SELECT * FROM Users';
     try {
       const [rows] = await db.promise().query(sql);
-      return rows;
+      return rows.map(User.rowToUser);
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;
@@ -76,6 +104,33 @@ class User {
       throw error;
     }
   }
+
+	static async updateById(id, user) {
+		let sql = `UPDATE Users SET ? WHERE id = ?`;
+		try {
+			const [result] = await db.promise().query(sql, [user, id]);
+			console.log(result);
+			return result;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	// Helper function to convert a database row to a User instance
+	static rowToUser(row) {
+    return new User(
+      row.username,
+      row.email,
+      row.password,
+      row.birth,
+      row.gender,
+      row.bio,
+      row.is_admin,
+			row.id
+    );
+	}
+
 }
 
 export default User;

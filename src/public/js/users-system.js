@@ -69,28 +69,56 @@ fetch('/api/systems/5/requests')
                         <td>${request.system_name}</td>
                         <td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
                         <td>
-                            <button class="btn btn-success btn-sm" onclick="acceptRequest()">
+                            <button class="btn btn-success btn-sm" onclick="acceptRequest(${request.id})">
                                 <i class="fas fa-check"></i>
                             </button>
                         </td>                        
 						<td>
-							<button class="btn btn-danger btn-sm" onclick="declineRequest()">
+							<button class="btn btn-danger btn-sm" onclick="rejectRequest(${request.id})">
 								<i class="fas fa-trash"></i>
 							</button>
 						</td>
                     `;
-			row.id = `userRow_${request.created}`;
+			row.id = `userRow_${request.id}`;
 			requestTableBody.appendChild(row);
 		});
 	})
 	.catch(error => console.error('Error fetching data:', error));
 
-function acceptRequest() {
-
+function acceptRequest(requestId) {
+    // Make a PUT request to accept user request to join System
+    fetch(`/api/systems/join-request/${requestId}`, {
+        method: 'PUT',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const deletedRow = document.getElementById(`userRow_${requestId}`);
+            if (deletedRow) {
+                deletedRow.remove();
+            }
+        })
+        .catch(error => console.error('Error deleting user:', error));
 }
 
-function declineRequest() {
-	
+function rejectRequest(requestId) {
+    // Make a DELETE request to reject user request to join System
+    fetch(`/api/systems/join-request/${requestId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const deletedRow = document.getElementById(`userRow_${requestId}`);
+            if (deletedRow) {
+                deletedRow.remove();
+            }
+        })
+        .catch(error => console.error('Error deleting user:', error));
 }
 
 function leaveSystem(systemId) {

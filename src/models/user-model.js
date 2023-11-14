@@ -12,7 +12,7 @@ class User {
 		this.id = id;
   }
 	  // Save new user to the database
-  save() {
+  async save() {
     let sql = `
       INSERT INTO Users (
         username, email, password, is_admin, birth, gender, bio
@@ -21,7 +21,16 @@ class User {
     return db.promise().execute(sql, [this.username, this.email, this.password, this.is_admin, this.birth, this.gender, this.bio]);
   }
 
-	update() {
+	async getId() {
+		if (!this.id) {
+			console.log('id not set');
+			const user = await User.findByEmail(this.email);
+			this.id = user.id;
+		}
+		return this.id;
+	}
+
+	async update() {
     const dataToUpdate = {
       username: this.username,
       email: this.email,

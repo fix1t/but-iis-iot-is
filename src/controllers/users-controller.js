@@ -40,6 +40,7 @@ export const registerUser = async (req, res) => {
         const user = new User(username, email, hashedPassword, birth, gender, bio);
 
         await user.save();
+		await user.getId();
 
 		const token = generateToken(user);
 		res.cookie('auth-token', token, {

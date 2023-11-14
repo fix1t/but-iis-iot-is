@@ -67,13 +67,31 @@ fetch('/api/systems/5/requests')
 						<td>${new Date(request.birth).toLocaleDateString()}</td>
                         <td>${request.bio}</td>
                         <td>${request.system_name}</td>
-                        <td>${request.status}</td>
+                        <td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="acceptRequest()">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>                        
+						<td>
+							<button class="btn btn-danger btn-sm" onclick="declineRequest()">
+								<i class="fas fa-trash"></i>
+							</button>
+						</td>
                     `;
-			//row.id = `userRow_${user.id}`;
+			row.id = `userRow_${request.created}`;
 			requestTableBody.appendChild(row);
 		});
 	})
 	.catch(error => console.error('Error fetching data:', error));
+
+function acceptRequest() {
+
+}
+
+function declineRequest() {
+	
+}
 
 function leaveSystem(systemId) {
 	// Make a DELETE request to remove logged user from the system with the specified systemId

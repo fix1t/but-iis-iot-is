@@ -100,7 +100,7 @@ function acceptRequest(requestId) {
                 deletedRow.remove();
             }
         })
-        .catch(error => console.error('Error deleting user:', error));
+        .catch(error => console.error('Error accepting request:', error));
 }
 
 function rejectRequest(requestId) {
@@ -118,7 +118,7 @@ function rejectRequest(requestId) {
                 deletedRow.remove();
             }
         })
-        .catch(error => console.error('Error deleting user:', error));
+        .catch(error => console.error('Error rejecting request:', error));
 }
 
 function leaveSystem(systemId) {

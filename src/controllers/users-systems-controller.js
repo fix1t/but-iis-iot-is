@@ -59,13 +59,13 @@ export const requestsSystem = async (req, res) => {
 	});
 };
 
-export const acceptRequest = async (req, res) => {
-	let sql = `UPDATE SystemUserRequests
-				SET status = 'accepted'
-				WHERE id = ?`;
-	const id = req.params.id;
+export const addUser = async (req, res) => {
 
-	db.query(sql, [id], (error, result) => {
+	let sql = `INSERT INTO SystemUsers SET ?`;
+	const { system_id, user_id } = req.body;
+	let join = { system_id, user_id };
+
+	db.query(sql, join, (error, result) => {
 		if (error) {
 			console.error('Error executing query:', error.stack);
 			res.status(500).json({ error: 'Internal Server Error' });
@@ -73,7 +73,34 @@ export const acceptRequest = async (req, res) => {
 		}
 		res.json(result);
 	});
-	// TO-DO AddUser
+};
+
+export const acceptRequest = async (req, res) => {
+	let sql = `UPDATE SystemUserRequests
+				SET status = 'accepted'
+				WHERE id = ?`;
+	const id = req.params.id;
+
+	try {
+		await new Promise((resolve, reject) => {
+			db.query(sql, [id], (error, result) => {
+				if (error) {
+					console.error('Error executing query:', error.stack);
+					reject(error);
+					return;
+				}
+				resolve(result);
+			});
+		});
+
+		// Fetch data using getRequestDetails
+		const { system_id, user_id } = await getRequestDetails(id);
+
+		// Trigger addUser function
+		addUser({ body: { system_id, user_id } }, res);
+	} catch (error) {
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const rejectRequest = async (req, res) => {
@@ -106,6 +133,23 @@ export const leaveSystem = async (req, res) => {
 		res.status(200).json({ message: 'System left successfully' });
 	});
 };
+
+function getRequestDetails(id) {
+	return new Promise((resolve, reject) => {
+		let sql = `SELECT system_id, user_id
+                    FROM SystemUserRequests
+                    WHERE id = ?`;
+
+		db.query(sql, [id], (error, result) => {
+			if (error) {
+				console.error('Error executing query:', error.stack);
+				reject(error);
+				return;
+			}
+			resolve(result[0]);
+		});
+	});
+}
 
 function isRequestStatusValid(status) {
 	return status == 'pending' || status == 'accepted' || status == 'rejected';

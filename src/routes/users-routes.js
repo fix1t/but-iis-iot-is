@@ -9,8 +9,8 @@ router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 router.get('/me', verifyToken, getCurrentUser);
 router.put('/:id', verifyToken, updateUser);
-router.delete('/:id', deleteUser);
-router.get('/get', getAllUsers);
-router.get('/:id', getUser);
+router.delete('/:id', verifyToken, deleteUser);
+router.get('/getAll', verifyToken, getAllUsers);
+router.get('/:id', verifyToken, getUser);
 
 export default router;

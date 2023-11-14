@@ -62,7 +62,7 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        if (!userAlreadyExists(email)) {
+        if (!emailInUse(email)) {
             res.status(400).json({ error: 'User not found' });
             return;
         }

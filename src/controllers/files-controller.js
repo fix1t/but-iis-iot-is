@@ -20,3 +20,7 @@ export const register = (req, res) => {
 export const users = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/user/user-list.html'));
 }
+
+export const systemUsers = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-users.html'));
+}

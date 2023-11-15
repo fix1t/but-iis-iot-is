@@ -19,11 +19,31 @@ export const createRequest = async (req, res) => {
 };
 
 export const usersSystem = async (req, res) => {
-	let sql = `SELECT Users.username, Users.email, Users.birth, Users.bio, SystemUsers.created
+	let sql = `SELECT Users.id, Users.username, Users.email, Users.birth, Users.bio, SystemUsers.created
 				FROM SystemUsers
 				INNER JOIN Users ON Users.id = SystemUsers.user_id
 				WHERE system_id = ?
 				ORDER BY SystemUsers.created`;
+	const id = req.params.id;
+
+	db.query(sql, [id], (error, result) => {
+		if (error) {
+			console.error('Error executing query:', error.stack);
+			res.status(500).json({ error: 'Internal Server Error' });
+			return;
+		}
+		res.json(result);
+	});
+};
+
+export const usersNotSystem = async (req, res) => {
+	let sql = `SELECT id, username, email, bio
+				FROM Users
+				WHERE id NOT IN (
+					SELECT user_id
+					FROM SystemUsers
+					WHERE system_id = ?
+				)`;
 	const id = req.params.id;
 
 	db.query(sql, [id], (error, result) => {

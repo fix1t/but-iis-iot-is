@@ -42,9 +42,8 @@
         </form>
     </div>
 
+    <h2 class="mt-4">Users in System Table</h2>
     <div class="mt-4">
-        <h2 class="mb-4">Users in System Table</h2>
-
         <table class="table">
             <thead class="thead-light">
                 <tr>
@@ -60,9 +59,8 @@
         </table>
     </div>
 
+    <h2>Request Table</h2>
     <div class="mt-4">
-        <h2 class="mb-4">Request Table</h2>
-
         <table class="table table-striped">
             <thead class="thead-light">
                 <tr>
@@ -82,20 +80,8 @@
         </table>
     </div>
 
-    <div class="my-4">
-        <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-danger btn-sm center" onclick="leaveSystem(5)">
-                    LEAVE SYSTEM <i class="fas fa-arrow-alt-circle-right"></i>
-                </button>
-                <p class="text-warning mt-2">WARNING: Force assign to System ID = 5 in function call HERE (onclick)</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="mt-4">
-        <h2 class="mb-4">Users NOT in System Table</h2>
-
+    <h2>Users NOT in System Table</h2>
+    <div class="mt-4 table-wrapper-scroll-y my-custom-scrollbar table-fix-head">
         <table class="table">
             <thead class="thead-light">
                 <tr>
@@ -107,6 +93,17 @@
             </thead>
             <tbody id="userNotSystemTableBody"></tbody>
         </table>
+    </div>
+
+    <div class="my-4">
+        <div class="row">
+            <div class="col text-center">
+                <button class="btn btn-danger btn-sm center" onclick="leaveSystem(5)">
+                    LEAVE SYSTEM <i class="fas fa-arrow-alt-circle-right"></i>
+                </button>
+                <p class="text-warning mt-2">WARNING: Force assign to System ID = 5 in function call HERE (onclick)</p>
+            </div>
+        </div>
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

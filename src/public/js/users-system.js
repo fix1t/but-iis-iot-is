@@ -185,20 +185,25 @@ function leaveSystem(systemId) {
 		.catch(error => console.error('Error leaving system:', error));
 }
 
-// function removeUser(userId) {
-// 	// Make a DELETE request to remove user from the system with the specified systemId
-// 	fetch(`/api/systems/5/remove/${userId}`, {
-// 		method: 'DELETE',
-// 	})
-// 		.then(response => {
-// 			if (!response.ok) {
-// 				throw new Error(`HTTP error! Status: ${response.status}`);
-// 			}
+function removeUser(userId) {
+	// Make a DELETE request to remove user from the system with the specified systemId
+	let systemId = 5;
+	fetch(`/api/systems/${systemId}/remove/${userId}`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ user_id: userId, system_id: systemId }),
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
 
-// 			const deletedRow = document.getElementById(`userRow_${userId}`);
-// 			if (deletedRow) {
-// 				deletedRow.remove();
-// 			}
-// 		})
-// 		.catch(error => console.error('Error removing user:', error));
-// }
+			const deletedRow = document.getElementById(`userRow_${userId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+		})
+		.catch(error => console.error('Error removing user:', error));
+}

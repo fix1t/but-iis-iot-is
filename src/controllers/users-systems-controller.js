@@ -154,6 +154,22 @@ export const leaveSystem = async (req, res) => {
 	});
 };
 
+export const removeUser = async (req, res) => {
+	let sql = `DELETE FROM SystemUsers WHERE system_id = ? AND user_id = ?`;
+	const { system_id, user_id } = req.body;
+	const systemId = system_id;
+	const userId = user_id;
+
+	db.query(sql, [systemId, userId], (error, result) => {
+		if (error) {
+			console.error('Error executing query:', error.stack);
+			res.status(500).json({ error: 'Internal Server Error' });
+			return;
+		}
+		res.status(200).json({ message: 'User removed successfully' });
+	});
+};
+
 function getRequestDetails(id) {
 	return new Promise((resolve, reject) => {
 		let sql = `SELECT system_id, user_id

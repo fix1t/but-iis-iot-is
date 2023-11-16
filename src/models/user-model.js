@@ -130,7 +130,6 @@ class User {
 			row.id
     );
 	}
-
 }
 
 export default User;

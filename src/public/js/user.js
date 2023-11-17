@@ -1,5 +1,5 @@
 // Fetch data from the server and print user table
-fetch('/api/users/get')
+fetch('/api/users/getAll')
     .then(response => response.json())
     .then(data => {
         const usersTableBody = document.getElementById('usersTableBody');

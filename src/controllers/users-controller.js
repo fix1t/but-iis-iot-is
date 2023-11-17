@@ -62,7 +62,12 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        if (!emailInUse(email)) {
+		if (!email || !password) {
+			res.status(400).json({ error: 'Please provide an required data email and password.' });
+			return;
+		}
+
+        if (!await emailInUse(email)) {
             res.status(400).json({ error: 'User not found' });
             return;
         }
@@ -171,40 +176,72 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-    let sql = `DELETE FROM Users WHERE id = ${req.params.id}`;
-    db.query(sql, (error, result) => {
-        if (error) {
-            console.error('Error executing query:', error.stack);
-            res.status(500).json({error: 'Internal Server Error'});
-            return;
+	const user = req.user;
+	const idToBeDeleted = req.params.id;
+
+	// user can only delete his own profile, unless he is an admin
+	if(!user.is_admin && user.id != idToBeDeleted){
+		res.status(401).json({error: 'Unauthorized'});
+		return;
+	} else if( user.id == idToBeDeleted){
+		// user is deleting his own profile
+		// delete his session
+		res.clearCookie('auth-token');
+	}
+
+    try {
+        const success = await User.deleteById(idToBeDeleted);
+        if (success) {
+            res.status(200).json({ message: 'User deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json({message: 'User deleted successfully'});
-    });
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 export const getAllUsers = async (req, res) => {
-    let sql = 'SELECT * FROM Users';
-    db.query(sql, (error, result) => {
-        if (error) {
-            console.error('Error executing query:', error.stack);
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-        res.json(result);
-    });
+    try {
+        const users = await User.findAll();
+		// TODO: leave out id and password
+		const filteredUsers = users.map(user => {
+		return {
+			id: user.id,
+			username: user.username,
+			email: user.email,
+			bio: user.bio,
+			birth: user.birth,
+			gender: user.gender
+		};
+		});
+		res.json(filteredUsers);
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 export const getUser = async (req, res) => {
-    let sql = `SELECT * FROM Users WHERE id = ${req.params.id}`;
-    db.query(sql, (error, result) => {
-        if (error) {
-            console.error('Error executing query:', error.stack);
-            res.status(500).send('Internal Server Error');
-            return;
+    try {
+        const user = await User.findById(req.params.id);
+        if (user) {
+			const data = {
+				username: user.username,
+				email: user.email,
+				bio: user.bio,
+				birth: user.birth,
+				gender: user.gender
+			}
+            res.json(data);
+        } else {
+            res.status(404).json({ message: 'User not found' });
         }
-        console.log(result)
-        res.send('User fetched..');
-    });
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 function isMissingRequiredFields(user) {

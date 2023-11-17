@@ -1,21 +1,22 @@
 import db from '../config/db.js';
-//import SystemUser from '../models/system-user-model.js'
+import SystemRequest from '../models/system-request-model.js'
 
 export const createRequest = async (req, res) => {
 	const { system_id, message } = req.body;
-	let request = { system_id, user_id: req.user.id, status: 'pending', message };
+	const user_id = req.user.id;
 
-	// TO-DO Check if System_id exists
+	// Check if System_id exists
+	// Check if User doesn't create request for his own System
 
-	let sql = 'INSERT INTO SystemUserRequests SET ?';
-	db.query(sql, request, (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
-		res.status(200).json({ message: 'System Request created successfully' });
-	});
+	try {
+		const systemRequest = new SystemRequest(system_id, user_id, message);
+
+		await systemRequest.save();
+		res.status(201).json({ message: 'System Request created successfully' });
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const usersSystem = async (req, res) => {
@@ -91,52 +92,41 @@ export const addUser = async (req, res) => {
 			res.status(500).json({ error: 'Internal Server Error' });
 			return;
 		}
-		res.json(result);
+		//res.status(200).json({ message: 'User added to the System successfully' });
 	});
 };
 
 export const acceptRequest = async (req, res) => {
-	let sql = `UPDATE SystemUserRequests
-				SET status = 'accepted'
-				WHERE id = ?`;
 	const id = req.params.id;
+	const status = "accepted";
 
 	try {
-		await new Promise((resolve, reject) => {
-			db.query(sql, [id], (error, result) => {
-				if (error) {
-					console.error('Error executing query:', error.stack);
-					reject(error);
-					return;
-				}
-				resolve(result);
-			});
-		});
+		const result = await SystemRequest.updateRequest(id, status);
 
-		// Fetch data using getRequestDetails
-		const { system_id, user_id } = await getRequestDetails(id);
+		// Fetch data using method getRequestDetails
+		const { system_id, user_id } = await SystemRequest.getRequestDetails(id);
 
-		// Trigger addUser function
-		addUser({ body: { system_id, user_id } }, res);
+		// Accepted Request -> Add User to the System
+		await addUser({ body: { system_id, user_id } }, res);
+
+		res.json(result);
 	} catch (error) {
+		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 };
 
 export const rejectRequest = async (req, res) => {
-	let sql = `UPDATE SystemUserRequests
-				SET status = 'rejected'
-				WHERE id = ?`;
 	const id = req.params.id;
+	const status = "rejected";
 
-	db.query(sql, [id], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
+	try {
+		const result = await SystemRequest.updateRequest(id, status);
 		res.json(result);
-	});
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const leaveSystem = async (req, res) => {
@@ -169,23 +159,6 @@ export const removeUser = async (req, res) => {
 		res.status(200).json({ message: 'User removed successfully' });
 	});
 };
-
-function getRequestDetails(id) {
-	return new Promise((resolve, reject) => {
-		let sql = `SELECT system_id, user_id
-                    FROM SystemUserRequests
-                    WHERE id = ?`;
-
-		db.query(sql, [id], (error, result) => {
-			if (error) {
-				console.error('Error executing query:', error.stack);
-				reject(error);
-				return;
-			}
-			resolve(result[0]);
-		});
-	});
-}
 
 function isRequestStatusValid(status) {
 	return status == 'pending' || status == 'accepted' || status == 'rejected';

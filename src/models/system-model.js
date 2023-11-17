@@ -17,6 +17,19 @@ class Systems {
         `;
         return db.promise().execute(sql, [this.owner_id, this.name, this.description]);
     }
+    async update() {
+        const dataToUpdate = {
+            //owner_id: this.owner_id, //@maybe want to change owner.id as well
+            name: this.name,
+            description: this.description,
+        };
+    // Generate SQL SET part dynamically based on the object
+    const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(dataToUpdate);
+
+    let sql = `UPDATE Systems SET ${updates} WHERE id = ?`;
+    return db.promise().execute(sql, [...values, this.id]);
+    }
 
     static async findAllSystems() {
         let sql = 'SELECT * FROM Systems';
@@ -29,6 +42,30 @@ class Systems {
         }
     }
 
+    static async deleteById(id) {
+      let sql = `DELETE FROM Systems WHERE id = ?`;
+      try {
+        const [result] = await db.promise().query(sql, [id]);
+        console.log(result);
+        return result;
+      } catch (error) {
+        console.error('Error executing query:', error.stack);
+        throw error;
+      }
+    }
+  
+/*
+    static async getCurrentUserSystems() {
+        let sql = 'SELECT * FROM SystemsUsers WHERE user_id = ?';
+        try {
+          const [rows] = await db.promise().query(sql);
+          return rows.map(Systems.rowToSystems);
+        } catch (error) {
+          console.error('Error executing query:', error.stack);
+          throw error;
+        }
+    }
+*/
     static async findById(id) {
         let sql = `SELECT * FROM Systems WHERE id = ?`;
         try {

@@ -43,6 +43,28 @@ export const getSystemByID = async (req, res) => {
             res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+/*
+//@todo shouldnt here be using the UserSystems table?
+export const getCurrentUserSystems = async (req, res) => {
+    try {
+        const systems = await Systems.getCurrentUserSystems();
+            const filteredSystems = systems.map(system => {
+            return {
+                //@TODO send attributes that we want, now sending just names (works for all even now)
+                //id: system.id,
+                //owner_id: system.owner_id,
+                name: system.name,
+                //description: system.description,
+                //created: system.created,
+            };
+            });
+            res.json(filteredSystems);
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+*/
 
 //@todo should here be adding user/admin to the UserSystems table?
 export const createSystem = async (req, res) => {
@@ -62,6 +84,63 @@ export const createSystem = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+export const updateSystem = async (req, res) => {
+    const { name, description } = req.body;
+    const user = req.user;
+    let systemToUpdate;
+    try {
+        systemToUpdate = await Systems.findById(req.params.id);
+    } catch(err){
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (!systemToUpdate) {
+        res.status(404).json({ error: 'System not found' });
+        return;
+    }
+    if(systemToUpdate.owner_id !== user.id && !user.isAdmin){
+        res.status(401).json({ error: 'Forbidden' });
+        return;
+    }
+
+    systemToUpdate.name = name;
+    systemToUpdate.description = description;
+    try{
+        await systemToUpdate.update();
+        res.status(200).json({ message: 'System updated successfully' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export const deleteSystem = async (req, res) => {
+    const user = req.user;
+    let systemToDelete;
+    try {
+        systemToDelete = await Systems.findById(req.params.id);
+    } catch(err){
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (!systemToDelete) {
+        res.status(404).json({ error: 'System not found' });
+        return;
+    }
+    if(systemToDelete.owner_id !== user.id && !user.isAdmin){
+        res.status(401).json({ error: 'Forbidden' });
+        return;
+    }
+    try{
+        await Systems.deleteById(systemToDelete.id);
+        res.status(200).json({ message: 'System deleted successfully' });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 
 function isMissingRequiredFields(system) {
     const { name } = system;

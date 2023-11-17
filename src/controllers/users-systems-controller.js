@@ -1,3 +1,9 @@
+/**
+ * @file users-systems-controller.js
+ * @author Jakub Mikyšek (xmikys03)
+ * @brief MVC - Controller for User System Interactions (adding and removing Users, dealing with User Request)
+ */
+
 import db from '../config/db.js';
 import SystemRequest from '../models/system-request-model.js'
 
@@ -20,64 +26,39 @@ export const createRequest = async (req, res) => {
 };
 
 export const usersSystem = async (req, res) => {
-	let sql = `SELECT Users.id, Users.username, Users.email, Users.birth, Users.bio, SystemUsers.created
-				FROM SystemUsers
-				INNER JOIN Users ON Users.id = SystemUsers.user_id
-				WHERE system_id = ?
-				ORDER BY SystemUsers.created`;
 	const id = req.params.id;
 
-	db.query(sql, [id], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
+	try {
+		const result = await SystemRequest.usersSystem(id);
 		res.json(result);
-	});
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const usersNotSystem = async (req, res) => {
-	let sql = `SELECT id, username, email, bio
-				FROM Users
-				WHERE id NOT IN (
-					SELECT user_id
-					FROM SystemUsers
-					WHERE system_id = ?
-				)`;
 	const id = req.params.id;
 
-	db.query(sql, [id], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
+	try {
+		const result = await SystemRequest.usersNotSystem(id);
 		res.json(result);
-	});
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const requestsSystem = async (req, res) => {
-	let sql = `SELECT 
-					Users.username, Users.email, Users.birth, Users.bio,
-					Systems.name AS system_name,
-					SUR.status, SUR.message, SUR.created, SUR.id
-				FROM SystemUserRequests AS SUR
-				INNER JOIN Users ON Users.id = SUR.user_id
-				INNER JOIN Systems ON Systems.id = SUR.system_id
-				WHERE system_id = ?
-				AND SUR.status = 'pending'
-				ORDER BY SUR.created`;
 	const id = req.params.id;
 
-	db.query(sql, [id], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
+	try {
+		const result = await SystemRequest.systemRequests(id);
 		res.json(result);
-	});
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const addUser = async (req, res) => {
@@ -130,34 +111,38 @@ export const rejectRequest = async (req, res) => {
 };
 
 export const leaveSystem = async (req, res) => {
-	let sql = `DELETE FROM SystemUsers WHERE system_id = ? AND user_id = ?`;
 	const systemId = req.params.id;
 	const userId = req.user.id;
 
-	db.query(sql, [systemId, userId], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
-		res.status(200).json({ message: 'System left successfully' });
-	});
+	try {
+        const success = await SystemRequest.leaveSystem(systemId, userId);
+        if (success) {
+            res.status(200).json({ message: 'System left successfully' });
+        } else {
+            res.status(404).json({ error: 'System not found' });
+        }
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 export const removeUser = async (req, res) => {
-	let sql = `DELETE FROM SystemUsers WHERE system_id = ? AND user_id = ?`;
 	const { system_id, user_id } = req.body;
 	const systemId = system_id;
 	const userId = user_id;
 
-	db.query(sql, [systemId, userId], (error, result) => {
-		if (error) {
-			console.error('Error executing query:', error.stack);
-			res.status(500).json({ error: 'Internal Server Error' });
-			return;
-		}
-		res.status(200).json({ message: 'User removed successfully' });
-	});
+	try {
+        const success = await SystemRequest.leaveSystem(systemId, userId);
+        if (success) {
+            res.status(200).json({ message: 'User removed from System successfully' });
+        } else {
+            res.status(404).json({ error: 'System not found' });
+        }
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 function isRequestStatusValid(status) {

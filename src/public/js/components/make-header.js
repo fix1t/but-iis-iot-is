@@ -1,5 +1,5 @@
 /**
- * @file header.js
+ * @file make-header.js
  * @author Jakub Mikyšek (xmikys03), Gabriel Biel (xbielg00)
  * @brief File for rendering header navigation for HTML files
  */

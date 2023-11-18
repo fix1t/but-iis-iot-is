@@ -8,6 +8,7 @@ class Systems {
         this.created = created;
         this.id = id;
     }
+
     // Save new user to the database
     async save() {
         let sql = `
@@ -17,18 +18,19 @@ class Systems {
         `;
         return db.promise().execute(sql, [this.owner_id, this.name, this.description]);
     }
+
     async update() {
         const dataToUpdate = {
             //owner_id: this.owner_id, //@maybe want to change owner.id as well
             name: this.name,
             description: this.description,
         };
-    // Generate SQL SET part dynamically based on the object
-    const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
-    const values = Object.values(dataToUpdate);
+        // Generate SQL SET part dynamically based on the object
+        const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
+        const values = Object.values(dataToUpdate);
 
-    let sql = `UPDATE Systems SET ${updates} WHERE id = ?`;
-    return db.promise().execute(sql, [...values, this.id]);
+        let sql = `UPDATE Systems SET ${updates} WHERE id = ?`;
+        return db.promise().execute(sql, [...values, this.id]);
     }
 
     static async findAllSystems() {

@@ -11,10 +11,6 @@ export const getAllSystems = async (req, res) => {
         const systemsWithOwners = await Promise.all(systems.map(async (system) => {
             // Fetch the owner's name from the User model
             const owner = await User.findById(system.owner_id);
-            if (!owner) {
-                console.error(`Owner not found for system with ID ${system.id}`);
-                return null;
-            }
 
             return {
                 id: system.id,
@@ -26,10 +22,7 @@ export const getAllSystems = async (req, res) => {
             };
         }));
 
-        // Filter out systems with missing owner details
-        const filteredSystems = systemsWithOwners.filter(system => system !== null);
-
-        res.json(filteredSystems);
+        res.json(systemsWithOwners);
     } catch (error) {
         console.error('Error executing query:', error.stack);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -86,6 +79,7 @@ export const getCurrentUserSystems = async (req, res) => {
 */
 
 //@todo should here be adding user/admin to the UserSystems table?
+
 export const createSystem = async (req, res) => {
     try {
         const userId = req.user.id; // Get user ID from req.user

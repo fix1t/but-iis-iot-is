@@ -44,7 +44,7 @@ export const getSystemByID = async (req, res) => {
         const data = {
             id: system.id,
             owner_id: system.owner_id,
-            owner_name: owner.name,
+            owner_name: owner.username,
             name: system.name,
             description: system.description,
             created: system.created,

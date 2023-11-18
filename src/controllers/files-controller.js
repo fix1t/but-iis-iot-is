@@ -32,3 +32,7 @@ export const systemList = (req, res) => {
 export const systemEdit = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/system/system-edit.html'));
 }
+
+export const systemCreate = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-create.html'));
+}

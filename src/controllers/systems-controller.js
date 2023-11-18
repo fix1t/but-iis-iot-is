@@ -6,17 +6,30 @@ import Systems from '../models/system-model.js';
 export const getAllSystems = async (req, res) => {
     try {
         const systems = await Systems.findAllSystems();
-            const filteredSystems = systems.map(system => {
+
+        // Fetch owner details for all systems in parallel
+        const systemsWithOwners = await Promise.all(systems.map(async (system) => {
+            // Fetch the owner's name from the User model
+            const owner = await User.findById(system.owner_id);
+            if (!owner) {
+                console.error(`Owner not found for system with ID ${system.id}`);
+                return null;
+            }
+
             return {
-                //@TODO send attributes that we want, now sending just names (works for all even now)
-                //id: system.id,
-                //owner_id: system.owner_id,
+                id: system.id,
+                owner_id: system.owner_id,
+                owner_name: owner.username, // Add the owner's name to the data
                 name: system.name,
-                //description: system.description,
-                //created: system.created,
+                description: system.description,
+                created: system.created,
             };
-            });
-            res.json(filteredSystems);
+        }));
+
+        // Filter out systems with missing owner details
+        const filteredSystems = systemsWithOwners.filter(system => system !== null);
+
+        res.json(filteredSystems);
     } catch (error) {
         console.error('Error executing query:', error.stack);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -30,9 +43,15 @@ export const getSystemByID = async (req, res) => {
             res.status(404).json({ error: 'System not found' });
             return;
         }
+        const owner = await User.findById(system.owner_id);
+        if (!owner) {
+            res.status(404).json({ error: 'Owner not found' });
+            return;
+        }
         const data = {
             id: system.id,
             owner_id: system.owner_id,
+            owner_name: owner.name,
             name: system.name,
             description: system.description,
             created: system.created,
@@ -129,7 +148,7 @@ export const deleteSystem = async (req, res) => {
         return;
     }
     if(systemToDelete.owner_id !== user.id && !user.isAdmin){
-        res.status(401).json({ error: 'Forbidden' });
+        res.status(401).json({ error: 'You are not the owner. Only owner can delete a system.' });
         return;
     }
     try{

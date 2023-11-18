@@ -24,3 +24,7 @@ export const userList = (req, res) => {
 export const userEdit = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/user/user-edit.html'));
 }
+
+export const systemUsers = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-users.html'));
+}

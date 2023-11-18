@@ -22,8 +22,8 @@ class SystemRequest {
 		return db.promise().execute(sql, [this.system_id, this.user_id, this.status, this.message]);
 	}
 
-	// START this 4 methods should be transfer to System Model when possible
-	static async usersSystem(id) {
+	// START this 5 methods should be transfer to System Model when possible
+	static async findSystemUsers(id) {
 		let sql = `SELECT Users.id, Users.username, Users.email, Users.birth, Users.bio, SystemUsers.created
 					FROM SystemUsers
 					INNER JOIN Users ON Users.id = SystemUsers.user_id
@@ -38,7 +38,7 @@ class SystemRequest {
 		}
 	}
 
-	static async usersNotSystem(id) {
+	static async findUsersNotInSystem(id) {
 		let sql = `SELECT id, username, email, bio
 					FROM Users
 					WHERE id NOT IN (
@@ -55,7 +55,7 @@ class SystemRequest {
 		}
 	}
 
-	static async systemRequests(id) {
+	static async getSystemRequestsById(id) {
 		let sql = `SELECT 
 						Users.username, Users.email, Users.birth, Users.bio,
 						Systems.name AS system_name,
@@ -76,11 +76,21 @@ class SystemRequest {
 	}
 
 	// returns true or false
-	static async leaveSystem(system_id, user_id) {
+	static async removeUserFromSystem(system_id, user_id) {
 		let sql = `DELETE FROM SystemUsers WHERE system_id = ? AND user_id = ?`;
 		try {
 			const [result] = await db.promise().query(sql, [system_id, user_id]);
 			return result.affectedRows ? true : false;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	static async addUserToSystem(system_id, user_id) {
+		let sql = `INSERT INTO SystemUsers SET ?`;
+		try {
+			await db.promise().query(sql, { system_id, user_id });
 		} catch (error) {
 			console.error('Error executing query:', error.stack);
 			throw error;

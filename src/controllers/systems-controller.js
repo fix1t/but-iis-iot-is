@@ -33,7 +33,7 @@ export const getSystemByID = async (req, res) => {
     try{
         const system = await Systems.findById(req.params.id);
         if (!system) {
-            res.status(404).json({ error: 'System not found getSystem' });
+            res.status(404).json({ error: 'System not found' });
             return;
         }
         const owner = await User.findById(system.owner_id);
@@ -108,7 +108,7 @@ export const updateSystem = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
     if (!systemToUpdate) {
-        res.status(404).json({ error: 'System not found UPDATE' });
+        res.status(404).json({ error: 'System not found' });
         return;
     }
     if(systemToUpdate.owner_id !== user.id && !user.isAdmin){
@@ -137,7 +137,7 @@ export const deleteSystem = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
     if (!systemToDelete) {
-        res.status(404).json({ error: 'System not found DELETE' });
+        res.status(404).json({ error: 'System not found' });
         return;
     }
     if(systemToDelete.owner_id !== user.id && !user.isAdmin){

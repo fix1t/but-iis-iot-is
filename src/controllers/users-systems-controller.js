@@ -144,15 +144,23 @@ export const rejectRequest = async (req, res) => {
 };
 
 export const leaveSystem = async (req, res) => {
-	const system_id = req.params.system_id;
+	const { system_id } = req.params;
 	const user_id = req.user.id;
 
 	try {
-		const success = await System.removeUserFromSystem(system_id, user_id);
-		if (success) {
-			res.status(200).json({ message: 'System left successfully' });
+		const system = await System.findById(system_id);
+
+		if (user_id === system.owner_id) {
+			await System.deleteById(system_id);
+			res.status(200).json({ message: 'System deleted successfully' });
 		} else {
-			res.status(404).json({ error: 'System not found' });
+			const success = await System.removeUserFromSystem(system_id, user_id);
+
+			if (success) {
+				res.status(200).json({ message: 'Left the system successfully' });
+			} else {
+				res.status(404).json({ error: 'System not found' });
+			}
 		}
 	} catch (error) {
 		console.error('Error executing query:', error.stack);

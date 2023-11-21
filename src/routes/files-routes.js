@@ -1,5 +1,5 @@
 import express from 'express';
-import { home, login, register, userList, userEdit, systemUsers, systemList, systemEdit, systemCreate } from '../controllers/files-controller.js';
+import { home, login, register, userList, userEdit, systemUsers, systemList, systemEdit, systemCreate, systemRequests } from '../controllers/files-controller.js';
 import { verifyToken, redirectIfAuthenticated } from '../utils/auth.js';
 
 const router = express.Router();
@@ -13,5 +13,6 @@ router.get('/systems', verifyToken, systemList);
 router.get('/systems/edit/:id', verifyToken, systemEdit);
 router.get('/systems/create', verifyToken, systemCreate);
 router.get('/systems/util', verifyToken, systemUsers);
+router.get('/systems-requests', verifyToken, systemRequests);
 
 export default router;

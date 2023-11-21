@@ -5,34 +5,34 @@
  */
 
 // Profile
-document.addEventListener('DOMContentLoaded', function() {
-    const editButton = document.getElementById('editUserButton');
-    if (editButton) {
-        editButton.addEventListener('click', async () => {
-            window.location.href = '/users/edit';
-        });
-    }
+document.addEventListener('DOMContentLoaded', function () {
+	const editButton = document.getElementById('editUserButton');
+	if (editButton) {
+		editButton.addEventListener('click', async () => {
+			window.location.href = '/users/edit';
+		});
+	}
 });
 
 // Logout
-document.addEventListener('DOMContentLoaded', function() {
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/users/logout', {
-                    method: 'POST',
-                    credentials: 'include' // Include cookies with the request
-                });
-                if (response.ok) {
-                    // Redirect to the login page after successful logout
-                    window.location.href = '/login';
-                }
-            } catch (error) {
-                console.error('Logout failed:', error);
-            }
-        });
-    }
+document.addEventListener('DOMContentLoaded', function () {
+	const logoutButton = document.getElementById('logoutButton');
+	if (logoutButton) {
+		logoutButton.addEventListener('click', async () => {
+			try {
+				const response = await fetch('/api/users/logout', {
+					method: 'POST',
+					credentials: 'include' // Include cookies with the request
+				});
+				if (response.ok) {
+					// Redirect to the login page after successful logout
+					window.location.href = '/login';
+				}
+			} catch (error) {
+				console.error('Logout failed:', error);
+			}
+		});
+	}
 });
 
 const header = document.getElementById('header');
@@ -44,15 +44,15 @@ header.innerHTML = `
 		<span class="navbar-toggler-icon"></span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarCollapse">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item active">
+		<ul class="navbar-nav mr-auto" id="navbarNav">
+			<li class="nav-item">
 				<a class="nav-link" href="/systems">Home</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="users">Users</a>
+				<a class="nav-link" href="/users">Users</a>
 			</li>
 			<li class="nav-item">
-            	<a class="nav-link" href="#">About</a>
+            	<a class="nav-link" href="/systems-requests">My Requests</a>
           	</li>
 		</ul>
 		<button id="editUserButton" class="btn btn-outline-warning my-2 mr-2 my-sm-0" type="button">

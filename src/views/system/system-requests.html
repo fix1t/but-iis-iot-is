@@ -8,28 +8,47 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <title>IoT - System List</title>
+    <title>IoT - Device management</title>
 </head>
 
-<body>
+<body class="container">
+
     <div id="header"></div>
 
-    <div class="container mt-4">
-        <h2 class="mb-4">System List</h2>
-
-        <table class="table">
+    <h2>Requests to my system</h2>
+    <div class="mt-4">
+        <table class="table table-striped">
             <thead class="thead-light">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Owner Id</th>
-                    <th>Owner Name</th>
                     <th>Created</th>
-                    <th>Description</th>
+                    <th>Message</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Birth</th>
+                    <th>Bio</th>
+                    <th>System Name</th>
+                    <th>Status</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="systemsTableBody"></tbody>
+            <tbody id="requestTableBody"></tbody>
+        </table>
+    </div>
+
+    <h2>My requests</h2>
+    <div class="mt-4">
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>System Name</th>
+                    <th>System Owner</th>
+                    <th>My Message</th>
+                    <th>Created</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="myRequestTableBody"></tbody>
         </table>
     </div>
 
@@ -43,7 +62,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <script src="/js/system/system-list.js"></script>
+    <script src="/js/system/system-requests.js"></script>
     <script src="/js/components/header.js"></script>
 </body>
 

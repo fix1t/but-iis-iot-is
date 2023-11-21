@@ -56,28 +56,32 @@ export const getSystemByID = async (req, res) => {
     }
 };
 
-//@todo shouldnt here be using the UserSystems table?
 export const getCurrentUserSystems = async (req, res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user.id;
         const systems = await Systems.getCurrentUserSystems(userId);
-            const filteredSystems = systems.map(system => {
+
+        // Fetch owner details for all systems in parallel
+        const systemsWithOwners = await Promise.all(systems.map(async (system) => {
+            // Fetch the owner's name from the User model
+            const owner = await User.findById(system.owner_id);
+
             return {
-                //@TODO send attributes that we want, now sending just names (works for all even now)
                 id: system.id,
                 owner_id: system.owner_id,
+                owner_name: owner.username, // Add the owner's name to the data
                 name: system.name,
                 description: system.description,
                 created: system.created,
             };
-            });
-            res.json(filteredSystems);
+        }));
+
+        res.json(systemsWithOwners);
     } catch (error) {
         console.error('Error executing query:', error.stack);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 export const createSystem = async (req, res) => {
     try {

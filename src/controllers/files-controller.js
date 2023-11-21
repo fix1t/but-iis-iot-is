@@ -25,6 +25,18 @@ export const userEdit = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/user/user-edit.html'));
 }
 
+export const systemList = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-list.html'));
+}
+
+export const systemEdit = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-edit.html'));
+}
+
+export const systemCreate = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-create.html'));
+}
+
 export const systemUsers = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/system/system-users.html'));
 }

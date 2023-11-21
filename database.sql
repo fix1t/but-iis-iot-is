@@ -88,10 +88,10 @@ CREATE TABLE DeviceParameters (
 
 CREATE TABLE KPIs (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    system_id INT NOT NULL,
+    device_id INT NOT NULL,
     parameter_id INT NOT NULL,
     threshold DECIMAL(10,2) NOT NULL,
     operation ENUM('greater', 'less', 'equal', 'not_equal') NOT NULL,
-    FOREIGN KEY (system_id) REFERENCES Systems(id) ON DELETE CASCADE,
+    FOREIGN KEY (device_id) REFERENCES Devices(id) ON DELETE CASCADE,
     FOREIGN KEY (parameter_id) REFERENCES Parameters(id) ON DELETE CASCADE
 );

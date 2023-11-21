@@ -9,14 +9,35 @@ class Systems {
         this.id = id;
     }
 
-    // Save new user to the database
     async save() {
-        let sql = `
-        INSERT INTO Systems (
-            owner_id, name, description
-        ) VALUES (?, ?, ?)
-        `;
-        return db.promise().execute(sql, [this.owner_id, this.name, this.description]);
+      try {
+          await db.promise().beginTransaction();
+
+          let systemInsertSql = `
+              INSERT INTO Systems (
+                  owner_id, name, description
+              ) VALUES (?, ?, ?)
+          `;
+          let systemUsersInsertSql = `
+              INSERT INTO SystemUsers (
+                  system_id, user_id
+              ) VALUES (?, ?)
+          `;
+          // Insert into Systems table
+          const [systemResult] = await db.promise().execute(systemInsertSql, [this.owner_id, this.name, this.description]);
+          
+          // Retrieve the inserted system ID
+          const systemId = systemResult.insertId;
+
+          // Insert into SystemUsers table using the retrieved system ID
+          await db.promise().execute(systemUsersInsertSql, [systemId, this.owner_id]);
+
+          await db.promise().commit();
+      } catch (error) {
+          console.error('Error during the transaction. ROLLBACK!', error);
+          await db.promise().rollback(); //makes rollback to the default previous state of db 
+          throw error;
+      }
     }
 
     async update() {
@@ -56,18 +77,21 @@ class Systems {
       }
     }
   
-/*
-    static async getCurrentUserSystems() {
-        let sql = 'SELECT * FROM SystemsUsers WHERE user_id = ?';
-        try {
-          const [rows] = await db.promise().query(sql);
+    static async getCurrentUserSystems(user_id) {
+      let sql = `
+          SELECT Systems.* 
+          FROM Systems 
+          JOIN SystemUsers ON Systems.id = SystemUsers.system_id 
+          WHERE SystemUsers.user_id = ?
+      `;
+      try {
+          const [rows] = await db.promise().query(sql, [user_id]);
           return rows.map(Systems.rowToSystems);
-        } catch (error) {
+      } catch (error) {
           console.error('Error executing query:', error.stack);
           throw error;
-        }
+      }
     }
-*/
 
     static async findById(id) {
         let sql = `SELECT * FROM Systems WHERE id = ?`;

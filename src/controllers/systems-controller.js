@@ -33,7 +33,7 @@ export const getSystemByID = async (req, res) => {
     try{
         const system = await Systems.findById(req.params.id);
         if (!system) {
-            res.status(404).json({ error: 'System not found' });
+            res.status(404).json({ error: 'System not found getSystem' });
             return;
         }
         const owner = await User.findById(system.owner_id);
@@ -55,19 +55,20 @@ export const getSystemByID = async (req, res) => {
             res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-/*
+
 //@todo shouldnt here be using the UserSystems table?
 export const getCurrentUserSystems = async (req, res) => {
     try {
-        const systems = await Systems.getCurrentUserSystems();
+        const userId = req.user.id
+        const systems = await Systems.getCurrentUserSystems(userId);
             const filteredSystems = systems.map(system => {
             return {
                 //@TODO send attributes that we want, now sending just names (works for all even now)
-                //id: system.id,
-                //owner_id: system.owner_id,
+                id: system.id,
+                owner_id: system.owner_id,
                 name: system.name,
-                //description: system.description,
-                //created: system.created,
+                description: system.description,
+                created: system.created,
             };
             });
             res.json(filteredSystems);
@@ -76,9 +77,7 @@ export const getCurrentUserSystems = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-*/
 
-//@todo should here be adding user/admin to the UserSystems table?
 
 export const createSystem = async (req, res) => {
     try {
@@ -109,7 +108,7 @@ export const updateSystem = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
     if (!systemToUpdate) {
-        res.status(404).json({ error: 'System not found' });
+        res.status(404).json({ error: 'System not found UPDATE' });
         return;
     }
     if(systemToUpdate.owner_id !== user.id && !user.isAdmin){
@@ -138,7 +137,7 @@ export const deleteSystem = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
     if (!systemToDelete) {
-        res.status(404).json({ error: 'System not found' });
+        res.status(404).json({ error: 'System not found DELETE' });
         return;
     }
     if(systemToDelete.owner_id !== user.id && !user.isAdmin){

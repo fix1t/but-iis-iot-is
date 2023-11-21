@@ -1,3 +1,19 @@
 body {
     padding-top: 5rem;
 }
+
+.table-fix-head thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 300px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}

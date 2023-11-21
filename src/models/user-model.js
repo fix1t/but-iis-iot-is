@@ -93,12 +93,24 @@ class User {
     }
   }
 
+	// returns true or false
   static async deleteById(id) {
     let sql = `DELETE FROM Users WHERE id = ?`;
     try {
-      const [result] = await db.promise().query(sql, [id]);
-      console.log(result);
-      return result;
+			console.log('DELETE BY ID');
+			const [result] = await db.promise().query(sql, [id]);
+      return result.affectedRows ? true : false;
+    } catch (error) {
+      console.error('Error executing query:', error.stack);
+      throw error;
+    }
+  }
+
+  static async getMultipleUsers(offset, limit) {
+    let sql = `SELECT * FROM Users LIMIT ?, ?`;
+    try {
+      const [users] = await db.promise().query(sql, [offset, limit]);
+      return users;
     } catch (error) {
       console.error('Error executing query:', error.stack);
       throw error;

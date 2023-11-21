@@ -19,8 +19,6 @@ async function loadSystemData() {
         systemId = systemData.id;
         document.getElementById('systemName').value = systemData.name;
         document.getElementById('systemDescription').value = systemData.description;
-        document.getElementById('systemOwner').value = systemData.owner_id;
-        document.getElementById('systemCreated').value = systemData.created.split('T')[0];
     } catch (error) {
         console.error('Failed to load system data:', error);
     }
@@ -30,10 +28,8 @@ const handleSubmit = async (event) => {
     event.preventDefault();
     const name = document.getElementById('systemName').value;
     const description = document.getElementById('systemDescription').value;
-    const owner_id = document.getElementById('systemOwner').value;
-    const created = document.getElementById('systemCreated').value;
 
-    const data = { name, description, owner_id, created };
+    const data = { name, description };
 
     try {
         const response = await fetch(`/api/systems/${systemId}`, {

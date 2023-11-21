@@ -126,7 +126,14 @@ function removeUser(userId) {
 	})
 		.then(response => {
 			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
+				return response.json().then(data => {
+					if (data.showPopup) {
+						// Display a popup to the user
+						alert('Cannot delete the owner!');
+					} else {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+				});
 			}
 
 			const deletedRow = document.getElementById(`userRow_${userId}`);

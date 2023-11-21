@@ -173,9 +173,14 @@ export const removeUser = async (req, res) => {
 	const { user_id } = req.body;
 
 	try {
+		const system = await System.findById(system_id);
+		if (user_id === system.owner_id){
+			return res.status(400).json({ error: 'Cannot delete the owner!', showPopup: true });
+		}
+
 		const success = await System.removeUserFromSystem(system_id, user_id);
 		if (success) {
-			res.status(200).json({ message: 'User removed from System successfully' });
+			res.status(200).json({ message: 'User removed from the system successfully' });
 		} else {
 			res.status(404).json({ error: 'System not found' });
 		}

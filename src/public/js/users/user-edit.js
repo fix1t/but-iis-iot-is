@@ -59,3 +59,22 @@ const handleSubmit = async (event) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
+
+function deleteUser() {
+    // Make a DELETE request to delete the user with the specified userId
+    fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const deletedRow = document.getElementById(`userRow_${userId}`);
+            if (deletedRow) {
+                deletedRow.remove();
+            }
+			window.location.href = '/login';
+        })
+        .catch(error => console.error('Error deleting user:', error));
+}

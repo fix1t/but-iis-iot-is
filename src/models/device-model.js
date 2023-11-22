@@ -70,6 +70,17 @@ class Device {
 		}
 	}
 
+	static async findByOwnerId(owner_id) {
+		let sql = `SELECT * FROM Devices WHERE owner_id = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [owner_id]);
+			return rows.length ? rows.map(row => Device.rowToDevice(row)) : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static rowToDevice(row) {
 		return new Device(row.owner_id, row.type_id, row.name, row.description, row.user_alias, row.id);
 	}

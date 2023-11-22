@@ -10,9 +10,26 @@ export const createDeviceInSystem = async (req, res) => {
 		return res.status(400).json({ error: 'Missing required fields' });
 	}
 
-	// Check if the user has access to the system
-	if (!user.isAdmin && !(await System.isUserInSystem(user.id, system_id))) {
-		return res.status(401).json({ error: 'Unauthorized' });
+	const device = new Device(user.id, type_id, name, description, userAlias);
+
+	try {
+		await device.save();
+		await device.getId();
+		await System.addDeviceToSystem(system_id, device.id);
+		res.status(201).json({ message: 'Device created successfully', device_id: device.id });
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+export const createDeviceOutsideSystem = async (req, res) => {
+	const user = req.user;
+	const { name, type_id, description, userAlias } = req.body;
+
+	// Check requirred fields
+	if (!name || !type_id || !user) {
+		return res.status(400).json({ error: 'Missing required fields' });
 	}
 
 	const device = new Device(user.id, type_id, name, description, userAlias);
@@ -20,8 +37,7 @@ export const createDeviceInSystem = async (req, res) => {
 	try {
 		await device.save();
 		await device.getId();
-		await System.addDeviceToSystem(system_id, device.id);
-		res.status(201).json({ message: 'Device created successfully' });
+		res.status(201).json({ message: 'Device created successfully', device_id: device.id });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });

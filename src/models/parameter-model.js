@@ -42,3 +42,5 @@ class Parameter {
 		return new Parameter(row.type_id, row.name, row.id);
 	}
 }
+
+export default Parameter;

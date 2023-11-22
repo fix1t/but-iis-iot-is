@@ -41,3 +41,5 @@ class Type {
 		return new Type(row.name, row.id);
 	}
 }
+
+export default Type;

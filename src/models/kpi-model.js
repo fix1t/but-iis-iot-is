@@ -1,15 +1,5 @@
 import db from '../config/db.js';
 
-// CREATE TABLE KPIs (
-//     id INT PRIMARY KEY AUTO_INCREMENT,
-//     device_id INT NOT NULL,
-//     parameter_id INT NOT NULL,
-//     threshold DECIMAL(10,2) NOT NULL,
-//     operation ENUM('greater', 'less', 'equal', 'not_equal') NOT NULL,
-//     FOREIGN KEY (device_id) REFERENCES Devices(id) ON DELETE CASCADE,
-//     FOREIGN KEY (parameter_id) REFERENCES Parameters(id) ON DELETE CASCADE
-// );
-
 class KPI {
 	constructor(device_id, parameter_id, threshold, operation, id = null) {
 		this.id = id;

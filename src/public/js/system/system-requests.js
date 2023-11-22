@@ -37,12 +37,12 @@ function fetchDataAndPrintTableRows(url, tableBodyId, isMyRequests) {
                         <td>${request.system_name}</td>
                         <td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
                         <td>
-                            <button class="btn btn-success btn-sm" onclick="acceptOrRejectRequest(${request.id}, 'accept')">
+                            <button class="btn btn-success btn-sm" onclick="acceptRequest(${request.id}, 'accept')">
                                 <i class="fas fa-check"></i>
                             </button>
                         </td>                        
                         <td>
-                            <button class="btn btn-danger btn-sm" onclick="acceptOrRejectRequest(${request.id}, 'reject')">
+                            <button class="btn btn-danger btn-sm" onclick="rejectRequest(${request.id}, 'reject')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>

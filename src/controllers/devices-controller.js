@@ -1,6 +1,5 @@
 import Device from '../models/device-model.js';
 import System from '../models/system-model.js';
-import { login } from './files-controller.js';
 
 export const createDeviceInSystem = async (req, res) => {
 	const user = req.user;
@@ -24,6 +23,18 @@ export const createDeviceInSystem = async (req, res) => {
 		await device.getId();
 		await System.addDeviceToSystem(system_id, device.id);
 		res.status(201).json({ message: 'Device created successfully' });
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+export const getMyDevices = async (req, res) => {
+	const user = req.user;
+
+	try {
+		const devices = await Device.findByOwnerId(user.id);
+		res.status(200).json(devices);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });

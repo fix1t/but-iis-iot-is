@@ -28,13 +28,11 @@ function fetchDataAndPrintTableRows(url, tableBodyId, isMyRequests) {
                     `;
                 } else {
                     htmlContent = `
+						<td>${request.system_name}</td>
                         <td>${new Date(request.created).toLocaleString()}</td>
                         <td>${request.message}</td>
                         <td>${request.username}</td>
                         <td>${request.email}</td>
-                        <td>${new Date(request.birth).toLocaleDateString()}</td>
-                        <td>${request.bio}</td>
-                        <td>${request.system_name}</td>
                         <td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
                         <td>
                             <button class="btn btn-success btn-sm" onclick="acceptRequest(${request.id}, 'accept')">

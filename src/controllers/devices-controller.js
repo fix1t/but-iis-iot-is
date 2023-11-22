@@ -18,7 +18,6 @@ export const createDeviceInSystem = async (req, res) => {
 	const device = new Device(user.id, type_id, name, description, userAlias);
 
 	try {
-		console.log('Creating device');
 		await device.save();
 		await device.getId();
 		await System.addDeviceToSystem(system_id, device.id);

@@ -16,32 +16,7 @@
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <a class="navbar-brand" href="#">IoT Management</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarCollapse"
-        aria-controls="navbarCollapse"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"
-              >Home <span class="sr-only">(current)</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="users">Users</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-        </ul>
-      </div>
     </nav>
 
     <div class="container mt-4">
@@ -61,6 +36,7 @@
                     id="userEmail"
                     name="userEmail"
                     placeholder="name@example.com"
+                    required
                   />
                 </div>
                 <div class="form-group">
@@ -70,6 +46,7 @@
                     class="form-control"
                     id="userPassword"
                     name="userPassword"
+                    required
                   />
                 </div>
                 <button type="submit" class="btn btn-primary mx-auto d-block">
@@ -80,7 +57,7 @@
 
         <div class="col-md-6 pl-5">
             <h2 class="mb-4 text-center text-primary">System List</h2>
-              <div class="my-custom-login-scrollbar table-wrapper-scroll-y">
+              <div class="table-fix-head my-custom-login-scrollbar table-wrapper-scroll-y">
                 <table class="table">
                     <thead class="thead-light">
                         <tr>

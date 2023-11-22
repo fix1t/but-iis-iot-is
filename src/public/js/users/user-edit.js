@@ -70,10 +70,6 @@ function deleteUser() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             
-            const deletedRow = document.getElementById(`userRow_${userId}`);
-            if (deletedRow) {
-                deletedRow.remove();
-            }
 			window.location.href = '/login';
         })
         .catch(error => console.error('Error deleting user:', error));

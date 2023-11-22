@@ -18,29 +18,31 @@
     <div class="container mt-4 d-flex justify-content-center">
         <button class="btn btn-primary" onclick="location.href='/systems/create'">Create System</button>
     </div>
-
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-6 pr-5">
                 <h2 class="mb-4 text-center">System List</h2>
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>System Name</th>
-                            <!--<th>Owner Id</th>>-->
-                            <th>Owner Name</th>
-                            <!--<th>Created</th> -->
-                            <th>Description</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="systemsTableBody"></tbody>
-                </table>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar-all-systems table-fix-head">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>System Name</th>
+                                <!--<th>Owner Id</th>>-->
+                                <th>Owner Name</th>
+                                <!--<th>Created</th> -->
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="systemsTableBody"></tbody>
+                    </table>
+                </div> <!-- closing div tag for the scrollable div -->
             </div>
 
             <div class="col-md-6 pl-5">
                 <h2 class="mb-4 text-center">My Systems List</h2>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar-user-list table-fix-head">
                     <table class="table">
                         <thead class="thead-light">
                             <tr>
@@ -55,9 +57,28 @@
                         </thead>
                         <tbody id="userSystemsTableBody"></tbody>
                     </table>
+                </div>
+
+                <h2 class="mb-4 text-center mt-5">My Devices List</h2>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar-user-list table-fix-head">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Device Name</th>
+                                <th>Description</th>
+                                <th>User Alias</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="userDevicesTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -70,6 +91,7 @@
         crossorigin="anonymous"></script>
     <script src="/js/system/system-list.js"></script>
     <script src="/js/components/header.js"></script>
+    <script src="/js/device/device-list.js"></script>
 </body>
 
 </html>

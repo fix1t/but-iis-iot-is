@@ -42,8 +42,7 @@ async function loadDevices() {
 
 		// Create the table structure
 		const table = document.createElement('table');
-		table.classList.add('table', 'table-bordered');
-
+		table.classList.add('table', 'table-bordered', 'container', 'p-3', 'mt-3');
 		const thead = document.createElement('thead');
 		thead.innerHTML = `
 		<tr>

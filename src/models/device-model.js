@@ -2,8 +2,9 @@ import db from '../config/db.js';
 
 
 class Device {
-	constructor(type_id, name, description, user_alias, id = null) {
+	constructor(owner_id, type_id, name, description, user_alias, id = null) {
 		this.id = id;
+		this.owner_id = owner_id;
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -13,14 +14,26 @@ class Device {
 	async save() {
 		let sql = `
 			INSERT INTO Devices (
-				type_id, name, description, user_alias
-			) VALUES (?, ?, ?, ?)
+				owner_id, type_id, name, description, user_alias
+			) VALUES (?, ?, ?, ?, ?)
 		`;
-		return db.promise().execute(sql, [this.type_id, this.name, this.description, this.user_alias]);
+		return db.promise().execute(sql, [this.owner_id, this.type_id, this.name, this.description, this.user_alias]);
+	}
+
+	async getId() {
+		let sql = `SELECT id FROM Devices WHERE owner_id = ? AND type_id = ? AND name = ? AND description = ? AND user_alias = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [this.owner_id, this.type_id, this.name, this.description, this.user_alias]);
+			return rows.length ? rows[0].id : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
 	}
 
 	async update() {
 		const dataToUpdate = {
+			owner_id: this.owner_id,
 			type_id: this.type_id,
 			name: this.name,
 			description: this.description,
@@ -58,6 +71,8 @@ class Device {
 	}
 
 	static rowToDevice(row) {
-		return new Device(row.type_id, row.name, row.description, row.user_alias, row.id);
+		return new Device(row.owner_id, row.type_id, row.name, row.description, row.user_alias, row.id);
 	}
 }
+
+export default Device;

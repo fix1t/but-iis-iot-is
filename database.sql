@@ -52,7 +52,7 @@ CREATE TABLE Devices (
     id INT PRIMARY KEY AUTO_INCREMENT,
     type_id INT NOT NULL,
     owner_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
     description TEXT,
     user_alias VARCHAR(255),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

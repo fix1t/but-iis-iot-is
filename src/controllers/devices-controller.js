@@ -7,18 +7,22 @@ export const createDeviceInSystem = async (req, res) => {
 	const { name, type_id, system_id, description, userAlias } = req.body;
 
 	// Check requirred fields
-	if (!name || !type_id || !system_id) {
+	if (!name || !type_id || !system_id || !user) {
 		return res.status(400).json({ error: 'Missing required fields' });
 	}
 
-	//TODO: Check if the user has access to the system
+	// Check if the user has access to the system
+	if (!user.isAdmin && !(await System.isUserInSystem(user.id, system_id))) {
+		return res.status(401).json({ error: 'Unauthorized' });
+	}
 
 	const device = new Device(user.id, type_id, name, description, userAlias);
 
 	try {
 		console.log('Creating device');
 		await device.save();
-		// await System.addDeviceToSystem(system_id, device.id);
+		await device.getId();
+		await System.addDeviceToSystem(system_id, device.id);
 		res.status(201).json({ message: 'Device created successfully' });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);

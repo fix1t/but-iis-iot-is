@@ -104,6 +104,32 @@ class Systems {
 		}
 	}
 
+	static async addDeviceToSystem(system_id, device_id) {
+		let sql = `
+					INSERT INTO SystemDevices (
+							system_id, device_id
+					) VALUES (?, ?)
+			`;
+		try {
+			const [result] = await db.promise().execute(sql, [system_id, device_id]);
+			return result;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	static async isUserInSystem(user_id, system_id) {
+		let sql = `SELECT * FROM SystemUsers WHERE user_id = ? AND system_id = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [user_id, system_id]);
+			return rows.length ? true : false;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	// Helper function to convert a database row to a Systems instance
 	static rowToSystems(row) {
 		return new Systems(

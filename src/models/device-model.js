@@ -24,7 +24,8 @@ class Device {
 		let sql = `SELECT id FROM Devices WHERE owner_id = ? AND type_id = ? AND name = ? AND description = ? AND user_alias = ?`;
 		try {
 			const [rows] = await db.promise().query(sql, [this.owner_id, this.type_id, this.name, this.description, this.user_alias]);
-			return rows.length ? rows[0].id : null;
+			this.id = rows[0].id;
+			return this.id;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);
 			throw error;
@@ -40,7 +41,6 @@ class Device {
 			user_alias: this.user_alias
 		};
 
-		// Generate SQL SET part dynamically based on the object
 		const updates = Object.keys(dataToUpdate).map(key => `${key} = ?`).join(', ');
 		const values = Object.values(dataToUpdate);
 
@@ -48,7 +48,7 @@ class Device {
 		return db.promise().execute(sql, [...values, this.id]);
 	}
 
-	static async getDeviceById(id) {
+	static async findById(id) {
 		let sql = `SELECT * FROM Devices WHERE id = ?`;
 		try {
 			const [rows] = await db.promise().query(sql, [id]);
@@ -59,7 +59,7 @@ class Device {
 		}
 	}
 
-	static async getSystemDevices(systemId) {
+	static async findBySystemId(systemId) {
 		let sql = `SELECT * FROM Devices WHERE id IN (SELECT device_id FROM SystemDevices WHERE system_id = ?)`;
 		try {
 			const [rows] = await db.promise().query(sql, [systemId]);

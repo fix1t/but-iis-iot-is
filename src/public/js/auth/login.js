@@ -25,7 +25,7 @@ const handleSubmit = async (event) => {
 		} else {
 			const responseBody = await response.json();
 			console.log(responseBody.message); 
-			window.location.href = '/users';
+			window.location.href = '/systems';
 		}
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);

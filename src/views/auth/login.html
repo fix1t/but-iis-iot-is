@@ -16,60 +16,64 @@
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <a class="navbar-brand" href="#">IoT Management</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarCollapse"
-        aria-controls="navbarCollapse"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"
-              >Home <span class="sr-only">(current)</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="users">Users</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-        </ul>
-      </div>
     </nav>
 
-    <div class="container border border-secondary rounded-sm p-3 mt-5">
-      <h3 class="text-center text-primary">Login</h3>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="userEmail">Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="userEmail"
-            name="userEmail"
-            placeholder="name@example.com"
-          />
+    <div class="container mt-4">
+      <div class="row">
+          <div class="col-md-6 pr-5">
+            <h3 style="margin-top: 70px;" class="text-center text-primary">Register</h3>
+            <div style="margin-top: 70px;" class="d-flex justify-content-center">
+              <button class="btn btn-primary" onclick="location.href='/register'">Register</button>
+            </div>
+              <h3 style="margin-top: 150px;" class="text-center text-primary">Login</h3>
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="userEmail">Email address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="userEmail"
+                    name="userEmail"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="userPassword">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="userPassword"
+                    name="userPassword"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary mx-auto d-block">
+                  Login
+                </button>
+              </form>
         </div>
-        <div class="form-group">
-          <label for="userPassword">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="userPassword"
-            name="userPassword"
-          />
+
+        <div class="col-md-6 pl-5">
+            <h2 class="mb-4 text-center text-primary">System List</h2>
+              <div class="table-fix-head my-custom-login-scrollbar table-wrapper-scroll-y">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>System Name</th>
+                            <!--<th>Owner Id</th>-->
+                            <th>Owner Name</th>
+                            <!--<th>Created</th>-->
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="systemsTableBody"></tbody>
+                </table>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary mx-auto d-block">
-          Login
-        </button>
-      </form>
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -89,5 +93,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="/js/auth/login.js"></script>
+    <script src="/js/system/system-list.js"></script>
   </body>
 </html>

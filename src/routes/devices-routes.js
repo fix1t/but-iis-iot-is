@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/my-devices', verifyToken, getMyDevices);
 //post
 router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createDeviceInSystem);
-router.post('/create', verifyToken, continueIfUserIsInSystem, createDeviceOutsideSystem);
+router.post('/create', verifyToken, createDeviceOutsideSystem);
 
 export default router;

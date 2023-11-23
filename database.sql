@@ -51,11 +51,13 @@ CREATE TABLE Types (
 CREATE TABLE Devices (
     id INT PRIMARY KEY AUTO_INCREMENT,
     type_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    owner_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
     description TEXT,
     user_alias VARCHAR(255),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (type_id) REFERENCES Types(id) ON DELETE CASCADE
+    FOREIGN KEY (owner_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE SystemDevices (

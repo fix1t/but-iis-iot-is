@@ -64,3 +64,15 @@ export const getMyDevices = async (req, res) => {
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
+
+export const getDeviceById = async (req, res) => {
+	const deviceId = req.params.device_id;
+
+	try {
+		const device = await Device.findById(deviceId);
+		res.status(200).json(device);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}

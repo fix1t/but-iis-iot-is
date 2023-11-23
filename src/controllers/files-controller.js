@@ -48,3 +48,7 @@ export const systemRequests = (req, res) => {
 export const systemDetail = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/system/system-detail.html'));
 }
+
+export const deviceDetail = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/device/device-detail.html'));
+}

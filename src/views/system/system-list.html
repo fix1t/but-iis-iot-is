@@ -77,6 +77,28 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="joinRequestModal" tabindex="-1" role="dialog" aria-labelledby="joinRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="joinRequestModalLabel">Join Request</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="joinRequestForm">
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea class="form-control" id="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

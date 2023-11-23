@@ -20,9 +20,16 @@ fetch('/api/systems/in')
 		});
 	})
 	.catch(error => console.error('Error fetching data:', error));
-
-// Fetch data from the server and print system table
-fetch('/api/systems/notIn')
+	
+	// Add click event listeners to the buttons
+	document.querySelectorAll('button[data-toggle="modal"]').forEach(button => {
+		button.addEventListener('click', function() {
+			// Store the system_id in the modal
+			document.getElementById('joinRequestModal').dataset.systemId = this.dataset.systemId;
+		});
+	});
+	
+	fetch('/api/systems/notIn')
 	.then(response => response.json())
 	.then(userSystems => {
 		const userSystemsTableBody = document.getElementById('systemsTableBody');
@@ -34,17 +41,49 @@ fetch('/api/systems/notIn')
 				<td>${system.owner_name}</td>
 				<td>${system.description}</td>
 				<td>
-					<button class="btn btn-primary btn-sm" onclick="showSystemDetail(${system.id})">
-						<i class="fas fa-info" style="padding: 0.25rem;"></i>
+					<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#joinRequestModal" data-system-id="${system.id}">
+						SEND REQUEST
 					</button>
 				</td>
 			`;
 			row.id = `userSystemRow_${system.id}`;
 			userSystemsTableBody.appendChild(row);
 		});
+	
+		// Add click event listeners to the buttons
+		document.querySelectorAll('button[data-toggle="modal"]').forEach(button => {
+			button.addEventListener('click', function() {
+				// Store the system_id in the modal
+				document.getElementById('joinRequestModal').dataset.systemId = this.dataset.systemId;
+			});
+		});
 	})
 	.catch(error => console.error('Error fetching data:', error));
-
+	
+	// Add event listener to the form
+	document.getElementById('joinRequestForm').addEventListener('submit', function(event) {
+		event.preventDefault();
+	
+		// Get the system_id from the modal
+		const system_id = document.getElementById('joinRequestModal').dataset.systemId;
+		const message = document.getElementById('message').value;
+	
+		fetch(`/api/systems/${system_id}/join-request`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ message })
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log('Success:', data);
+			$('#joinRequestModal').modal('hide');
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
+	});
 
 function deleteSystem(systemId) {
     // Make a DELETE request to delete the system with the specified systemId

@@ -12,7 +12,6 @@ export const createRequest = async (req, res) => {
 	const { message } = req.body;
 
 	// TO-DO Check if System_id exists
-	// TO-DO Check if User doesn't create request for his own System
 
 	try {
 		const systemRequest = new SystemRequest(system_id, user_id, message);

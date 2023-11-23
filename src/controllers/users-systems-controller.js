@@ -5,6 +5,8 @@
  */
 
 import SystemRequest from '../models/system-request-model.js'
+import System from '../models/system-model.js'
+
 
 export const createRequest = async (req, res) => {
     const system_id = req.params.system_id;
@@ -37,7 +39,7 @@ export const getAllSystemUsers = async (req, res) => {
 	const system_id = req.params.system_id;
 
 	try {
-		const result = await SystemRequest.findSystemUsers(system_id);
+		const result = await System.findSystemUsers(system_id);
 		res.json(result);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -49,7 +51,7 @@ export const getAllUsersNotInSystem = async (req, res) => {
 	const system_id = req.params.system_id;
 
 	try {
-		const result = await SystemRequest.findUsersNotInSystem(system_id);
+		const result = await System.findUsersNotInSystem(system_id);
 		res.json(result);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -61,7 +63,30 @@ export const getSystemRequests = async (req, res) => {
 	const system_id = req.params.system_id;
 
 	try {
-		const result = await SystemRequest.getSystemRequestsById(system_id);
+		const result = await SystemRequest.getSystemRequestsBySystemId(system_id);
+		res.json(result);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+};
+
+export const getRequestsToYourSystem = async (req, res) => {
+	const user_id = req.user.id;
+	try {
+		const result = await SystemRequest.getSystemRequestsByOwnerId(user_id);
+		res.json(result);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+};
+
+export const getMyRequests = async (req, res) => {
+	const user_id = req.user.id;
+
+	try {
+		const result = await SystemRequest.getSystemRequestsByUserId(user_id);
 		res.json(result);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -74,7 +99,7 @@ export const addUser = async (req, res) => {
 	const { user_id } = req.body;
 
 	try {
-		await SystemRequest.addUserToSystem(system_id, user_id);
+		await System.addUserToSystem(system_id, user_id);
 		res.status(201).json({ message: 'User added successfully' });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -86,7 +111,7 @@ export const addUserByRequest = async (req, res) => {
 	const { system_id, user_id } = req.body;
 
 	try {
-		await SystemRequest.addUserToSystem(system_id, user_id);
+		await System.addUserToSystem(system_id, user_id);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
@@ -127,15 +152,23 @@ export const rejectRequest = async (req, res) => {
 };
 
 export const leaveSystem = async (req, res) => {
-	const system_id = req.params.system_id;
+	const { system_id } = req.params;
 	const user_id = req.user.id;
 
 	try {
-		const success = await SystemRequest.removeUserFromSystem(system_id, user_id);
-		if (success) {
-			res.status(200).json({ message: 'System left successfully' });
+		const system = await System.findById(system_id);
+
+		if (user_id === system.owner_id) {
+			await System.deleteById(system_id);
+			res.status(200).json({ message: 'System deleted successfully' });
 		} else {
-			res.status(404).json({ error: 'System not found' });
+			const success = await System.removeUserFromSystem(system_id, user_id);
+
+			if (success) {
+				res.status(200).json({ message: 'Left the system successfully' });
+			} else {
+				res.status(404).json({ error: 'System not found' });
+			}
 		}
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -148,9 +181,14 @@ export const removeUser = async (req, res) => {
 	const { user_id } = req.body;
 
 	try {
-		const success = await SystemRequest.removeUserFromSystem(system_id, user_id);
+		const system = await System.findById(system_id);
+		if (user_id === system.owner_id){
+			return res.status(400).json({ error: 'Cannot delete the owner!', showPopup: true });
+		}
+
+		const success = await System.removeUserFromSystem(system_id, user_id);
 		if (success) {
-			res.status(200).json({ message: 'User removed from System successfully' });
+			res.status(200).json({ message: 'User removed from the system successfully' });
 		} else {
 			res.status(404).json({ error: 'System not found' });
 		}

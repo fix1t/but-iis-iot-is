@@ -20,7 +20,7 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 app.use('/', fileRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/systems', systemRoutes);
-app.use('/api/systems', userSystemRoutes);
+app.use('/api/user/system', userSystemRoutes);
 app.use('/api/devices', devicesRoutes);
 
 // Close the connection when the application is shutting down

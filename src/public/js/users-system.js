@@ -8,7 +8,7 @@ const handleSubmit = async (event) => {
 	const message = document.getElementById('userMessage').value;
 
 	try {
-		const response = await fetch(`/api/systems/${systemId}/join-request`, {
+		const response = await fetch(`/api/user/system/${systemId}/join-request`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ const handleSubmit = async (event) => {
 };
 
 // Fetch data from the server and print users in system
-fetch('/api/systems/5/users')
+fetch('/api/user/system/5/users')
 	.then(response => response.json())
 	.then(data => {
 		const userSystemTableBody = document.getElementById('userSystemTableBody');
@@ -56,7 +56,7 @@ fetch('/api/systems/5/users')
 	.catch(error => console.error('Error fetching data:', error));
 
 // Fetch data from the server and print users NOT in system
-fetch('/api/systems/5/users/not')
+fetch('/api/user/system/5/users/not')
 	.then(response => response.json())
 	.then(data => {
 		const userNotSystemTableBody = document.getElementById('userNotSystemTableBody');
@@ -78,43 +78,10 @@ fetch('/api/systems/5/users/not')
 	})
 	.catch(error => console.error('Error fetching data:', error));
 
-// Fetch data from the server and print all system requests
-fetch('/api/systems/5/requests')
-	.then(response => response.json())
-	.then(data => {
-		const requestTableBody = document.getElementById('requestTableBody');
-		data.forEach(request => {
-			const row = document.createElement('tr');
-			row.innerHTML = `
-						<td>${new Date(request.created).toLocaleString()}</td>
-						<td>${request.message}</td>
-                        <td>${request.username}</td>
-                        <td>${request.email}</td>
-						<td>${new Date(request.birth).toLocaleDateString()}</td>
-                        <td>${request.bio}</td>
-                        <td>${request.system_name}</td>
-                        <td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
-                        <td>
-                            <button class="btn btn-success btn-sm" onclick="acceptRequest(${request.id})">
-                                <i class="fas fa-check"></i>
-                            </button>
-                        </td>                        
-						<td>
-							<button class="btn btn-danger btn-sm" onclick="rejectRequest(${request.id})">
-								<i class="fas fa-trash"></i>
-							</button>
-						</td>
-                    `;
-			row.id = `userRow_${request.id}`;
-			requestTableBody.appendChild(row);
-		});
-	})
-	.catch(error => console.error('Error fetching data:', error));
-
 function addUser(userId) {
 	let systemId = 5;
 	// Make a POST request to add User to System
-	fetch(`/api/systems/${systemId}/add-user`, {
+	fetch(`/api/user/system/${systemId}/add-user`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -134,45 +101,9 @@ function addUser(userId) {
 		.catch(error => console.error('Error adding user:', error));
 }
 
-function acceptRequest(requestId) {
-	// Make a PUT request to accept user request to join System
-	fetch(`/api/systems/join-request/${requestId}`, {
-		method: 'PUT',
-	})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
-
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
-			if (deletedRow) {
-				deletedRow.remove();
-			}
-		})
-		.catch(error => console.error('Error accepting request:', error));
-}
-
-function rejectRequest(requestId) {
-	// Make a DELETE request to reject user request to join System
-	fetch(`/api/systems/join-request/${requestId}`, {
-		method: 'DELETE',
-	})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
-
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
-			if (deletedRow) {
-				deletedRow.remove();
-			}
-		})
-		.catch(error => console.error('Error rejecting request:', error));
-}
-
 function leaveSystem(systemId) {
 	// Make a DELETE request to remove logged user from the system with the specified systemId
-	fetch(`/api/systems/${systemId}/leave`, {
+	fetch(`/api/user/system/${systemId}/leave`, {
 		method: 'DELETE',
 	})
 		.then(response => {
@@ -186,7 +117,7 @@ function leaveSystem(systemId) {
 function removeUser(userId) {
 	// Make a DELETE request to remove user from the system with the specified systemId
 	let systemId = 5;
-	fetch(`/api/systems/${systemId}/remove-user`, {
+	fetch(`/api/user/system/${systemId}/remove-user`, {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json',
@@ -195,7 +126,14 @@ function removeUser(userId) {
 	})
 		.then(response => {
 			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
+				return response.json().then(data => {
+					if (data.showPopup) {
+						// Display a popup to the user
+						alert('Cannot delete the owner!');
+					} else {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+				});
 			}
 
 			const deletedRow = document.getElementById(`userRow_${userId}`);

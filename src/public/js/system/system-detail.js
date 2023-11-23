@@ -1,4 +1,5 @@
 let systemId;
+let ownerId;
 
 document.addEventListener('DOMContentLoaded', function () {
 	loadSystemData();
@@ -17,12 +18,13 @@ async function loadSystemData() {
 		systemId = systemData.id;
 		document.getElementById('systemName').value = systemData.name;
 		document.getElementById('systemDescription').value = systemData.description;
+		ownerId = systemData.owner_id;
 		document.getElementById('systemOwner').value = systemData.owner_id;
 
 		const createdDate = new Date(systemData.created);
 		const formattedDate = createdDate.toLocaleDateString();
 		document.getElementById('systemCreated').value = formattedDate;
-		
+
 		document.getElementById('systemId').value = systemData.id;
 
 		// wait for systemId to be set
@@ -34,58 +36,153 @@ async function loadSystemData() {
 	}
 }
 
-function loadSystemUsers() {
-	// Fetch data from the server and print users in system
-	fetch(`/api/user/system/${systemId}/users`)
-		.then(response => response.json())
-		.then(data => {
-			const userSystemTableBody = document.getElementById('userSystemTableBody');
+async function loadSystemUsers() {
+    try {
+		const userSystemList = document.getElementById('systemUsersList');
+        const response = await fetch(`/api/user/system/${systemId}/users`);
+        if (!response.ok) {
+            console.error('Error fetching data:', response.statusText);
+            return;
+        }
 
-			data.forEach(user => {
-				const row = document.createElement('tr');
-				row.innerHTML = `
-                        <td>${user.username}</td>
-                        <td>${user.email}</td>
-                        <td>${user.bio}</td>
-                        <td>${new Date(user.created).toLocaleDateString()}</td>
-						<td>
-							<button class="btn btn-danger btn-sm" onclick="removeUser(${user.id})">
-								<i class="fas fa-user-slash"></i>
-							</button>
-						</td>    
-                    `;
-				row.id = `userRow_${user.id}`;
-				userSystemTableBody.appendChild(row);
-			});
-		})
-		.catch(error => console.error('Error fetching data:', error));
+        const data = await response.json();
+
+		const user = await fetch(`/api/users/me`);
+		const userResponse = await user.json();
+		console.log("User:", userResponse);
+
+		if (userResponse.id !== ownerId) {
+			// show the request list only for owner or admin
+			userSystemList.classList.add('d-none');
+			return;
+		}
+		else {
+			userSystemList.classList.add('mt-4', 'container');
+		}
+
+        // Create the table structure
+		const heading = document.createElement('h2');
+		heading.textContent = 'System Users List';
+
+        const table = document.createElement('table');
+        table.classList.add('table');
+        const thead = document.createElement('thead');
+        thead.classList.add('thead-light');
+        thead.innerHTML = `
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Bio</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        `;
+
+        const tbody = document.createElement('tbody');
+
+        // Fill the table with user data
+        data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.bio}</td>
+                <td>${new Date(user.created).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="removeUser(${user.id})">
+                        <i class="fas fa-user-slash"></i>
+                    </button>
+                </td>    
+            `;
+            row.id = `userRow_${user.id}`;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+
+        // Clear existing content in userSystemTableBody and append the table
+        userSystemList.innerHTML = '';
+		userSystemList.appendChild(heading);
+        userSystemList.appendChild(table);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
-function loadNotSystemUsers() {
-	// Fetch data from the server and print users NOT in system
-	fetch(`/api/user/system/${systemId}/users/not`)
-		.then(response => response.json())
-		.then(data => {
-			const userNotSystemTableBody = document.getElementById('userNotSystemTableBody');
+async function loadNotSystemUsers() {
+    try {
+		const userNotSystemList = document.getElementById('userNotSystemList');
+        const response = await fetch(`/api/user/system/${systemId}/users/not`);
+        if (!response.ok) {
+            console.error('Error fetching data:', response.statusText);
+            return;
+        }
 
+        const data = await response.json();
 
-			data.forEach(user => {
-				const row = document.createElement('tr');
-				row.innerHTML = `
-                        <td>${user.username}</td>
-                        <td>${user.email}</td>
-                        <td>${user.bio}</td>
-						<td>
-							<button class="btn btn-success btn-sm" onclick="addUser(${user.id})">
-								<i class="fas fa-plus"></i>
-							</button>
-						</td>    
-                    `;
-				row.id = `userRow_${user.id}`;
-				userNotSystemTableBody.appendChild(row);
-			});
-		})
-		.catch(error => console.error('Error fetching data:', error));
+		const user = await fetch(`/api/users/me`);
+		const userResponse = await user.json();
+		console.log("User:", userResponse);
+
+		if (userResponse.id !== ownerId) {
+			// show the request list only for owner or admin
+			userNotSystemList.classList.add('d-none');
+			return;
+		}
+		else {
+			userNotSystemList.classList.add('mt-4', 'container', );
+		}
+
+        // Create the table structure
+		const heading = document.createElement('h2');
+		heading.textContent = 'Users NOT in System List';
+		const box = document.createElement('div');
+		box.classList.add('table-wrapper-scroll-y', 'my-custom-scrollbar', 'table-fix-head');
+
+        const table = document.createElement('table');
+        table.classList.add('table');
+        const thead = document.createElement('thead');
+        thead.classList.add('thead-light');
+        thead.innerHTML = `
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Bio</th>
+                <th></th>
+            </tr>
+        `;
+
+        const tbody = document.createElement('tbody');
+
+        // Fill the table with user data
+        data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.bio}</td>
+                <td>
+                    <button class="btn btn-success btn-sm" onclick="addUser(${user.id})">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>    
+            `;
+            row.id = `userRow_${user.id}`;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+		box.appendChild(table);
+
+        // Clear existing content in userNotSystemTableBody and append the table
+        userNotSystemList.innerHTML = '';
+        userNotSystemList.appendChild(heading);
+        userNotSystemList.appendChild(box);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
 function addUser(userId) {
@@ -165,11 +262,21 @@ async function loadSystemRequests() {
 			requestList.classList.add('d-none');
 			return;
 		}
+
+		const requests = await response.json();
+
+		const user = await fetch(`/api/users/me`);
+		const userResponse = await user.json();
+		console.log("User:", userResponse);
+
+		if (userResponse.id !== ownerId) {
+			// show the request list only for owner or admin
+			requestList.classList.add('d-none');
+			return;
+		}
 		else {
 			requestList.classList.add('mt-4', 'container');
 		}
-
-		const requests = await response.json();
 
 		// Create the table structure
 		const heading = document.createElement('h2');

@@ -14,6 +14,18 @@ body {
     overflow: auto;
 }
 
+.my-custom-scrollbar-user-list {
+    position: relative;
+    height: 350px;
+    overflow: auto;
+}
+
+.my-custom-scrollbar-all-systems {
+    position: relative;
+    height: 700px;
+    overflow: auto;
+}
+
 .my-custom-login-scrollbar {
     position: relative;
     height: 600px;

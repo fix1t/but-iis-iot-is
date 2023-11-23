@@ -37,6 +37,17 @@ class SystemRequest {
 			throw error;
 		}
 	}
+	
+	static async getUsersInSystemRequests(system_id, user_id) {
+        let sql = `SELECT * FROM SystemUserRequests WHERE system_id = ? AND user_id = ? AND status = 'pending'`;
+        try {
+            const [rows] = await db.promise().query(sql, [system_id, user_id]);
+            return rows;
+        } catch (error) {
+            console.error('Error executing query:', error.stack);
+            throw error;
+        }
+    }
 
 	static async findUsersNotInSystem(id) {
 		let sql = `SELECT id, username, email, bio

@@ -12,7 +12,6 @@ async function loadSystemData() {
 		if (!response.ok) {
 			throw new Error('Network response was not ok');
 		}
-
 		const systemData = await response.json();
 
 		systemId = systemData.id;
@@ -29,6 +28,7 @@ async function loadSystemData() {
 		// wait for systemId to be set
 		loadSystemUsers();
 		loadNotSystemUsers();
+		loadSystemRequests()
 	} catch (error) {
 		console.error('Failed to load system data:', error);
 	}
@@ -151,4 +151,118 @@ function removeUser(userId) {
 			}
 		})
 		.catch(error => console.error('Error removing user:', error));
+}
+
+
+// REQUESTS HANDLE
+async function loadSystemRequests() {
+	try {
+		const requestList = document.getElementById('requestList'); // Get the requestList element
+		const response = await fetch(`/api/user/system/${systemId}/requests`);
+
+		if (!response.ok) {
+			//hide the request list element
+			requestList.classList.add('d-none');
+			return;
+		}
+		else {
+			requestList.classList.add('mt-4', 'container');
+		}
+
+		const requests = await response.json();
+
+		// Create the table structure
+		const heading = document.createElement('h2');
+		heading.textContent = 'Request List';
+
+		const table = document.createElement('table');
+		table.classList.add('table', 'table-striped');
+		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
+		thead.innerHTML = `
+		<tr>
+			<th>Created</th>
+			<th>Message</th>
+			<th>Username</th>
+			<th>Email</th>
+			<th>Status</th>
+			<th></th>
+			<th></th>
+		</tr>
+	  `;
+
+		const tbody = document.createElement('tbody');
+		tbody.id = 'systemRequestsList';
+
+		// Fill the table with requests
+		requests.forEach(request => {
+			const row = document.createElement('tr');
+			row.innerHTML += `
+					<td>${new Date(request.created).toLocaleString()}</td>
+					<td>${request.message}</td>
+					<td>${request.username}</td>
+					<td>${request.email}</td>
+					<td>${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</td>
+					<td>
+						<button class="btn btn-success btn-sm" onclick="acceptRequest(${request.id})">
+							<i class="fas fa-check"></i>
+						</button>
+					</td>                        
+					<td>
+						<button class="btn btn-danger btn-sm" onclick="rejectRequest(${request.id})">
+							<i class="fas fa-trash"></i>
+						</button>
+					</td>
+		`;
+
+			row.id = `requestRow_${request.id}`;
+			tbody.appendChild(row);
+		});
+
+		table.appendChild(thead);
+		table.appendChild(tbody);
+
+		// Clear existing content in requestList and append the table
+		requestList.innerHTML = '';
+		requestList.appendChild(heading);
+		requestList.appendChild(table);
+	} catch (error) {
+		console.error('Failed to load requests:', error);
+	}
+}
+
+function acceptRequest(requestId) {
+	// Make a PUT request to accept user request to join System
+	fetch(`/api/user/system/join-request/${requestId}`, {
+		method: 'PUT',
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+		})
+		.catch(error => console.error('Error accepting request:', error));
+}
+
+function rejectRequest(requestId) {
+	// Make a DELETE request to reject user request to join System
+	fetch(`/api/user/system/join-request/${requestId}`, {
+		method: 'DELETE',
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+		})
+		.catch(error => console.error('Error rejecting request:', error));
 }

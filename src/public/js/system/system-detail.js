@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	loadDevices();
 });
 
+document.getElementById('addDeviceButton').addEventListener('click', function () {
+	// go to the add device page for this system
+	window.location.href = `/device/create/${systemId}`;
+});
+
 async function loadSystemData() {
 	try {
 		const response = await fetch(`/api/systems/${systemId}`);

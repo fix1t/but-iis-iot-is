@@ -10,50 +10,54 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/css/style.css" />
-    <title>IoT - System Management</title>
+    <title>IoT - Create Device</title>
   </head>
 
   <body>
     <div class="container border border-secondary rounded-sm p-3">
-      <h3 class="text-center text-primary">System Information</h3>
+      <h3 class="text-center text-primary">Create Your Device!</h3>
       <div class="form-group">
-        <label for="systemName">System Name</label>
+        <label for="deviceName">Device Name</label>
         <input
           type="text"
           class="form-control"
-          id="systemName"
-          name="systemName"
-          readonly
+          id="deviceName"
+          name="deviceName"
+          required
         />
       </div>
       <div class="form-group">
-        <label for="systemDescription">System Description</label>
+        <label for="userAlias">Device Alias</label>
+        <input
+          type="text"
+          class="form-control"
+          id="userAlias"
+          name="userAlias"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="deviceDescription">Device Description</label>
         <textarea
           class="form-control"
-          id="systemDescription"
-          name="systemDescription"
+          id="deviceDescription"
+          name="deviceDescription"
           rows="3"
-          readonly
         ></textarea>
       </div>
+
       <div class="form-group">
-        <label for="systemOwner">System Owner</label>
-        <input type="text" class="form-control" id="systemOwner" name="systemOwner" readonly />
-      </div>
-      <div class="form-group">
-          <label for="systemCreated">System Created</label>
-          <input type="text" class="form-control" id="systemCreated" name="systemCreated" readonly />
-      </div>
-      <div class="form-group">
-          <label for="systemId">System ID</label>
-          <input type="text" class="form-control" id="systemId" name="systemId" readonly />
+        <label for="deviceType">Device Type</label>
+        <select
+          class="form-control"
+          id="deviceType"
+          name="deviceType"
+          required
+        ></select>
       </div>
 
-      <button class="btn btn-primary" id="addDeviceButton">Add Device</button>
-      <button class="btn btn-primary" id="editSystemButton">[TODO] Edit System</button>
+      <button class="btn btn-primary" id="createDeviceButton">Create</button>
     </div>
-
-    <div id="deviceList"></div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -71,6 +75,6 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/system/system-detail.js"></script>
+    <script src="/js/device/device-create.js"></script>
   </body>
 </html>

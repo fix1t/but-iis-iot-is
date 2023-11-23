@@ -31,3 +31,21 @@ const handleSubmit = async (event) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 };
+
+fetch('/api/systems/get')
+	.then(response => response.json())
+	.then(userSystems => {
+		const userSystemsTableBody = document.getElementById('systemsTableBody');
+		userSystems.forEach(system => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
+				<td>${system.id}</td>
+				<td>${system.name}</td>
+				<td>${system.owner_name}</td>
+				<td>${system.description}</td>
+			`;
+			row.id = `userSystemRow_${system.id}`;
+			userSystemsTableBody.appendChild(row);
+		});
+	})
+	.catch(error => console.error('Error fetching data:', error));

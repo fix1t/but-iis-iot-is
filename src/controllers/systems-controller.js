@@ -83,6 +83,33 @@ export const getCurrentUserSystems = async (req, res) => {
 	}
 };
 
+export const getSystemsUserIsNotIn = async (req, res) => {
+	try {
+		const userId = req.user.id;
+		const systems = await Systems.getSystemsUserIsNotIn(userId);
+
+		// Fetch owner details for all systems in parallel
+		const systemsWithOwners = await Promise.all(systems.map(async (system) => {
+			// Fetch the owner's name from the User model
+			const owner = await User.findById(system.owner_id);
+
+			return {
+				id: system.id,
+				owner_id: system.owner_id,
+				owner_name: owner.username, // Add the owner's name to the data
+				name: system.name,
+				description: system.description,
+				created: system.created,
+			};
+		}));
+
+		res.json(systemsWithOwners);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+};
+
 export const createSystem = async (req, res) => {
 	try {
 		const userId = req.user.id; // Get user ID from req.user

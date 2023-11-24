@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 	loadTypes();
+	loadFreeDevices();
 });
 
 
@@ -66,4 +67,90 @@ async function loadTypes() {
 	} catch (error) {
 		console.error('Failed to load types:', error);
 	}
+}
+
+async function loadFreeDevices() {
+    try {
+		const freeDeviceList = document.getElementById('freeDevicesList');
+        const response = await fetch(`/api/devices/all-free`);
+        if (!response.ok) {
+			freeDeviceList.classList.add('d-none');
+			return;
+        }
+
+        const data = await response.json();
+
+        // Create the table structure
+		const heading = document.createElement('h2');
+		heading.textContent = 'Add Device';
+		const box = document.createElement('div');
+		box.classList.add('table-wrapper-scroll-y', 'my-custom-scrollbar', 'table-fix-head');
+
+        const table = document.createElement('table');
+        table.classList.add('table');
+        const thead = document.createElement('thead');
+        thead.classList.add('thead-light');
+        thead.innerHTML = `
+            <tr>
+                <th>User Alias</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        `;
+
+        const tbody = document.createElement('tbody');
+
+        // Fill the table with user data
+        data.forEach(device => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${device.user_alias}</td>
+                <td>${device.name}</td>
+                <td>${device.description}</td>
+                <td>
+                    <button class="btn btn-success btn-sm" onclick="addDevice(${device.id})">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>    
+            `;
+            row.id = `deviceRow_${device.id}`;
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+		box.appendChild(table);
+
+        // Clear existing content in freeDeviceList and append the table
+        freeDeviceList.innerHTML = '';
+        freeDeviceList.appendChild(heading);
+        freeDeviceList.appendChild(box);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+function addDevice(deviceId) {
+	let systemId = window.location.pathname.split('/').pop();
+	// Make a POST request to add User to System
+	fetch(`/api/devices/${systemId}/add-device`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ device_id: deviceId }),
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const deletedRow = document.getElementById(`deviceRow_${deviceId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+			window.location.reload();
+		})
+		.catch(error => console.error('Error adding user:', error));
 }

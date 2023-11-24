@@ -6,7 +6,7 @@ function fetchDataAndPrintTableRows(url, tableBodyId, isMyRequests) {
 
             if (data.length === 0) {
                 const noRequestsMessage = document.createElement('tr');
-                noRequestsMessage.innerHTML = '<td colspan="5">No requests available</td>';
+                noRequestsMessage.innerHTML = `<td colspan="8">No requests available</td>`;
                 tableBody.appendChild(noRequestsMessage);
                 return;
             }

@@ -34,7 +34,7 @@ async function loadSystemData() {
 		document.getElementById('systemCreated').value = formattedDate;
 
 		document.getElementById('systemId').value = systemData.id;
-		
+
 		// Get logged User
 		const user = await fetch(`/api/users/me`);
 		const userResponse = await user.json();
@@ -51,7 +51,7 @@ async function loadSystemData() {
 }
 
 async function loadSystemEditButton() {
-    try {
+	try {
 		const editSystemButton = document.getElementById('editSystem');
 
 		if (userId !== ownerId) {
@@ -63,34 +63,34 @@ async function loadSystemEditButton() {
 			editSystemButton.classList.add('d-inline-block');
 		}
 
-        // Create button
+		// Create button
 		const button = document.createElement('button');
 		button.textContent = 'Edit System';
-        button.classList.add('btn', 'btn-warning');
+		button.classList.add('btn', 'btn-warning');
 		button.id = 'editSystemButton';
 
-        editSystemButton.innerHTML = '';
-        editSystemButton.appendChild(button);
+		editSystemButton.innerHTML = '';
+		editSystemButton.appendChild(button);
 
 		button.addEventListener('click', function () {
-            // go to the edit system page
-            window.location.href = `/systems/edit/${systemId}`;
-        });
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+			// go to the edit system page
+			window.location.href = `/systems/edit/${systemId}`;
+		});
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	}
 }
 
 async function loadSystemUsers() {
-    try {
+	try {
 		const userSystemList = document.getElementById('systemUsersList');
-        const response = await fetch(`/api/user/system/${systemId}/users`);
-        if (!response.ok) {
-            console.error('Error fetching data:', response.statusText);
-            return;
-        }
+		const response = await fetch(`/api/user/system/${systemId}/users`);
+		if (!response.ok) {
+			console.error('Error fetching data:', response.statusText);
+			return;
+		}
 
-        const data = await response.json();
+		const data = await response.json();
 
 		if (userId !== ownerId) {
 			// show the request list only for owner or admin
@@ -101,15 +101,15 @@ async function loadSystemUsers() {
 			userSystemList.classList.add('mt-4', 'container');
 		}
 
-        // Create the table structure
+		// Create the table structure
 		const heading = document.createElement('h2');
 		heading.textContent = 'System Users List';
 
-        const table = document.createElement('table');
-        table.classList.add('table');
-        const thead = document.createElement('thead');
-        thead.classList.add('thead-light');
-        thead.innerHTML = `
+		const table = document.createElement('table');
+		table.classList.add('table');
+		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
+		thead.innerHTML = `
             <tr>
                 <th>Username</th>
                 <th>Email</th>
@@ -119,12 +119,12 @@ async function loadSystemUsers() {
             </tr>
         `;
 
-        const tbody = document.createElement('tbody');
+		const tbody = document.createElement('tbody');
 
-        // Fill the table with user data
-        data.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+		// Fill the table with user data
+		data.forEach(user => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
                 <td>${user.username}</td>
                 <td>${user.email}</td>
                 <td>${user.bio}</td>
@@ -135,32 +135,32 @@ async function loadSystemUsers() {
                     </button>
                 </td>    
             `;
-            row.id = `userRow_${user.id}`;
-            tbody.appendChild(row);
-        });
+			row.id = `userRow_${user.id}`;
+			tbody.appendChild(row);
+		});
 
-        table.appendChild(thead);
-        table.appendChild(tbody);
+		table.appendChild(thead);
+		table.appendChild(tbody);
 
-        // Clear existing content in userSystemTableBody and append the table
-        userSystemList.innerHTML = '';
+		// Clear existing content in userSystemTableBody and append the table
+		userSystemList.innerHTML = '';
 		userSystemList.appendChild(heading);
-        userSystemList.appendChild(table);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+		userSystemList.appendChild(table);
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	}
 }
 
 async function loadNotSystemUsers() {
-    try {
+	try {
 		const userNotSystemList = document.getElementById('userNotSystemList');
-        const response = await fetch(`/api/user/system/${systemId}/users/not`);
-        if (!response.ok) {
-            console.error('Error fetching data:', response.statusText);
-            return;
-        }
+		const response = await fetch(`/api/user/system/${systemId}/users/not`);
+		if (!response.ok) {
+			console.error('Error fetching data:', response.statusText);
+			return;
+		}
 
-        const data = await response.json();
+		const data = await response.json();
 
 		if (userId !== ownerId) {
 			// show the request list only for owner or admin
@@ -168,20 +168,20 @@ async function loadNotSystemUsers() {
 			return;
 		}
 		else {
-			userNotSystemList.classList.add('mt-4', 'container', );
+			userNotSystemList.classList.add('mt-4', 'container',);
 		}
 
-        // Create the table structure
+		// Create the table structure
 		const heading = document.createElement('h2');
 		heading.textContent = 'Users NOT in System List';
 		const box = document.createElement('div');
 		box.classList.add('table-wrapper-scroll-y', 'my-custom-scrollbar', 'table-fix-head');
 
-        const table = document.createElement('table');
-        table.classList.add('table');
-        const thead = document.createElement('thead');
-        thead.classList.add('thead-light');
-        thead.innerHTML = `
+		const table = document.createElement('table');
+		table.classList.add('table');
+		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
+		thead.innerHTML = `
             <tr>
                 <th>Username</th>
                 <th>Email</th>
@@ -190,12 +190,12 @@ async function loadNotSystemUsers() {
             </tr>
         `;
 
-        const tbody = document.createElement('tbody');
+		const tbody = document.createElement('tbody');
 
-        // Fill the table with user data
-        data.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+		// Fill the table with user data
+		data.forEach(user => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
                 <td>${user.username}</td>
                 <td>${user.email}</td>
                 <td>${user.bio}</td>
@@ -205,21 +205,21 @@ async function loadNotSystemUsers() {
                     </button>
                 </td>    
             `;
-            row.id = `userRow_${user.id}`;
-            tbody.appendChild(row);
-        });
+			row.id = `userRow_${user.id}`;
+			tbody.appendChild(row);
+		});
 
-        table.appendChild(thead);
-        table.appendChild(tbody);
+		table.appendChild(thead);
+		table.appendChild(tbody);
 		box.appendChild(table);
 
-        // Clear existing content in userNotSystemTableBody and append the table
-        userNotSystemList.innerHTML = '';
-        userNotSystemList.appendChild(heading);
-        userNotSystemList.appendChild(box);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+		// Clear existing content in userNotSystemTableBody and append the table
+		userNotSystemList.innerHTML = '';
+		userNotSystemList.appendChild(heading);
+		userNotSystemList.appendChild(box);
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	}
 }
 
 function addUser(userId) {
@@ -305,7 +305,7 @@ async function loadSystemRequests() {
 
 		const requests = await response.json();
 
-		if (userId!== ownerId) {
+		if (userId !== ownerId) {
 			// show the request list only for owner or admin
 			requestList.classList.add('d-none');
 			return;
@@ -337,10 +337,15 @@ async function loadSystemRequests() {
 		const tbody = document.createElement('tbody');
 		tbody.id = 'systemRequestsList';
 
-		// Fill the table with requests
-		requests.forEach(request => {
-			const row = document.createElement('tr');
-			row.innerHTML += `
+		if (requests.length === 0) {
+			const noRequestsMessage = document.createElement('tr');
+			noRequestsMessage.innerHTML = '<td colspan="8">No requests available</td>';
+			tbody.appendChild(noRequestsMessage);
+		} else {
+			// Fill the table with requests
+			requests.forEach(request => {
+				const row = document.createElement('tr');
+				row.innerHTML += `
 					<td>${new Date(request.created).toLocaleString()}</td>
 					<td>${request.message}</td>
 					<td>${request.username}</td>
@@ -358,9 +363,10 @@ async function loadSystemRequests() {
 					</td>
 		`;
 
-			row.id = `requestRow_${request.id}`;
-			tbody.appendChild(row);
-		});
+				row.id = `requestRow_${request.id}`;
+				tbody.appendChild(row);
+			});
+		}
 
 		table.appendChild(thead);
 		table.appendChild(tbody);
@@ -410,7 +416,7 @@ function rejectRequest(requestId) {
 		})
 		.catch(error => console.error('Error rejecting request:', error));
 }
-  
+
 async function loadDevices() {
 	try {
 		const deviceList = document.getElementById('deviceList'); // Get the deviceList element
@@ -424,9 +430,14 @@ async function loadDevices() {
 
 		const devices = await response.json();
 
+		deviceList.classList.add('mt-4', 'container');
+
+		const heading = document.createElement('h2');
+		heading.textContent = 'System Device List';
+
 		// Create the table structure
 		const table = document.createElement('table');
-		table.classList.add('table', 'table-bordered', 'container', 'p-3', 'mt-3');
+		table.classList.add('table', 'table-bordered', 'p-3', 'mt-3');
 		const thead = document.createElement('thead');
 		thead.innerHTML = `
 		<tr>
@@ -468,6 +479,7 @@ async function loadDevices() {
 
 		// Clear existing content in deviceList and append the table
 		deviceList.innerHTML = '';
+		deviceList.appendChild(heading);
 		deviceList.appendChild(table);
 	} catch (error) {
 		console.error('Failed to load devices:', error);

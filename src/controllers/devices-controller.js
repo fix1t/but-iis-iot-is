@@ -83,15 +83,3 @@ export const getAllTypes = async (req, res) => {
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
-
-export const getAllParametersAndValuesByDeviceId = async (req, res) => {
-	const deviceId = req.params.device_id;
-
-	try {
-		const parameters = await Parameter.findLatestValuesByDeviceId(deviceId);
-		res.status(200).json(parameters);
-	} catch (error) {
-		console.error('Error executing query:', error.stack);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
-}

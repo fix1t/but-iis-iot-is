@@ -9,22 +9,30 @@ import System from '../models/system-model.js'
 
 
 export const createRequest = async (req, res) => {
-	const system_id = req.params.system_id;
-	const user_id = req.user.id;
-	const { message } = req.body;
+    const system_id = req.params.system_id;
+    const user_id = req.user.id;
+    const { message } = req.body;
 
-	// TO-DO Check if System_id exists
-	// TO-DO Check if User doesn't create request for his own System
+    // TO-DO Check if System_id exists
 
-	try {
-		const systemRequest = new SystemRequest(system_id, user_id, message);
+    try {
+        // Check if a request already exists
+		
+		// the createRequest gets called only on Users, that are not in the System, so we are checking only for pending requests,
+		// if they were rejected, then they can send new one and if they are in the method doesnt get callled at all
+        const existingRequest = await SystemRequest.getUsersInSystemRequests(system_id, user_id);
+        if (existingRequest.length > 0) { // array is not empty
+            return res.status(409).json({ message: 'Request already exists' });
+        }
 
-		await systemRequest.save();
-		res.status(201).json({ message: 'System Request created successfully' });
-	} catch (error) {
-		console.error('Error executing query:', error.stack);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
+        const systemRequest = new SystemRequest(system_id, user_id, message);
+
+        await systemRequest.save();
+        res.status(201).json({ message: 'System Request created successfully' });
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error Here' });
+    }
 };
 
 export const getAllSystemUsers = async (req, res) => {

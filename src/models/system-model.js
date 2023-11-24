@@ -93,6 +93,22 @@ class Systems {
 		}
 	}
 
+	static async getSystemsUserIsNotIn(user_id) {
+		let sql = `
+			SELECT Systems.* 
+			FROM Systems 
+			LEFT JOIN SystemUsers ON Systems.id = SystemUsers.system_id AND SystemUsers.user_id = ?
+			WHERE SystemUsers.user_id IS NULL
+		`;
+		try {
+			const [rows] = await db.promise().query(sql, [user_id]);
+			return rows.map(Systems.rowToSystems);
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static async findById(id) {
 		let sql = `SELECT * FROM Systems WHERE id = ?`;
 		try {

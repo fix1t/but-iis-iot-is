@@ -1,6 +1,7 @@
 import User from '../models/user-model.js';
 import Systems from '../models/system-model.js';
 import Devices from '../models/device-model.js';
+import SystemRequest from '../models/system-request-model.js';
 
 
 export const getAllSystems = async (req, res) => {
@@ -81,6 +82,37 @@ export const getCurrentUserSystems = async (req, res) => {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
+};
+
+export const getSystemsUserIsNotIn = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const systems = await Systems.getSystemsUserIsNotIn(userId);
+
+        // Fetch owner details and check for pending requests for all systems in parallel
+        const systemsWithOwnersAndRequests = await Promise.all(systems.map(async (system) => {
+            // Fetch the owner's name from the User model
+            const owner = await User.findById(system.owner_id);
+
+            // Check if a pending request exists
+            const pendingRequest = await SystemRequest.getUsersInSystemRequests(system.id, userId);
+
+            return {
+                id: system.id,
+                owner_id: system.owner_id,
+                owner_name: owner.username, // Add the owner's name to the data
+                name: system.name,
+                description: system.description,
+                created: system.created,
+                requestSent: pendingRequest.length > 0, // Add whether a pending request exists
+            };
+        }));
+
+        res.json(systemsWithOwnersAndRequests);
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 export const createSystem = async (req, res) => {

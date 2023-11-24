@@ -46,7 +46,6 @@ export const createDeviceOutsideSystem = async (req, res) => {
 	if (!(await Type.findById(type_id))) {
 		return res.status(400).json({ error: 'Invalid type_id' });
 	}
-	console.log("outside", user.id, type_id, name, description, userAlias);
 	const device = new Device(user.id, type_id, name, description, userAlias);
 
 	try {

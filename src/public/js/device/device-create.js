@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let url = '/api/devices/create';
     let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
-	console.log(url);
 
     if (systemId !== 'create') {
         url += `/${systemId}`;

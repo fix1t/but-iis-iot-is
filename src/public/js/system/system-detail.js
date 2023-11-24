@@ -1,5 +1,6 @@
 let systemId;
 let ownerId;
+let userId;
 
 document.addEventListener('DOMContentLoaded', function () {
 	systemId = window.location.pathname.split('/').pop();
@@ -33,14 +34,52 @@ async function loadSystemData() {
 		document.getElementById('systemCreated').value = formattedDate;
 
 		document.getElementById('systemId').value = systemData.id;
+		
+		// Get logged User
+		const user = await fetch(`/api/users/me`);
+		const userResponse = await user.json();
+		console.log("User:", userResponse);
+		userId = userResponse.id;
 
 		// wait for systemId to be set
+		loadSystemEditButton()
 		loadSystemUsers();
 		loadNotSystemUsers();
 		loadSystemRequests()
 	} catch (error) {
 		console.error('Failed to load system data:', error);
 	}
+}
+
+async function loadSystemEditButton() {
+    try {
+		const editSystemButton = document.getElementById('editSystem');
+
+		if (userId !== ownerId) {
+			// show the edit button only for owner or admin
+			editSystemButton.classList.add('d-none');
+			return;
+		}
+		else {
+			editSystemButton.classList.add('d-inline-block');
+		}
+
+        // Create button
+		const button = document.createElement('button');
+		button.textContent = 'Edit System';
+        button.classList.add('btn', 'btn-warning');
+		button.id = 'editSystemButton';
+
+        editSystemButton.innerHTML = '';
+        editSystemButton.appendChild(button);
+
+		button.addEventListener('click', function () {
+            // go to the edit system page
+            window.location.href = `/systems/edit/${systemId}`;
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
 async function loadSystemUsers() {
@@ -54,11 +93,7 @@ async function loadSystemUsers() {
 
         const data = await response.json();
 
-		const user = await fetch(`/api/users/me`);
-		const userResponse = await user.json();
-		console.log("User:", userResponse);
-
-		if (userResponse.id !== ownerId) {
+		if (userId !== ownerId) {
 			// show the request list only for owner or admin
 			userSystemList.classList.add('d-none');
 			return;
@@ -128,11 +163,7 @@ async function loadNotSystemUsers() {
 
         const data = await response.json();
 
-		const user = await fetch(`/api/users/me`);
-		const userResponse = await user.json();
-		console.log("User:", userResponse);
-
-		if (userResponse.id !== ownerId) {
+		if (userId !== ownerId) {
 			// show the request list only for owner or admin
 			userNotSystemList.classList.add('d-none');
 			return;

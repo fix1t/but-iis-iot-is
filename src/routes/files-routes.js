@@ -23,6 +23,6 @@ router.get('/systems/detail/:id', verifyToken, systemDetail);
 router.get('/device/detail/:id', verifyToken, deviceDetail);
 router.get('/device/create', verifyToken, deviceCreate);
 router.get('/device/create/:system_id', verifyToken, continueIfUserIsInSystem, deviceCreate);
-router.get('/parameters/:parameter_id', verifyToken, parameterDetail);
+router.get('/parameters/:device_id/:parameter_id/', verifyToken, parameterDetail);
 
 export default router;

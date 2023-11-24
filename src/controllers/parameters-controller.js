@@ -22,3 +22,15 @@ export const getAllValuesByParameterIdAndDeviceId = async (req, res) => {
 		res.status(404).json({ message: error.message });
 	}
 }
+
+export const getAllParametersAndValuesByDeviceId = async (req, res) => {
+	const deviceId = req.params.device_id;
+
+	try {
+		const parameters = await Parameter.findLatestValuesByDeviceId(deviceId);
+		res.status(200).json(parameters);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}

@@ -32,6 +32,18 @@ class Device {
 		}
 	}
 
+	static async deleteById(id) {
+		let sql = `DELETE FROM Devices WHERE id = ?`;
+		try {
+			const [result] = await db.promise().query(sql, [id]);
+			console.log(result);
+			return result;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	async update() {
 		const dataToUpdate = {
 			owner_id: this.owner_id,

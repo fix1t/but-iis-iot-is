@@ -18,6 +18,17 @@ class Parameter {
 		return db.promise().execute(sql, [this.type_id, this.name]);
 	}
 
+	static async findById(id) {
+		let sql = `SELECT * FROM Parameters WHERE id = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [id]);
+			return rows.length ? Parameter.rowToParameter(rows[0]) : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static async findByTypeId(typeId) {
 		let sql = `SELECT * FROM Parameters WHERE type_id = ?`;
 		try {
@@ -83,6 +94,36 @@ class Parameter {
 		try {
 			const [rows] = await db.promise().query(sql, [deviceId, deviceId]);
 			DEBUG('[findLatestValuesByDeviceId()]:\n' + JSON.stringify(rows, null, 2));
+			return rows.length ? rows : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	// Retrieve all captured values for a specific parameter of a specific device
+	static async findAllValuesByDeviceIdAndParameterId(deviceId, parameterId = this.id) {
+		let sql = `
+			SELECT
+				DP.value AS parameter_value,       -- Captured parameter value
+				DP.recorded_at AS recorded_at      -- Captured timestamp
+			FROM
+				Devices AS D                       -- Devices table alias
+			JOIN
+				Parameters AS P                     -- Parameters table alias
+			ON
+				P.id = ?                           -- Specify the target parameter ID
+			JOIN
+				DeviceParameters AS DP              -- DeviceParameters table alias
+			ON
+				D.id = ?                           -- Specify the target device ID
+				AND P.id = DP.parameter_id
+			ORDER BY
+				DP.recorded_at ASC;                -- Order by captured timestamp
+		`;
+		try {
+			const [rows] = await db.promise().query(sql, [parameterId, deviceId]);
+			DEBUG('[findAllValuesByDeviceIdAndParameterId()]:\n' + JSON.stringify(rows, null, 2));
 			return rows.length ? rows : null;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);

@@ -28,7 +28,7 @@ class SystemRequest {
 					WHERE id = ?`;
 		try {
 			const [result] = await db.promise().query(sql, [newStatus, id]);
-			console(result);
+			console.log(result);
 			return result;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);

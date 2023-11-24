@@ -15,8 +15,14 @@
   <body>
     <div id="header"></div>
     <!-- Description -->
-    <div class="container" id="parameter"></div>
-    <!-- List -->
+    <div class="container" id="parameterInfo"></div>
+
+    <!-- Graph -->
+    <div class="container">
+      <canvas id="dataChart"></canvas>
+    </div>
+
+    <!-- KPI List -->
     <table
       class="container table table-striped table-bordered"
       id="kpiList"
@@ -37,6 +43,8 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="/js/parameter/parameter-detail.js"></script>
     <script src="/js/components/header.js"></script>
   </body>

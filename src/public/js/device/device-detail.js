@@ -70,7 +70,7 @@ async function loadParameters(deviceId) {
 
 		console.log(response.body);
 		if (!response.ok) {
-			alert('Failed to load parameters.\n' + response.error);
+			console.log('Failed to load parameters.\n' + response.error);
 			throw new Error('Network response was not ok');
 		}
 
@@ -82,7 +82,7 @@ async function loadParameters(deviceId) {
 				<td>${parameter.parameter_name}</td>
 				<td>${parameter.parameter_value}</td>
 				<td>${parameter.parameter_unit_name}</td>
-				<td><a href="/parameters/${parameter.parameter_id}">Detail</a></td>
+				<td><a href="/parameters/${parameter.parameter_id}/${parameter.device_id}">Detail</a></td>
 			`;
 			parameterList.appendChild(row);
 		});

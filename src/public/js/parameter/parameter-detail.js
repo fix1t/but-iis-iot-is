@@ -56,6 +56,8 @@ async function loadGraph(deviceId, parameterId) {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/data`);
 		const data = await response.json();
 
+		const unit_name = document.getElementById('parameterUnits').value;
+
 		const labels = data.map(entry => entry.recorded_at);
 		const values = data.map(entry => parseFloat(entry.parameter_value));
 
@@ -66,7 +68,7 @@ async function loadGraph(deviceId, parameterId) {
 			data: {
 				labels: labels,
 				datasets: [{
-					label: 'Parameter Data',
+					label: `${unit_name}`,
 					data: values,
 					borderColor: 'rgba(75, 192, 192, 1)',
 					backgroundColor: 'rgba(75, 192, 192, 0.2)',

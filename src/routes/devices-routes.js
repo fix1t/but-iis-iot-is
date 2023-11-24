@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDeviceInSystem, createDeviceOutsideSystem, getMyDevices, getDeviceById, getAllTypes,  deleteDevice } from '../controllers/devices-controller.js';
+import { createDeviceInSystem, createDeviceOutsideSystem, getMyDevices, getDeviceById, getAllTypes,  deleteDevice, updateDevice } from '../controllers/devices-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
 
 const router = express.Router();
@@ -13,4 +13,5 @@ router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createD
 router.post('/create', verifyToken, createDeviceOutsideSystem);
 //delete
 router.delete('/:device_id', verifyToken, deleteDevice);
+router.put('/:device_id', verifyToken, updateDevice);
 export default router;

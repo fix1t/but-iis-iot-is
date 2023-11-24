@@ -83,6 +83,37 @@ export const getDeviceById = async (req, res) => {
 	}
 }
 
+export const updateDevice = async (req, res) => {
+	const { name, description, user_alias } = req.body;
+	const user = req.user;
+	let deviceToUpdate;
+	try {
+		deviceToUpdate = await Device.findById(req.params.device_id);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+	if (!deviceToUpdate) {
+		res.status(404).json({ error: 'Device not found' });
+		return;
+	}
+	if (deviceToUpdate.owner_id !== user.id && !user.isAdmin) {
+		res.status(401).json({ error: 'Forbidden' });
+		return;
+	}
+
+	deviceToUpdate.name = name;
+	deviceToUpdate.description = description;
+	deviceToUpdate.user_alias = user_alias;
+	try {
+		await deviceToUpdate.update();
+		res.status(200).json({ message: 'Device updated successfully' });
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
 export const deleteDevice = async (req, res) => {
 	const user = req.user;
 	const deviceId = req.params.device_id;

@@ -98,7 +98,7 @@ export const updateDevice = async (req, res) => {
 		return;
 	}
 	if (deviceToUpdate.owner_id !== user.id && !user.isAdmin) {
-		res.status(401).json({ error: 'Forbidden' });
+		res.status(401).json({ error: 'You do not have sufficient rights to edit this device' });
 		return;
 	}
 

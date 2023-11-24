@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem } from '../controllers/devices-controller.js';
+import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem, deleteDevice, updateDevice } from '../controllers/devices-controller.js';
 import { getParameterById, getAllValuesByParameterIdAndDeviceId, getAllParametersAndValuesByDeviceId, getAllKpisByParameterIdAndDeviceId } from '../controllers/parameters-controller.js';
 import { createKpi, deleteKpi } from '../controllers/kpis-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
@@ -21,6 +21,9 @@ router.post('/create', verifyToken, createDevice);
 router.post('/:system_id/add-device', verifyToken, addDeviceToSystem);
 router.post('/:device_id/parameters/:parameter_id/create/kpi', verifyToken, createKpi);
 //delete
+router.delete('/:device_id', verifyToken, deleteDevice);
 router.delete('/:device_id/parameters/:parameter_id/delete/kpi/:kpi_id', verifyToken, deleteKpi);
+//put
+router.put('/:device_id', verifyToken, updateDevice);
 
 export default router;

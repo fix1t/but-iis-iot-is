@@ -54,8 +54,6 @@ async function loadDeviceData(deviceId) {
 				</div>
 			</div>
 		`;
-
-
 	} catch (error) {
 		console.error('Failed to load devices:', error);
 	}

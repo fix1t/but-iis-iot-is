@@ -6,7 +6,7 @@ import { ERROR, INFO } from '../utils/logger.js';
 export const createDeviceInSystem = async (req, res) => {
 	const user = req.user;
 	const systemId = req.params.system_id;
-	const { name, type_id, description, user_alias } = req.body;
+	const { name, type_id, description, userAlias } = req.body;
 
 	INFO(`Creating device ${name} in system ${systemId}`);
 
@@ -21,7 +21,7 @@ export const createDeviceInSystem = async (req, res) => {
 		return res.status(400).json({ error: 'Invalid type_id' });
 	}
 
-	const device = new Device(user.id, type_id, name, description, user_alias);
+	const device = new Device(user.id, type_id, name, description, userAlias);
 
 	try {
 		await device.save();
@@ -46,7 +46,7 @@ export const createDeviceOutsideSystem = async (req, res) => {
 	if (!(await Type.findById(type_id))) {
 		return res.status(400).json({ error: 'Invalid type_id' });
 	}
-
+	console.log("outside", user.id, type_id, name, description, userAlias);
 	const device = new Device(user.id, type_id, name, description, userAlias);
 
 	try {

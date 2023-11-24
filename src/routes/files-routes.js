@@ -15,6 +15,7 @@ router.get('/systems/create', verifyToken, systemCreate);
 router.get('/systems-requests', verifyToken, systemRequests);
 router.get('/systems/detail/:id', verifyToken, systemDetail);
 router.get('/device/detail/:id', verifyToken, deviceDetail);
+router.get('/device/create', verifyToken, deviceCreate);
 router.get('/device/create/:system_id', verifyToken, continueIfUserIsInSystem, deviceCreate);
 
 export default router;

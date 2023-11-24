@@ -13,5 +13,6 @@ router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createD
 router.post('/create', verifyToken, createDeviceOutsideSystem);
 //delete
 router.delete('/:device_id', verifyToken, deleteDevice);
+//put
 router.put('/:device_id', verifyToken, updateDevice);
 export default router;

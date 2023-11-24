@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const systemId = window.location.pathname.split('/').pop();
 	console.log(systemId);
-    console.log(systemId);
 
     let url = '/api/devices/create';
     let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };

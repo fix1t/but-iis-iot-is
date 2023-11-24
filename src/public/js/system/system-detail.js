@@ -38,7 +38,6 @@ async function loadSystemData() {
 		// Get logged User
 		const user = await fetch(`/api/users/me`);
 		const userResponse = await user.json();
-		console.log("User:", userResponse);
 		userId = userResponse.id;
 
 		// wait for systemId to be set
@@ -241,6 +240,7 @@ function addUser(userId) {
 			if (deletedRow) {
 				deletedRow.remove();
 			}
+			window.location.reload();
 		})
 		.catch(error => console.error('Error adding user:', error));
 }
@@ -255,6 +255,7 @@ function leaveSystem() {
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
+			window.location.href = '/systems';
 		})
 		.catch(error => console.error('Error leaving system:', error));
 }
@@ -284,6 +285,7 @@ function removeUser(userId) {
 			if (deletedRow) {
 				deletedRow.remove();
 			}
+			window.location.reload();
 		})
 		.catch(error => console.error('Error removing user:', error));
 }
@@ -303,11 +305,7 @@ async function loadSystemRequests() {
 
 		const requests = await response.json();
 
-		const user = await fetch(`/api/users/me`);
-		const userResponse = await user.json();
-		console.log("User:", userResponse);
-
-		if (userResponse.id !== ownerId) {
+		if (userId!== ownerId) {
 			// show the request list only for owner or admin
 			requestList.classList.add('d-none');
 			return;
@@ -390,6 +388,7 @@ function acceptRequest(requestId) {
 			if (deletedRow) {
 				deletedRow.remove();
 			}
+			window.location.reload();
 		})
 		.catch(error => console.error('Error accepting request:', error));
 }

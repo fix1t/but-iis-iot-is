@@ -9,11 +9,16 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css" />
     <title>IoT - Create Device</title>
   </head>
   <div id="header"></div>
   <body>
+    <div class="container mb-3">
+      <button class="btn btn-secondary" onclick="history.back()">&#8592 Go Back</button>
+    </div>
+
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">Create Your Device!</h3>
       <div class="form-group">
@@ -58,6 +63,8 @@
 
       <button class="btn btn-primary" id="createDeviceButton">Create</button>
     </div>
+
+    <div class="container mt-4" id="freeDevicesList"></div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

@@ -83,6 +83,33 @@ export const getDeviceById = async (req, res) => {
 	}
 }
 
+export const getFreeDevices = async (req, res) => {
+	try {
+		const device = await Device.findFree();
+		res.status(200).json(device);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+/**
+ * @todo in progress
+ */ 
+export const addDeviceToSystem = async (req, res) => {
+	const systemId = req.params.system_id;
+	const { device_id } = req.body;
+
+	try {
+		const device = await Device.findById(device_id);
+		await System.addDeviceToSystem(systemId, device.id);
+		res.status(201).json({ message: 'Device added successfully', device_id: device.id });
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
 export const getAllTypes = async (req, res) => {
 	try {
 		const types = await Type.findAll();

@@ -15,7 +15,7 @@ class Type {
 		return db.promise().execute(sql, [this.name]);
 	}
 
-	static async getAll() {
+	static async findAll() {
 		let sql = `SELECT * FROM Types`;
 		try {
 			const [rows] = await db.promise().query(sql);

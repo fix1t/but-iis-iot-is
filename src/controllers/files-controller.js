@@ -6,7 +6,7 @@ const __dirname = path.dirname(__filename);
 
 
 export const home = (req, res) => {
-	res.sendFile(path.join(__dirname, '../views/user/user-list.html'));
+	res.sendFile(path.join(__dirname, '../views/system/system-list.html'));
 }
 
 export const login = (req, res) => {
@@ -51,4 +51,8 @@ export const systemDetail = (req, res) => {
 
 export const deviceDetail = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/device/device-detail.html'));
+}
+
+export const deviceCreate = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/device/device-create.html'));
 }

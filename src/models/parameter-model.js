@@ -45,6 +45,7 @@ class Parameter {
 		let sql = `
 			SELECT
 				D.id AS device_id,                 -- Device ID
+				P.id AS parameter_id,              -- Parameter ID
 				P.name AS parameter_name,          -- Parameter name
 				P.unit_name AS parameter_unit_name,-- Parameter unit name
 				DP.value AS parameter_value        -- Last captured parameter value

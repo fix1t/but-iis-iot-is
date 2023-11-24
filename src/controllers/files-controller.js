@@ -41,6 +41,10 @@ export const systemUsers = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/system/system-users.html'));
 }
 
+export const systemRequests = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/system/system-requests.html'));
+}
+
 export const systemDetail = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/system/system-detail.html'));
 }

@@ -9,11 +9,15 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css" />
     <title>IoT - System Management</title>
   </head>
 
   <body>
+
+    <div id="header"></div>
+  
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">System Information</h3>
       <div class="form-group">
@@ -53,7 +57,19 @@
       <button class="btn btn-primary" id="editSystemButton">[TODO] Edit System</button>
     </div>
 
+    <div id="systemUsersList"></div>
+    <div id="userNotSystemList"></div>
+    <div id="requestList"></div>
     <div id="deviceList"></div>
+
+    <div class="container my-4">
+      <h2 class="text-danger">Leave System</h2>
+      <p>Once you leave this system, you will need to submit a new join request to regain access. Please be certain.</p>
+      <button class="btn btn-danger btn-sm" onclick="leaveSystem()">
+          <span class="p-2" style="font-size: 20px;">Leave this system</span>
+      </button>
+    </div>
+    
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -72,5 +88,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="/js/system/system-detail.js"></script>
+    <script src="/js/components/header.js"></script>
   </body>
 </html>

@@ -15,66 +15,39 @@
 
     <div id="header"></div>
 
-    <h1 class="text-warning text-center">
-        WARNING: Force assign to System ID = 5<br>
-        <small class="text-muted">Edit in <code>users-system.js</code></small>
-    </h1>
-
-
-    <div class="border border-secondary rounded-sm p-3">
-        <h3 class="text-center text-primary">Create System Request</h3>
-        <form id="createRequestForm">
-            <div class="form-group">
-                <label for="userMessage">Message</label>
-                <textarea class="form-control" id="userMessage" name="userMessage" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary mx-auto mb-2">
-                Send Request
-            </button>
-        </form>
-    </div>
-
-    <h2 class="mt-4">Users in System List</h2>
+    <h2>Requests to my system</h2>
     <div class="mt-4">
-        <table class="table">
+        <table class="table table-striped">
             <thead class="thead-light">
                 <tr>
+                    <th>System Name</th>
+                    <th>Created</th>
+                    <th>Message</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Birth</th>
-                    <th>Bio</th>
-                    <th>Added</th>
+                    <th>Status</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="userSystemTableBody"></tbody>
+            <tbody id="requestTableBody"></tbody>
         </table>
     </div>
 
-    <h2>Users NOT in System Table</h2>
+    <h2>My requests</h2>
     <div class="mt-4 table-wrapper-scroll-y my-custom-scrollbar table-fix-head">
-        <table class="table">
+        <table class="table table-striped">
             <thead class="thead-light">
                 <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Bio</th>
-                    <th></th>
+                    <th>System Name</th>
+                    <th>System Owner</th>
+                    <th>My Message</th>
+                    <th>Created</th>
+                    <th>Status</th>
                 </tr>
             </thead>
-            <tbody id="userNotSystemTableBody"></tbody>
+            <tbody id="myRequestTableBody"></tbody>
         </table>
-    </div>
-
-    <div class="my-4">
-        <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-danger btn-sm center" onclick="leaveSystem(15)">
-                    LEAVE SYSTEM <i class="fas fa-arrow-alt-circle-right"></i>
-                </button>
-                <p class="text-warning mt-2">WARNING: Force assign to System ID = 5 in function call HERE (onclick)</p>
-            </div>
-        </div>
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -87,7 +60,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <script src="/js/users-system.js"></script>
+    <script src="/js/system/system-requests.js"></script>
     <script src="/js/components/header.js"></script>
 </body>
 

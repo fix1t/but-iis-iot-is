@@ -104,6 +104,60 @@ class Systems {
 		}
 	}
 
+	static async findSystemUsers(id) {
+		let sql = `SELECT Users.id, Users.username, Users.email, Users.birth, Users.bio, SystemUsers.created
+						FROM SystemUsers
+						INNER JOIN Users ON Users.id = SystemUsers.user_id
+						WHERE system_id = ?
+						ORDER BY SystemUsers.created`;
+		try {
+			const [rows] = await db.promise().query(sql, [id]);
+			return rows;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	static async findUsersNotInSystem(id) {
+		let sql = `SELECT id, username, email, bio
+						FROM Users
+						WHERE id NOT IN (
+							SELECT user_id
+							FROM SystemUsers
+							WHERE system_id = ?
+						)`;
+		try {
+			const [rows] = await db.promise().query(sql, [id]);
+			return rows;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	// returns true or false
+	static async removeUserFromSystem(system_id, user_id) {
+		let sql = `DELETE FROM SystemUsers WHERE system_id = ? AND user_id = ?`;
+		try {
+			const [result] = await db.promise().query(sql, [system_id, user_id]);
+			return result.affectedRows ? true : false;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	static async addUserToSystem(system_id, user_id) {
+		let sql = `INSERT INTO SystemUsers SET ?`;
+		try {
+			await db.promise().query(sql, { system_id, user_id });
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static async addDeviceToSystem(system_id, device_id) {
 		let sql = `
 					INSERT INTO SystemDevices (

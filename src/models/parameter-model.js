@@ -2,9 +2,10 @@ import db from '../config/db.js';
 import { INFO, DEBUG, WARN, ERROR } from '../utils/logger.js';
 
 class Parameter {
-	constructor(type_id, name, id = null) {
+	constructor(type_id, name, unitName, id = null) {
 		this.id = id;
 		this.type_id = type_id;
+		this.unit_name = unitName;
 		this.name = name;
 	}
 
@@ -45,6 +46,7 @@ class Parameter {
 			SELECT
 				D.id AS device_id,                 -- Device ID
 				P.name AS parameter_name,          -- Parameter name
+				P.unit_name AS parameter_unit_name,-- Parameter unit name
 				DP.value AS parameter_value        -- Last captured parameter value
 			FROM
 				Devices AS D                       -- Devices table alias
@@ -79,7 +81,7 @@ class Parameter {
 		`;
 		try {
 			const [rows] = await db.promise().query(sql, [deviceId, deviceId]);
-			DEBUG('Latest value of every param of device:\n' + rows);
+			DEBUG('[findLatestValuesByDeviceId()]:\n' + JSON.stringify(rows, null, 2));
 			return rows.length ? rows : null;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);
@@ -88,7 +90,7 @@ class Parameter {
 	}
 
 	static rowToParameter(row) {
-		return new Parameter(row.type_id, row.name, row.id);
+		return new Parameter(row.type_id, row.name, row.unit_name, row.id);
 	}
 }
 

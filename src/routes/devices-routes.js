@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDeviceInSystem, createDeviceOutsideSystem, getMyDevices, getDeviceById, getAllTypes } from '../controllers/devices-controller.js';
+import { createDevice, getMyDevices, getDeviceById, getAllTypes, getAllParametersAndValuesByDeviceId } from '../controllers/devices-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
 
 const router = express.Router();
@@ -8,8 +8,9 @@ const router = express.Router();
 router.get('/my-devices', verifyToken, getMyDevices);
 router.get('/types', verifyToken, getAllTypes);
 router.get('/:device_id', verifyToken, getDeviceById);
+router.get('/:device_id/parameters', verifyToken, getAllParametersAndValuesByDeviceId);
 //post
-router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createDeviceInSystem);
-router.post('/create', verifyToken, createDeviceOutsideSystem);
+router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createDevice);
+router.post('/create', verifyToken, createDevice);
 
 export default router;

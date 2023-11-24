@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 	const deviceId = window.location.pathname.split('/').pop();
 	loadDeviceData(deviceId);
+	loadParameters(deviceId);
 });
 
 async function loadDeviceData(deviceId) {
@@ -53,9 +54,37 @@ async function loadDeviceData(deviceId) {
 				</div>
 			</div>
 		`;
-
-
 	} catch (error) {
 		console.error('Failed to load devices:', error);
+	}
+}
+
+async function loadParameters(deviceId) {
+	// Get the parameters
+	// Create a taable row for each parameter with clickable link to the parameter details
+	const parameterList = document.getElementById('parameterList');
+	try {
+		const response = await fetch(`/api/devices/${deviceId}/parameters`);
+
+		console.log(response.body);
+		if (!response.ok) {
+			console.log('Failed to load parameters.\n' + response.error);
+			throw new Error('Network response was not ok');
+		}
+
+		const parameters = await response.json();
+
+		parameters.forEach(parameter => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
+				<td>${parameter.parameter_name}</td>
+				<td>${parameter.parameter_value}</td>
+				<td>${parameter.parameter_unit_name}</td>
+				<td><a href="/parameters/${parameter.parameter_id}/${parameter.device_id}">Detail</a></td>
+			`;
+			parameterList.appendChild(row);
+		});
+	} catch (error) {
+		console.error('Failed to load parameters:', error);
 	}
 }

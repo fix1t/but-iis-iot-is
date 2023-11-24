@@ -1,13 +1,16 @@
+let deviceId;
+let parameterId;
+
 document.addEventListener('DOMContentLoaded', function () {
 	let uri = window.location.pathname.split('/');
-	const deviceId = uri.pop();
-	const parameterId = uri.pop();
-	loadParameterData(deviceId, parameterId);
-	loadGraph(deviceId, parameterId);
-	loadKpiList(deviceId, parameterId);
+	deviceId = uri.pop();
+	parameterId = uri.pop();
+	loadParameterData();
+	loadGraph();
+	loadKpiList();
 });
 
-async function loadParameterData(deviceId, parameterId) {
+async function loadParameterData() {
 	try {
 		const parameterInfo = document.getElementById('parameterInfo');
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}`);
@@ -52,7 +55,7 @@ async function loadParameterData(deviceId, parameterId) {
 	}
 }
 
-async function loadGraph(deviceId, parameterId) {
+async function loadGraph() {
 	try {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/data`);
 		const data = await response.json();
@@ -98,7 +101,7 @@ async function loadGraph(deviceId, parameterId) {
 	}
 }
 
-async function loadKpiList(deviceId, parameterId) {
+async function loadKpiList() {
 	try {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/kpis`);
 		const kpis = await response.json();
@@ -132,12 +135,51 @@ async function loadKpiList(deviceId, parameterId) {
 }
 
 async function deleteKpi(kpiId) {
-	//TODO
-	loadKpiList(deviceId, parameterId);
+	try {
+		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/delete/kpi/${kpiId}`, {
+			method: 'DELETE',
+		});
+
+		if (!response.ok) {
+			console.log(response);
+			throw new Error('Network response was not ok');
+		}
+
+		const kpi = await response.json();
+		console.log(kpi);
+	} catch {
+		console.error('Failed to delete KPI');
+	}
+
+	loadKpiList();
 }
 
-document.getElementById('createKpiForm').addEventListener('submit', function (e) {
+document.getElementById('createKpiForm').addEventListener('submit', async function (e) {
 	e.preventDefault();
-	//TODO: Create KPI
-	loadKpiList(deviceId, parameterId);
+
+	const threshold = document.getElementById('kpiThreshold').value;
+	const operation = document.getElementById('kpiOperation').value;
+
+	try {
+		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/create/kpi`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ threshold, operation })
+		});
+
+		if (!response.ok) {
+			console.log(response);
+			throw new Error('Network response was not ok');
+		}
+
+		const kpi = await response.json();
+		console.log(kpi);
+	} catch {
+		console.error('Failed to create KPI');
+	}
+
+
+	loadKpiList();
 });

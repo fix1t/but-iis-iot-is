@@ -35,3 +35,8 @@ body {
 .table-wrapper-scroll-y {
     display: block;
 }
+
+.custom-btn {
+    background-color: #1cbe1c;
+    color: #fff; /* Change the text color if needed */
+}

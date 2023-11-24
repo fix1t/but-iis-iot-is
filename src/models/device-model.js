@@ -48,6 +48,15 @@ class Device {
 		return db.promise().execute(sql, [...values, this.id]);
 	}
 
+	async addParameter(parameterId) {
+		let sql = `
+			INSERT INTO DeviceParameters (
+				device_id, parameter_id, value, recorded_at
+			) VALUES (?, ?, ?, ?)
+		`;
+		return db.promise().execute(sql, [this.id, parameterId, 0, new Date()]);
+	}
+
 	static async findById(id) {
 		let sql = `SELECT * FROM Devices WHERE id = ?`;
 		try {

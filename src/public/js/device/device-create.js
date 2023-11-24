@@ -4,24 +4,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-document.getElementById('createDeviceButton').addEventListener('click', async () => {
-	const deviceName = document.getElementById('deviceName').value;
-	const deviceDescription = document.getElementById('deviceDescription').value;
-	const userAlias = document.getElementById('userAlias').value;
-	const deviceType = document.getElementById('deviceType').value;
-	console.log(deviceName, deviceDescription, userAlias, deviceType);
+ document.getElementById('createDeviceButton').addEventListener('click', async () => {
+    const deviceName = document.getElementById('deviceName').value;
+    const deviceDescription = document.getElementById('deviceDescription').value;
+    const userAlias = document.getElementById('userAlias').value;
+    const deviceType = document.getElementById('deviceType').value;
+    console.log(deviceName, deviceDescription, userAlias, deviceType);
 
-	const systemId = window.location.pathname.split('/').pop();
+    const systemId = window.location.pathname.split('/').pop();
 	console.log(systemId);
 
-	try {
-		const response = await fetch(`/api/devices/create/${systemId}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ name: deviceName, description: deviceDescription, type_id: deviceType, user_alias: userAlias, system_id: systemId })
-		});
+    let url = '/api/devices/create';
+    let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
+
+    if (systemId !== 'create') {
+        url += `/${systemId}`;
+        body.system_id = systemId;
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
 
 		if (!response.ok) {
 			const errorText = await response.json();

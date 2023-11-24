@@ -22,11 +22,50 @@
       <canvas id="dataChart"></canvas>
     </div>
 
-    <!-- KPI List -->
-    <table
-      class="container table table-striped table-bordered"
-      id="kpiList"
-    ></table>
+    <div class="container mt-4">
+      <div class="card">
+        <div class="card-header">Add New KPI</div>
+        <div class="card-body">
+          <form id="createKpiForm" class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="kpiThreshold" class="sr-only">Threshold</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="kpiThreshold"
+                  placeholder="Threshold"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="kpiOperation" class="sr-only">Operation</label>
+                <select class="form-control" id="kpiOperation">
+                  <option value="greater">Greater</option>
+                  <option value="less">Less</option>
+                  <option value="equal">Equal</option>
+                  <option value="not_equal">Not Equal</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary btn-block">
+                Create KPI
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- KPI List -->
+      <table
+        class="container table table-striped table-bordered"
+        id="kpiList"
+      ></table>
+    </div>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

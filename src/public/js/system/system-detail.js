@@ -339,7 +339,7 @@ async function loadSystemRequests() {
 
 		if (requests.length === 0) {
 			const noRequestsMessage = document.createElement('tr');
-			noRequestsMessage.innerHTML = '<td colspan="5">No requests available</td>';
+			noRequestsMessage.innerHTML = '<td colspan="8">No requests available</td>';
 			tbody.appendChild(noRequestsMessage);
 		} else {
 			// Fill the table with requests
@@ -430,9 +430,14 @@ async function loadDevices() {
 
 		const devices = await response.json();
 
+		deviceList.classList.add('mt-4', 'container');
+
+		const heading = document.createElement('h2');
+		heading.textContent = 'System Device List';
+
 		// Create the table structure
 		const table = document.createElement('table');
-		table.classList.add('table', 'table-bordered', 'container', 'p-3', 'mt-3');
+		table.classList.add('table', 'table-bordered', 'p-3', 'mt-3');
 		const thead = document.createElement('thead');
 		thead.innerHTML = `
 		<tr>
@@ -474,6 +479,7 @@ async function loadDevices() {
 
 		// Clear existing content in deviceList and append the table
 		deviceList.innerHTML = '';
+		deviceList.appendChild(heading);
 		deviceList.appendChild(table);
 	} catch (error) {
 		console.error('Failed to load devices:', error);

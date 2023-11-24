@@ -85,7 +85,7 @@ export const getDeviceById = async (req, res) => {
 
 export const getFreeDevices = async (req, res) => {
 	try {
-		const device = await Device.findFree();
+		const device = await Device.findAllFree();
 		res.status(200).json(device);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -93,9 +93,6 @@ export const getFreeDevices = async (req, res) => {
 	}
 }
 
-/**
- * @todo in progress
- */ 
 export const addDeviceToSystem = async (req, res) => {
 	const systemId = req.params.system_id;
 	const { device_id } = req.body;

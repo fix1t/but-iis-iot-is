@@ -81,7 +81,7 @@ class Device {
 		}
 	}
 
-	static async findFree() {
+	static async findAllFree() {
 		let sql = `SELECT *
 					FROM Devices
 					WHERE id NOT IN (SELECT device_id FROM SystemDevices);`;

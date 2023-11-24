@@ -83,6 +83,37 @@ export const getDeviceById = async (req, res) => {
 	}
 }
 
+export const deleteDevice = async (req, res) => {
+	const user = req.user;
+	const deviceId = req.params.device_id;
+	console.log(req.params.owner_id);
+	console.log(user.id);
+	let deviceToDelete;
+	try {
+		deviceToDelete = await Device.findById(deviceId);
+		console.log(deviceToDelete);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+	if (!deviceToDelete) {
+		res.status(404).json({ error: 'Device not found' });
+		return;
+	}
+	if (deviceToDelete.owner_id !== user.id && !user.isAdmin) {
+		res.status(401).json({ error: 'You are not the owner. Only owner can delete a device.' });
+		return;
+	}
+	console.log(user.id, deviceToDelete.owner_id);
+	try {
+		await Device.deleteById(deviceToDelete.id);
+		res.status(200).json({ message: 'Device deleted successfully' });
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
 export const getAllTypes = async (req, res) => {
 	try {
 		const types = await Type.findAll();

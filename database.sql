@@ -56,7 +56,7 @@ CREATE TABLE Devices (
     description TEXT,
     user_alias VARCHAR(255),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (type_id) REFERENCES Types(id) ON DELETE CASCADE
+    FOREIGN KEY (type_id) REFERENCES Types(id) ON DELETE CASCADE,
     FOREIGN KEY (owner_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 

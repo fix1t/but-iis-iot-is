@@ -76,7 +76,7 @@ fetch('/api/systems/notIn')
 		const system_id = document.getElementById('joinRequestModal').dataset.systemId;
 		const message = document.getElementById('message').value;
 	
-		fetch(`/api/systems/${system_id}/join-request`, {
+		fetch(`/api/user/systems/${system_id}/join-request`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { DEBUG } from '../utils/logger.js';
 
 class KPI {
 	constructor(device_id, parameter_id, threshold, operation, id = null) {
@@ -69,7 +70,24 @@ class KPI {
 		return db.promise().execute(sql, [deviceId, parameterId]);
 	}
 
+	static async findAllKpisByDeviceIdAndParameterId(deviceId, parameterId) {
+		let sql = `
+			SELECT * FROM KPIs
+			WHERE device_id = ? AND parameter_id = ?
+		`;
+		try {
+			const [rows] = await db.promise().query(sql, [deviceId, parameterId]);
+			DEBUG(`Found ${rows.length} kpis for device with id ${deviceId} and parameter with id ${parameterId}`);
+			return rows.length ? rows.map(row => KPI.rowToKPI(row)) : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static rowToKPI(row) {
 		return new KPI(row.device_id, row.parameter_id, row.threshold, row.operation, row.id);
 	}
 }
+
+export default KPI;

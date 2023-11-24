@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const parameterId = uri.pop();
 	loadParameterData(deviceId, parameterId);
 	loadGraph(deviceId, parameterId);
+	loadKpiList(deviceId, parameterId);
 });
 
 async function loadParameterData(deviceId, parameterId) {
@@ -96,3 +97,47 @@ async function loadGraph(deviceId, parameterId) {
 		console.error('Failed to load devices:', error);
 	}
 }
+
+async function loadKpiList(deviceId, parameterId) {
+	try {
+		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/kpis`);
+		const kpis = await response.json();
+
+		const kpiListElement = document.getElementById('kpiList');
+		// Use Bootstrap's 'table' classes for styling
+		kpiListElement.className = 'table table-striped table-bordered';
+		kpiListElement.innerHTML = '<thead class="thead-dark"><tr><th>Threshold</th><th>Operation</th><th>Action</th></tr></thead><tbody>';
+
+		kpis.forEach(kpi => {
+			// Append rows to the table body
+			const row = kpiListElement.insertRow();
+			row.innerHTML = `
+		  <td>${kpi.threshold}</td>
+		  <td>${kpi.operation}</td>
+		  <td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">X</button></td>
+		`;
+		});
+
+		// Add click event listeners to delete buttons
+		document.querySelectorAll('.delete-kpi').forEach(button => {
+			button.addEventListener('click', function (e) {
+				const kpiId = e.target.getAttribute('data-kpi-id');
+				deleteKpi(kpiId);
+			});
+		});
+
+	} catch (error) {
+		console.error('Failed to load KPIs:', error);
+	}
+}
+
+async function deleteKpi(kpiId) {
+	//TODO
+	loadKpiList(deviceId, parameterId);
+}
+
+document.getElementById('createKpiForm').addEventListener('submit', function (e) {
+	e.preventDefault();
+	//TODO: Create KPI
+	loadKpiList(deviceId, parameterId);
+});

@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { INFO, DEBUG, WARN, ERROR } from '../utils/logger.js';
 
 class Parameter {
 	constructor(type_id, name, id = null) {
@@ -32,6 +33,54 @@ class Parameter {
 		try {
 			const [rows] = await db.promise().query(sql, [typeName]);
 			return rows.length ? rows.map(row => Parameter.rowToParameter(row)) : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
+	// Retrieve the last captured value for each parameter of a specific device
+	static async findLatestValuesByDeviceId(deviceId) {
+		let sql = `
+			SELECT
+				D.id AS device_id,                 -- Device ID
+				P.name AS parameter_name,          -- Parameter name
+				DP.value AS parameter_value        -- Last captured parameter value
+			FROM
+				Devices AS D                       -- Devices table alias
+			JOIN
+				(
+					SELECT
+						device_id,
+						parameter_id,
+						MAX(recorded_at) AS latest_recorded_at  -- Find the latest recorded timestamp for each parameter-device combination
+					FROM
+						DeviceParameters
+					WHERE
+						device_id = ?     -- Specify the target device ID
+					GROUP BY
+						device_id,
+						parameter_id
+				) AS LatestDP
+			ON
+				D.id = LatestDP.device_id           -- Join with Devices to get device information
+			JOIN
+				Parameters AS P                     -- Parameters table alias
+			ON
+				LatestDP.parameter_id = P.id        -- Join with Parameters to get parameter names
+			JOIN
+				DeviceParameters AS DP              -- DeviceParameters table alias
+			ON
+				LatestDP.device_id = DP.device_id
+				AND LatestDP.parameter_id = DP.parameter_id
+				AND LatestDP.latest_recorded_at = DP.recorded_at -- Join with DeviceParameters to get the last captured parameter values
+			WHERE
+				D.id = ?;                 -- Filter by the specified device ID
+		`;
+		try {
+			const [rows] = await db.promise().query(sql, [deviceId, deviceId]);
+			DEBUG('Latest value of every param of device:\n' + rows);
+			return rows.length ? rows : null;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);
 			throw error;

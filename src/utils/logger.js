@@ -4,7 +4,6 @@ export const INFO = (data) => {
 
 export const DEBUG = (data) => {
 	const DEBUG = process.env.DEBUG;
-	console.log("DEBUG >> " + DEBUG);
 	if (DEBUG === 'true')
 		console.log("DEBUG >> " + data);
 }

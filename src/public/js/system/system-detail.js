@@ -23,7 +23,7 @@ async function loadSystemData() {
 		document.getElementById('systemName').value = systemData.name;
 		document.getElementById('systemDescription').value = systemData.description;
 		ownerId = systemData.owner_id;
-		document.getElementById('systemOwner').value = systemData.owner_id;
+		document.getElementById('systemOwner').value = systemData.owner_name;
 
 		const createdDate = new Date(systemData.created);
 		const formattedDate = createdDate.toLocaleDateString();
@@ -370,9 +370,15 @@ async function loadSystemRequests() {
 		tbody.id = 'systemRequestsList';
 
 		if (requests.length === 0) {
-			const noRequestsMessage = document.createElement('tr');
-			noRequestsMessage.innerHTML = '<td colspan="8">No requests available</td>';
-			tbody.appendChild(noRequestsMessage);
+			const noRequestsRow = document.createElement('tr');
+			const noRequestsCell = document.createElement('td');
+			noRequestsCell.colSpan = "7"; // Set the colspan to span across all columns
+			const noRequestsMessage = document.createElement('div');
+			noRequestsMessage.classList.add('alert', 'alert-info', 'mb-0'); // Adjusted classes here
+			noRequestsMessage.textContent = 'No pending requests at this time.';
+			noRequestsCell.appendChild(noRequestsMessage);
+			noRequestsRow.appendChild(noRequestsCell);
+			tbody.appendChild(noRequestsRow);
 		} else {
 			// Fill the table with requests
 			requests.forEach(request => {

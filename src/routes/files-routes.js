@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/', verifyToken, home);
 router.get('/login', redirectIfAuthenticated, login);
 router.get('/register', redirectIfAuthenticated, register);
-router.get('/users', verifyToken, continueIfUserIsAdmin, userList);
+router.get('/admin', verifyToken, continueIfUserIsAdmin, userList);
 router.get('/users/edit', verifyToken, userEdit);
 router.get('/systems', verifyToken, systemList);
 router.get('/systems/edit/:id', verifyToken, systemEdit);

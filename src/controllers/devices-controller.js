@@ -128,6 +128,11 @@ export const updateDevice = async (req, res) => {
 		return;
 	}
 
+	if (!name || name.trim() === '') {
+        res.status(400).json({ error: 'Name is required' });
+        return;
+    }
+
 	deviceToUpdate.name = name;
 	deviceToUpdate.description = description;
 	deviceToUpdate.user_alias = user_alias;

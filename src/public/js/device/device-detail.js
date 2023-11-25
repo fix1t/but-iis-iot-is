@@ -25,8 +25,8 @@ async function loadDeviceData(deviceId) {
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
-						<label for="deviceName" class="form-label">Name</label>
-						<input type="text" id="deviceName" class="form-control" value="${deviceData.name}" disabled>
+						<label for="deviceName" class="form-label">* Name</label>
+						<input type="text" id="deviceName" class="form-control" value="${deviceData.name}" disabled required>
 					</div>
 				</div>
 				<div class="row mb-3">

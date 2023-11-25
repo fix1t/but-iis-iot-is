@@ -9,11 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	loadDevices();
 });
 
-document.getElementById('addDeviceButton').addEventListener('click', function () {
-	// go to the add device page for this system
-	window.location.href = `/device/create/${systemId}`;
-});
-
 async function loadSystemData() {
 	try {
 		const response = await fetch(`/api/systems/${systemId}`);
@@ -43,6 +38,7 @@ async function loadSystemData() {
 		isAdmin = userResponse.is_admin;
 
 		// wait for systemId to be set
+		loadSystemAddDeviceButton();
 		loadSystemEditButton()
 		loadSystemUsers();
 		loadNotSystemUsers();
@@ -77,6 +73,37 @@ async function loadSystemEditButton() {
 		button.addEventListener('click', function () {
 			// go to the edit system page
 			window.location.href = `/systems/edit/${systemId}`;
+		});
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	}
+}
+
+async function loadSystemAddDeviceButton() {
+	try {
+		const addDeviceButton = document.getElementById('addDevice');
+
+		if (userId !== ownerId && !isAdmin) {
+			// show the edit button only for owner or admin
+			addDeviceButton.classList.add('d-none');
+			return;
+		}
+		else {
+			addDeviceButton.classList.add('d-inline-block');
+		}
+
+		// Create button
+		const button = document.createElement('button');
+		button.textContent = 'Add Device';
+		button.classList.add('btn', 'btn-primary');
+		button.id = 'addDeviceButton';
+
+		addDeviceButton.innerHTML = '';
+		addDeviceButton.appendChild(button);
+
+		button.addEventListener('click', function () {
+			// go to the add device page for this system
+			window.location.href = `/device/create/${systemId}`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);
@@ -307,7 +334,7 @@ async function loadSystemRequests() {
 
 		const requests = await response.json();
 
-		if (userId !== ownerId) {
+		if (userId !== ownerId && !isAdmin) {
 			// show the request list only for owner or admin
 			requestList.classList.add('d-none');
 			return;

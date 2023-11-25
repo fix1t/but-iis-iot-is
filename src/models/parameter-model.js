@@ -29,6 +29,18 @@ class Parameter {
 		}
 	}
 
+	static async getAllParameters() {
+		let sql = `SELECT * FROM Parameters`;
+		try {
+			const [rows] = await db.promise().query(sql);
+			return rows.length ? rows.map(row => Parameter.rowToParameter(row)) : null;
+		}
+		catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static async findByTypeId(typeId) {
 		let sql = `SELECT * FROM Parameters WHERE type_id = ?`;
 		try {

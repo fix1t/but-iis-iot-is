@@ -56,3 +56,7 @@ export const deviceCreate = (req, res) => {
 export const parameterDetail = (req, res) => {
 	res.sendFile(path.join(__dirname, '../views/parameter/parameter-detail.html'));
 }
+
+export const typeList = (req, res) => {
+	res.sendFile(path.join(__dirname, '../views/type/type-list.html'));
+}

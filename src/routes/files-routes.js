@@ -4,7 +4,7 @@ import {
 	userList, userEdit,
 	systemList, systemEdit, systemCreate, systemDetail, systemRequests,
 	deviceDetail, deviceCreate,
-	parameterDetail, typeList
+	parameterDetail, typeList, typeCreate
 } from '../controllers/files-controller.js';
 import { verifyToken, redirectIfAuthenticated, continueIfUserIsInSystem } from '../utils/auth.js';
 
@@ -24,6 +24,7 @@ router.get('/device/detail/:id', verifyToken, deviceDetail);
 router.get('/device/create', verifyToken, deviceCreate);
 router.get('/device/create/:system_id', verifyToken, continueIfUserIsInSystem, deviceCreate);
 router.get('/types', verifyToken, typeList);
+router.get('/types/create', verifyToken, typeCreate);
 router.get('/parameters/:device_id/:parameter_id/', verifyToken, parameterDetail);
 
 export default router;

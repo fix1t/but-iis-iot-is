@@ -62,7 +62,16 @@
     </div>
 
     <div class="container mt-4" id="freeDevicesList"></div>
-
+    <script>
+      window.onload = function() {
+        if (window.location.pathname === '/device/create' || window.location.pathname === '/device/create/') {
+            document.getElementById('freeDevicesList').style.display = 'none';
+        } else {
+            document.getElementById('freeDevicesList').style.display = 'block';
+        }
+      }
+      </script>
+  
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

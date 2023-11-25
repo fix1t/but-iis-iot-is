@@ -29,6 +29,14 @@ export const continueIfUserIsInSystem = async (req, res, next) => {
 	next();
 }
 
+export const continueIfUserIsAdmin = async (req, res, next) => {
+	const user = req.user;
+	if (!user.is_admin) {
+		return res.status(401).json({ error: 'Unauthorized' });
+	}
+	next();
+}
+
 export const redirectIfAuthenticated = (req, res, next) => {
 	const token = req.cookies['auth-token'];
 	if (token) {

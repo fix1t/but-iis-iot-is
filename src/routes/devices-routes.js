@@ -1,7 +1,7 @@
 import express from 'express';
 import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem, deleteDevice, updateDevice, canEditKpis } from '../controllers/devices-controller.js';
 import { getParameterById, getAllValuesByParameterIdAndDeviceId, getAllParametersAndValuesByDeviceId, getAllKpisByParameterIdAndDeviceId } from '../controllers/parameters-controller.js';
-import { createKpi, deleteKpi } from '../controllers/kpis-controller.js';
+import { createKpi, deleteKpi, getLatestKpiStatus } from '../controllers/kpis-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
 
 const router = express.Router();
@@ -20,6 +20,7 @@ router.get('/:device_id/kpis-can-edit', verifyToken, canEditKpis);
 router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createDevice);
 router.post('/create', verifyToken, createDevice);
 router.post('/:system_id/add-device', verifyToken, addDeviceToSystem);
+router.post('/:device_id/parameters/status', verifyToken, getLatestKpiStatus);
 router.post('/:device_id/parameters/:parameter_id/create/kpi', verifyToken, createKpi);
 //delete
 router.delete('/:device_id', verifyToken, deleteDevice);

@@ -107,6 +107,12 @@ async function loadKpiList() {
 		const kpis = await response.json();
 
 		const kpiListElement = document.getElementById('kpiList');
+
+		if (kpis == null) {
+			kpiListElement.innerHTML = '<p class="text-center text-primary m-3 text-uppercase">No KPI function for this parameter</p>';
+			return;
+		}
+
 		// Use Bootstrap's 'table' classes for styling
 		kpiListElement.className = 'table table-striped table-bordered';
 		kpiListElement.innerHTML = '<thead class="thead-dark"><tr><th>Threshold</th><th>Operation</th><th>Action</th></tr></thead><tbody>';

@@ -23,7 +23,7 @@ export const verifyToken = (req, res, next) => {
 export const continueIfUserIsInSystem = async (req, res, next) => {
 	const user = req.user;
 	const systemId = req.params.system_id;
-	if (!user.isAdmin && !(await Systems.isUserInSystem(user.id, systemId))) {
+	if (!user.is_admin && !(await Systems.isUserInSystem(user.id, systemId))) {
 		return res.status(401).json({ error: 'Unauthorized' });
 	}
 	next();

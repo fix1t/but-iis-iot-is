@@ -1,12 +1,15 @@
 let deviceId;
 let parameterId;
+let canEditKpis = false;
 
-document.addEventListener('DOMContentLoaded', function () {
+
+document.addEventListener('DOMContentLoaded', async function () {
 	let uri = window.location.pathname.split('/');
 	deviceId = uri.pop();
 	parameterId = uri.pop();
-	loadParameterData();
+	await loadParameterData();
 	loadGraph();
+	loadKpiCreateArea();
 	loadKpiList();
 });
 
@@ -101,6 +104,64 @@ async function loadGraph() {
 	}
 }
 
+async function loadKpiCreateArea() {
+	try {
+		const response = await fetch(`/api/devices/${deviceId}/kpis-can-edit`);
+		const data = await response.json();
+		canEditKpis = data['canEditKpis'];
+
+		if (canEditKpis) {
+			const kpiCreateArea = document.getElementById('kpiCreateArea');
+			console.log("can edit kpis");
+			kpiCreateArea.innerHTML = `
+				<div class="card">
+					<div class="card-header">Add New KPI</div>
+					<div class="card-body">
+					<form id="createKpiForm" class="row">
+						<div class="col-md-5">
+						<div class="form-group">
+							<label for="kpiThreshold" class="sr-only">Threshold</label>
+							<input
+							type="number"
+							class="form-control"
+							id="kpiThreshold"
+							placeholder="Threshold"
+							step="0.01"
+							required
+							/>
+						</div>
+						</div>
+						<div class="col-md-5">
+						<div class="form-group">
+							<label for="kpiOperation" class="sr-only">Operation</label>
+							<select class="form-control" id="kpiOperation" required>
+							<option value="greater">Greater</option>
+							<option value="less">Less</option>
+							<option value="equal">Equal</option>
+							<option value="not_equal">Not Equal</option>
+							</select>
+						</div>
+						</div>
+						<div class="col-md-2">
+						<button type="submit" class="btn btn-primary btn-block">
+							Create KPI
+						</button>
+						</div>
+					</form>
+					</div>
+				</div>`;
+			addListenerOnKpiCreate();
+		}
+
+	} catch (error) {
+		console.error('Failed to load device auth:', error);
+	}
+
+	loadKpiList()
+
+}
+
+
 async function loadKpiList() {
 	try {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/kpis`);
@@ -115,17 +176,29 @@ async function loadKpiList() {
 
 		// Use Bootstrap's 'table' classes for styling
 		kpiListElement.className = 'table table-striped table-bordered';
-		kpiListElement.innerHTML = '<thead class="thead-dark"><tr><th>Threshold</th><th>Operation</th><th>Action</th></tr></thead><tbody>';
+		if (canEditKpis) {
+			kpiListElement.innerHTML = '<thead class="thead-dark"><tr><th>Threshold</th><th>Operation</th><th>Action</th></tr></thead><tbody>';
 
-		kpis.forEach(kpi => {
-			// Append rows to the table body
-			const row = kpiListElement.insertRow();
-			row.innerHTML = `
-		  <td>${kpi.threshold}</td>
-		  <td>${kpi.operation}</td>
-		  <td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">X</button></td>
-		`;
-		});
+			kpis.forEach(kpi => {
+				// Append rows to the table body
+				const row = kpiListElement.insertRow();
+				row.innerHTML = `
+				<td>${kpi.threshold}</td>
+				<td>${kpi.operation}</td>
+				<td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">X</button></td>
+				`;
+			});
+		} else {
+			kpiListElement.innerHTML = '<thead class="thead-dark"><tr><th>Threshold</th><th>Operation</th></tr></thead><tbody>';
+			kpis.forEach(kpi => {
+				// Append rows to the table body
+				const row = kpiListElement.insertRow();
+				row.innerHTML = `
+				<td>${kpi.threshold}</td>
+				<td>${kpi.operation}</td>
+				`;
+			});
+		}
 
 		// Add click event listeners to delete buttons
 		document.querySelectorAll('.delete-kpi').forEach(button => {
@@ -160,32 +233,34 @@ async function deleteKpi(kpiId) {
 	loadKpiList();
 }
 
-document.getElementById('createKpiForm').addEventListener('submit', async function (e) {
-	e.preventDefault();
+function addListenerOnKpiCreate() {
+	document.getElementById('createKpiForm').addEventListener('submit', async function (e) {
+		e.preventDefault();
 
-	const threshold = document.getElementById('kpiThreshold').value;
-	const operation = document.getElementById('kpiOperation').value;
+		const threshold = document.getElementById('kpiThreshold').value;
+		const operation = document.getElementById('kpiOperation').value;
 
-	try {
-		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/create/kpi`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ threshold, operation })
-		});
+		try {
+			const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/create/kpi`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ threshold, operation })
+			});
 
-		if (!response.ok) {
-			console.log(response);
-			throw new Error('Network response was not ok');
+			if (!response.ok) {
+				console.log(response);
+				throw new Error('Network response was not ok');
+			}
+
+			const kpi = await response.json();
+			console.log(kpi);
+		} catch {
+			console.error('Failed to create KPI');
 		}
 
-		const kpi = await response.json();
-		console.log(kpi);
-	} catch {
-		console.error('Failed to create KPI');
-	}
 
-
-	loadKpiList();
-});
+		loadKpiList();
+	});
+}

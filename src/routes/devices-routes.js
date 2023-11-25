@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem, deleteDevice, updateDevice } from '../controllers/devices-controller.js';
+import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem, deleteDevice, updateDevice, canEditKpis } from '../controllers/devices-controller.js';
 import { getParameterById, getAllValuesByParameterIdAndDeviceId, getAllParametersAndValuesByDeviceId, getAllKpisByParameterIdAndDeviceId } from '../controllers/parameters-controller.js';
 import { createKpi, deleteKpi } from '../controllers/kpis-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
@@ -15,6 +15,7 @@ router.get('/:device_id/parameters', verifyToken, getAllParametersAndValuesByDev
 router.get('/:device_id/parameters/:parameter_id', verifyToken, getParameterById)
 router.get('/:device_id/parameters/:parameter_id/data', verifyToken, getAllValuesByParameterIdAndDeviceId);
 router.get('/:device_id/parameters/:parameter_id/kpis', verifyToken, getAllKpisByParameterIdAndDeviceId);
+router.get('/:device_id/kpis-can-edit', verifyToken, canEditKpis);
 //post
 router.post('/create/:system_id', verifyToken, continueIfUserIsInSystem, createDevice);
 router.post('/create', verifyToken, createDevice);

@@ -171,6 +171,7 @@ export const getCurrentUser = async (req, res) => {
 		gender: user.gender,
 		birth: user.birth,
 		bio: user.bio,
+		created: user.created,
 		is_admin: user.is_admin
 	}
 	res.status(200).json(data);
@@ -214,7 +215,8 @@ export const getAllUsers = async (req, res) => {
 			email: user.email,
 			bio: user.bio,
 			birth: user.birth,
-			gender: user.gender
+			gender: user.gender,
+			created: user.created
 		};
 		});
 		res.json(filteredUsers);

@@ -116,7 +116,7 @@ async function loadKpiList() {
 			const row = kpiListElement.insertRow();
 			row.innerHTML = `
 		  <td>${kpi.threshold}</td>
-		  <td>${kpi.operation}</td>
+		  <td>${kpi.operation.charAt(0).toUpperCase() + kpi.operation.slice(1)}</td>
 		  <td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">X</button></td>
 		`;
 		});

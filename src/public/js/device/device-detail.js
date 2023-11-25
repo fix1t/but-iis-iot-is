@@ -16,7 +16,7 @@ async function loadDeviceData(deviceId) {
 		const device = await response.json();
 
 		deviceInfo.innerHTML = `
-			<div class="container">
+			<div>
 				<div class="row">
 					<div class="col-12">
 						<h3 class="text-center">Device Info</h3>
@@ -74,16 +74,55 @@ async function loadParameters(deviceId) {
 
 		const parameters = await response.json();
 
-		parameters.forEach(parameter => {
+		parameterList.classList.add('mt-4', 'container');
+
+		const heading = document.createElement('h2');
+		heading.textContent = 'Parameter List';
+
+		const table = document.createElement('table');
+		table.classList.add('table', 'table-striped', 'table-bordered');
+
+		const tbody = document.createElement('tbody');
+
+		parameters.forEach(async (parameter) => {
+			const name = parameter.parameter_name;
+			const value = parameter.parameter_value;
+			const unit_name = parameter.parameter_unit_name;
+			const parameter_id = parameter.parameter_id;
+			const device_id = parameter.device_id;
+
+			const successResponse = await fetch(`/api/devices/${deviceId}/parameters/status`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					id: parameter_id,
+					value: value,
+				}),
+			});
+
+			const successData = await successResponse.json();
+			const success = successData.success;
+			if (successData.errors)
+				console.log(successData.errors);
+
 			const row = document.createElement('tr');
+			// Add a class based on the success status
+			row.classList.add(success ? 'bg-success' : 'bg-danger');
+			row.classList.add('text-white');
+
 			row.innerHTML = `
-				<td>${parameter.parameter_name}</td>
-				<td>${parameter.parameter_value}</td>
-				<td>${parameter.parameter_unit_name}</td>
-				<td><a href="/parameters/${parameter.parameter_id}/${parameter.device_id}">Detail</a></td>
+				<td>${name}</td>
+				<td>${value}</td>
+				<td>${unit_name}</td>
+				<td><a href="/parameters/${parameter_id}/${device_id}">Detail</a></td>
 			`;
-			parameterList.appendChild(row);
+			tbody.appendChild(row);
 		});
+		table.appendChild(tbody);
+		parameterList.appendChild(heading);
+		parameterList.appendChild(table);
 	} catch (error) {
 		console.error('Failed to load parameters:', error);
 	}

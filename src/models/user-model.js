@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 
 class User {
-	constructor(username, email, password, birth, gender, bio, is_admin = false, id = null) {
+	constructor(username, email, password, birth, gender, bio, is_admin = false, id = null, created = null) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -10,6 +10,7 @@ class User {
 		this.bio = bio;
 		this.is_admin = is_admin;
 		this.id = id;
+		this.created = created;
 	}
 	// Save new user to the database
 	async save() {
@@ -139,7 +140,8 @@ class User {
 			row.gender,
 			row.bio,
 			row.is_admin,
-			row.id
+			row.id,
+			row.created
 		);
 	}
 }

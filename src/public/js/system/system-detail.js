@@ -1,6 +1,7 @@
 let systemId;
 let ownerId;
 let userId;
+let isAdmin;
 
 document.addEventListener('DOMContentLoaded', function () {
 	systemId = window.location.pathname.split('/').pop();
@@ -39,6 +40,7 @@ async function loadSystemData() {
 		const user = await fetch(`/api/users/me`);
 		const userResponse = await user.json();
 		userId = userResponse.id;
+		isAdmin = userResponse.is_admin;
 
 		// wait for systemId to be set
 		loadSystemEditButton()
@@ -54,7 +56,7 @@ async function loadSystemEditButton() {
 	try {
 		const editSystemButton = document.getElementById('editSystem');
 
-		if (userId !== ownerId) {
+		if (userId !== ownerId && !isAdmin) {
 			// show the edit button only for owner or admin
 			editSystemButton.classList.add('d-none');
 			return;
@@ -92,7 +94,7 @@ async function loadSystemUsers() {
 
 		const data = await response.json();
 
-		if (userId !== ownerId) {
+		if (userId !== ownerId && !isAdmin) {
 			// show the request list only for owner or admin
 			userSystemList.classList.add('d-none');
 			return;
@@ -114,7 +116,7 @@ async function loadSystemUsers() {
                 <th>Username</th>
                 <th>Email</th>
                 <th>Bio</th>
-                <th>Created</th>
+                <th>Added</th>
                 <th></th>
             </tr>
         `;
@@ -162,7 +164,7 @@ async function loadNotSystemUsers() {
 
 		const data = await response.json();
 
-		if (userId !== ownerId) {
+		if (userId !== ownerId && !isAdmin) {
 			// show the request list only for owner or admin
 			userNotSystemList.classList.add('d-none');
 			return;

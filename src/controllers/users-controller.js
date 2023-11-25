@@ -170,7 +170,8 @@ export const getCurrentUser = async (req, res) => {
 		email: user.email,
 		gender: user.gender,
 		birth: user.birth,
-		bio: user.bio
+		bio: user.bio,
+		is_admin: user.is_admin
 	}
 	res.status(200).json(data);
 };

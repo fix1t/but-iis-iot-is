@@ -1,11 +1,31 @@
+let systemId;
+let ownerId;
 let userId;
 let isAdmin;
 
-
-fetch('/api/types/get')
+// Get logged User
+fetch(`/api/users/me`)
     .then(response => response.json())
-    .then(types => {
+    .then(userResponse => {
+        userId = userResponse.id;
+        isAdmin = userResponse.is_admin;
+        const createTypeButton = document.getElementById('createTypeButton');
+        if (isAdmin) {
+			// show the create type button for admin users
+			createTypeButton.classList.remove('d-none');
+		} else {
+			// hide the create type button for non-admin users
+			createTypeButton.classList.add('d-none');
+		}
+    })
+    .catch(error => console.error('Error:', error));
+
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        const response = await fetch('/api/types/get');
+        const types = await response.json();
         const tableBody = document.getElementById('typesTableBody');
+
         types.forEach(type => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -16,22 +36,8 @@ fetch('/api/types/get')
             `;
             tableBody.appendChild(row);
         });
-    })
-    .catch(error => console.error('Error:', error));
 
-async function checkUserAdminStatus() {
-	// Get logged User
-	const user = await fetch(`/api/users/me`);
-	const userResponse = await user.json();
-	const userId = userResponse.id;
-	const isAdmin = userResponse.is_admin;
-
-	const createTypeButton = document.getElementById('createTypeButton');
-	if (isAdmin) {
-		// hide the create type button for non-admin users
-		createTypeButton.classList.remove('d-none');
-	}
-}
-
-// Call the function when the page loads
-window.onload = checkUserAdminStatus;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});

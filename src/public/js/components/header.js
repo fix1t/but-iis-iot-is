@@ -29,6 +29,9 @@ async function initializePage() {
 			<li class="nav-item">
 			  <a class="nav-link" href="/systems-requests">My Requests</a>
 			</li>
+      <li class="nav-item">
+			  <a class="nav-link" href="/types">Types</a>
+			</li>
 		  </ul>
 		  <button id="editUserButton" class="btn btn-outline-warning my-2 mr-2 my-sm-0" type="button">
 			Profile <i class="fas fa-user"></i>

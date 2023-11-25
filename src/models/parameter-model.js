@@ -10,12 +10,13 @@ class Parameter {
 	}
 
 	async save() {
+		INFO(`Saving parameter ${this.name} with unit name ${this.unit_name}`);
 		let sql = `
 			INSERT INTO Parameters (
-				type_id, name
-			) VALUES (?, ?)
+				type_id, name, unit_name
+			) VALUES (?, ?, ?)
 		`;
-		return db.promise().execute(sql, [this.type_id, this.name]);
+		return db.promise().execute(sql, [this.type_id, this.name, this.unit_name]);
 	}
 
 	static async findById(id) {

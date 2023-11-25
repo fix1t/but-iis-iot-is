@@ -6,6 +6,7 @@ import userRoutes from './routes/users-routes.js'
 import systemRoutes from './routes/systems-routes.js'
 import userSystemRoutes from './routes/users-systems-routes.js'
 import deviceRoutes from './routes/devices-routes.js'
+import typeRoutes from './routes/types-routes.js'
 import path from 'path'
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/systems', systemRoutes);
 app.use('/api/user/system', userSystemRoutes);
 app.use('/api/devices', deviceRoutes);
+app.use('/api/types', typeRoutes);
 
 // Close the connection when the application is shutting down
 process.on('SIGINT', () => {

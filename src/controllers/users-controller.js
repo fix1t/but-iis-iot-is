@@ -1,5 +1,6 @@
 import db from '../config/db.js';
 import User from '../models/user-model.js';
+import Broker from '../models/broker-model.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/auth.js';
 
@@ -88,6 +89,8 @@ export const loginUser = async (req, res) => {
 			sameSite: 'strict', // CSRF protection
 			maxAge: 3600000 
 		  });
+
+		Broker.simulateBroker();
 
         res.status(200).json({ message: 'Logged in successfully' });
     } catch (err) {

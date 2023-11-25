@@ -40,6 +40,7 @@ function addParameter() {
     const newParameterDiv = document.createElement('div');
     newParameterDiv.className = 'form-group parameter';
     newParameterDiv.innerHTML = `
+		<hr style="border: 1px solid black;">
         <label for="parameterName">Parameter Name:</label>
         <input type="text" class="form-control parameterName" name="parameterName">
         <label for="unitName">Unit Name:</label>

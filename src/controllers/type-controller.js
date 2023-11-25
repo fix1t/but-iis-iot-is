@@ -4,9 +4,8 @@ import { ERROR, INFO } from '../utils/logger.js';
 
 export const createType = async (req, res) => {
     const { name, parameters } = req.body;
-    console.log("got here");
 
-    if (!name || !parameters) {
+    if (!name || parameters.length === 0 || parameters.some(param => param.name.trim() === '' || param.unit_name.trim() === '')) {
         return res.status(400).json({ error: 'Name and parameters are required' });
     }
 	const existingType = await Type.findByName(name);

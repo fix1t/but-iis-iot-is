@@ -48,7 +48,7 @@ export const getLatestKpiStatus = async (req, res) => {
 		const parameterId = id;
 		const parameterValue = value;
 
-		INFO(`Parameter ID: ${parameterId}, Parameter Value: ${parameterValue}`);
+		INFO(`Getting latest value (${parameterValue}) status for parameter ID: ${parameterId}`);
 
 		const kpiResults = await KPI.findAllKpisByDeviceIdAndParameterId(deviceId, parameterId);
 
@@ -69,7 +69,6 @@ export const getLatestKpiStatus = async (req, res) => {
 		} else {
 			errors.push(`No KPI defined`);
 		}
-		INFO(`Number of errors: ${errors.length}`);
 
 		if (errors.length > 0) {
 			res.status(200).json({ success: false, errors });

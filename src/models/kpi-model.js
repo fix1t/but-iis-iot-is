@@ -43,17 +43,6 @@ class KPI {
 		}
 	}
 
-	static async findByDeviceIdAndParameterId(deviceId, parameterId) {
-		let sql = `SELECT * FROM KPIs WHERE device_id = ? AND parameter_id = ?`;
-		try {
-			const [rows] = await db.promise().query(sql, [deviceId, parameterId]);
-			return rows.length ? rows.map(row => KPI.rowToKPI(row)) : null;
-		} catch (error) {
-			console.error('Error executing query:', error.stack);
-			throw error;
-		}
-	}
-
 	static async deleteById(kpiId) {
 		let sql = `
 			DELETE FROM KPIs

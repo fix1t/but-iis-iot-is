@@ -38,3 +38,47 @@ export const deleteKpi = async (req, res) => {
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
+
+export const getLatestKpiStatus = async (req, res) => {
+	const deviceId = req.params.device_id;
+	const { id, value } = req.body;
+	let errors = []; // Collect errors within the loop
+
+	try {
+		const parameterId = id;
+		const parameterValue = value;
+
+		INFO(`Parameter ID: ${parameterId}, Parameter Value: ${parameterValue}`);
+
+		const kpiResults = await KPI.findAllKpisByDeviceIdAndParameterId(deviceId, parameterId);
+
+		if (kpiResults && kpiResults.length > 0) {
+			// Loop through each KPI result and compare with threshold and operation
+			for (let i = 0; i < kpiResults.length; i++) {
+				const threshold = kpiResults[i].threshold;
+				const operation = kpiResults[i].operation;
+
+				// Collect errors
+				if ((operation === 'greater' && parameterValue < threshold) ||
+					(operation === 'less' && parameterValue > threshold) ||
+					(operation === 'equal' && parameterValue !== threshold) ||
+					(operation === 'not_equal' && parameterValue === threshold)) {
+					errors.push(`Threshold violation for operation '${operation}'`);
+				}
+			}
+		} else {
+			errors.push(`No KPI defined`);
+		}
+		INFO(`Number of errors: ${errors.length}`);
+
+		if (errors.length > 0) {
+			res.status(200).json({ success: false, errors });
+		} else {
+			res.status(200).json({ success: true });
+		}
+	} catch (error) {
+		ERROR(error.message);
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ success: false, error: 'Internal Server Error' });
+	}
+}

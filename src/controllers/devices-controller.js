@@ -34,8 +34,10 @@ export const createDevice = async (req, res) => {
 		const parameters = await Parameter.findByTypeId(type_id);
 
 		// Add the parameters to the device
-		for (const parameter of parameters) {
-			device.addParameter(parameter.id);
+		if (parameters) {
+			for (const parameter of parameters) {
+				device.addParameter(parameter.id);
+			}
 		}
 
 		// Add the device to the system
@@ -94,7 +96,7 @@ export const addDeviceToSystem = async (req, res) => {
 		res.status(201).json({ message: 'Device added successfully', device_id: device.id });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
+		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
 

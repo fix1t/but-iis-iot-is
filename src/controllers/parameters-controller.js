@@ -24,20 +24,6 @@ export const getAllValuesByParameterIdAndDeviceId = async (req, res) => {
 	}
 }
 
-export const getAllParameters = async (req, res) => {
-    try {
-        const parameters = await Parameter.getAllParameters();
-        if (parameters) {
-            res.status(200).json(parameters);
-        } else {
-            res.status(404).json({ message: 'No parameters found' });
-        }
-    } catch (error) {
-        console.error('Error executing query:', error.stack);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
-
 export const getAllParametersAndValuesByDeviceId = async (req, res) => {
 	const deviceId = req.params.device_id;
 

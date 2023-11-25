@@ -1,29 +1,18 @@
 import Type from '../models/type-model.js';
 import Parameter from '../models/parameter-model.js';
+import { INFO } from '../utils/logger.js';
 
 
-export const createTypeWithParameters = async (req, res) => {
-    const { name, parameters } = req.body;
+export const createType = async (req, res) => {
+    const { name } = req.body;
 
-    // Create a new type object
-    const newType = new Type({
-        name
-    });
-
-    // Save the new type to the database
     try {
-        const savedType = await newType.save();
-
-        // Create parameters for the type
-        const parameterPromises = parameters.map(param => {
-            return Parameter.create({ ...param, type_id: savedType.id });
-        });
-
-        // Wait for all parameters to be created
-        const savedParameters = await Promise.all(parameterPromises);
-
-        // Respond with the saved type and parameters
-        res.status(201).json({ type: savedType, parameters: savedParameters });
+        // Create a new type with the provided name
+        const type = new Type(name);
+        // Save the new type to the database
+        const savedType = await type.save();
+        // Respond with the saved type
+        res.status(201).json(savedType);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });

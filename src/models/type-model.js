@@ -6,28 +6,13 @@ class Type {
 		this.name = name;
 	}
 
-	async save(parameter_ids) {
+	async save() {
 		let sql = `
 			INSERT INTO Types (
 				name
 			) VALUES (?)
 		`;
 		const result = await db.promise().execute(sql, [this.name]);
-		const typeId = result[0].insertId;
-	
-		// Insert the parameters into the TypeParameters junction table
-		const parameterPromises = parameter_ids.map(id => {
-			let sql = `
-				INSERT INTO TypeParameters (
-					type_id,
-					parameter_id
-				) VALUES (?, ?)
-			`;
-			return db.promise().execute(sql, [typeId, id]);
-		});
-	
-		await Promise.all(parameterPromises);
-	
 		return result;
 	}
 

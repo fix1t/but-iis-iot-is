@@ -2,7 +2,7 @@ import Device from '../models/device-model.js';
 import Parameter from '../models/parameter-model.js';
 import System from '../models/system-model.js';
 import Type from '../models/type-model.js';
-import { ERROR, INFO } from '../utils/logger.js';
+import { DEBUG, ERROR, INFO } from '../utils/logger.js';
 
 export const createDevice = async (req, res) => {
 	const user = req.user;
@@ -65,11 +65,14 @@ export const getMyDevices = async (req, res) => {
 }
 
 export const getDeviceById = async (req, res) => {
+	const user = req.user;
 	const deviceId = req.params.device_id;
 
 	try {
 		const device = await Device.findById(deviceId);
-		res.status(200).json(device);
+		const isOwner = device.owner_id === user.id;
+		DEBUG(`User ${user.id} is owner of device ${deviceId}: ${isOwner}`)
+		res.status(200).json({ ...device, isOwner });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });

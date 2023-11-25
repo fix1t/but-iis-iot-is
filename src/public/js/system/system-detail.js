@@ -183,7 +183,29 @@ async function loadSystemUsers() {
 async function loadNotSystemUsers() {
 	try {
 		const userNotSystemList = document.getElementById('userNotSystemList');
+		const searchResultsContainer = document.createElement('div');
+		searchResultsContainer.classList.add('list-group', 'mt-2');
+
+		// Add a search input field
+		const heading = document.createElement('h2');
+		heading.textContent = 'Add User';
+		const searchInput = document.createElement('input');
+		searchInput.setAttribute('type', 'text');
+		searchInput.setAttribute('class', 'form-control mb-2');
+		searchInput.setAttribute('placeholder', 'Search by username');
+		searchInput.addEventListener('input', handleSearch);
+
+		// Append the search input to userNotSystemList
+		userNotSystemList.innerHTML = ''; // Clear existing content
+		userNotSystemList.appendChild(heading);
+		userNotSystemList.appendChild(searchInput);
+
+		// Append the search results container to userNotSystemList
+		userNotSystemList.appendChild(searchResultsContainer);
+
+		// Fetch all users not in the system
 		const response = await fetch(`/api/user/system/${systemId}/users/not`);
+
 		if (!response.ok) {
 			console.error('Error fetching data:', response.statusText);
 			return;
@@ -191,61 +213,42 @@ async function loadNotSystemUsers() {
 
 		const data = await response.json();
 
-		if (userId !== ownerId && !isAdmin) {
-			// show the request list only for owner or admin
-			userNotSystemList.classList.add('d-none');
-			return;
+		// Function to handle search and suggestions
+		function handleSearch() {
+			const searchTerm = searchInput.value.toLowerCase();
+
+			// Filter data based on the search term
+			const filteredData = data.filter(user => user.username.toLowerCase().includes(searchTerm));
+
+			// Display search results
+			displayResults(filteredData);
 		}
-		else {
-			userNotSystemList.classList.add('mt-4', 'container',);
-		}
 
-		// Create the table structure
-		const heading = document.createElement('h2');
-		heading.textContent = 'Users NOT in System List';
-		const box = document.createElement('div');
-		box.classList.add('table-wrapper-scroll-y', 'my-custom-scrollbar', 'table-fix-head');
+		// Function to display search results
+		function displayResults(results) {
+			searchResultsContainer.innerHTML = '';
 
-		const table = document.createElement('table');
-		table.classList.add('table');
-		const thead = document.createElement('thead');
-		thead.classList.add('thead-light');
-		thead.innerHTML = `
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Bio</th>
-                <th></th>
-            </tr>
-        `;
-
-		const tbody = document.createElement('tbody');
-
-		// Fill the table with user data
-		data.forEach(user => {
-			const row = document.createElement('tr');
-			row.innerHTML = `
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td>${user.bio}</td>
-                <td>
+			if (results.length === 0) {
+				const noResultsMessage = document.createElement('div');
+				noResultsMessage.classList.add('alert', 'alert-info', 'mb-0');
+				noResultsMessage.textContent = 'Oops! No matching users found. Try a different search!';
+				searchResultsContainer.appendChild(noResultsMessage);
+			} else {
+				results.forEach(user => {
+					const resultItem = document.createElement('div');
+					resultItem.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'justify-content-between', 'align-items-center', 'border', 'p-2');
+					resultItem.innerHTML = `
+                    <p class="mb-0">${user.username}</p>
                     <button class="btn btn-success btn-sm" onclick="addUser(${user.id})">
                         <i class="fas fa-plus"></i>
                     </button>
-                </td>    
-            `;
-			row.id = `userRow_${user.id}`;
-			tbody.appendChild(row);
-		});
+                `;
 
-		table.appendChild(thead);
-		table.appendChild(tbody);
-		box.appendChild(table);
+					searchResultsContainer.appendChild(resultItem);
+				});
+			}
+		}
 
-		// Clear existing content in userNotSystemTableBody and append the table
-		userNotSystemList.innerHTML = '';
-		userNotSystemList.appendChild(heading);
-		userNotSystemList.appendChild(box);
 	} catch (error) {
 		console.error('Error fetching data:', error);
 	}

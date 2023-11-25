@@ -6,17 +6,38 @@ class Type {
 		this.name = name;
 	}
 
-	async save() {
+	async save(parameter_ids) {
 		let sql = `
 			INSERT INTO Types (
 				name
 			) VALUES (?)
 		`;
-		return db.promise().execute(sql, [this.name]);
+		const result = await db.promise().execute(sql, [this.name]);
+		const typeId = result[0].insertId;
+	
+		// Insert the parameters into the TypeParameters junction table
+		const parameterPromises = parameter_ids.map(id => {
+			let sql = `
+				INSERT INTO TypeParameters (
+					type_id,
+					parameter_id
+				) VALUES (?, ?)
+			`;
+			return db.promise().execute(sql, [typeId, id]);
+		});
+	
+		await Promise.all(parameterPromises);
+	
+		return result;
 	}
 
 	static async findAll() {
-		let sql = `SELECT * FROM Types`;
+		const sql = `
+			SELECT Types.id, Types.name, GROUP_CONCAT(Parameters.name) as parameters
+			FROM Types
+			LEFT JOIN Parameters ON Types.id = Parameters.type_id
+			GROUP BY Types.id
+		`;
 		try {
 			const [rows] = await db.promise().query(sql);
 			return rows.length ? rows.map(row => Type.rowToType(row)) : null;
@@ -38,7 +59,9 @@ class Type {
 	}
 
 	static rowToType(row) {
-		return new Type(row.name, row.id);
+		const type = new Type(row.name, row.id);
+		type.parameters = row.parameters ? row.parameters.split(',') : [];
+		return type;
 	}
 }
 

@@ -1,23 +1,33 @@
 import Type from '../models/type-model.js';
-import { INFO } from '../utils/logger.js';
+import { ERROR, INFO } from '../utils/logger.js';
 
 
 export const createType = async (req, res) => {
-    const { name } = req.body;
+    const { name, parameters } = req.body;
+    console.log("got here");
+
+    if (!name || !parameters) {
+        return res.status(400).json({ error: 'Name and parameters are required' });
+    }
+	const existingType = await Type.findByName(name);
+
+	if (existingType) {
+	ERROR(`Type ${name} already exists`);
+    return res.status(409).json({ error: 'Type already exists' });
+	}
 
     try {
         // Create a new type with the provided name
         const type = new Type(name);
-        // Save the new type to the database
-        const savedType = await type.save();
+        // Add the parameters to the type and save the type to the database
+        await type.saveTypeWithParameters(parameters);
         // Respond with the saved type
-        res.status(201).json(savedType);
+        res.status(201).json(type);
     } catch (err) {
-        console.error(err);
+        console.error(`Error creating type ${name}:`, err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 export const getAllTypesWithParameters = async (req, res) => {
     try {

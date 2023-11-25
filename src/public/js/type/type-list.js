@@ -1,13 +1,9 @@
-let systemId;
-let ownerId;
-let userId;
 let isAdmin;
 
 // Get logged User
 fetch(`/api/users/me`)
     .then(response => response.json())
     .then(userResponse => {
-        userId = userResponse.id;
         isAdmin = userResponse.is_admin;
         const createTypeButton = document.getElementById('createTypeButton');
         if (isAdmin) {

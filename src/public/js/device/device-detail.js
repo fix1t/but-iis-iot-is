@@ -31,6 +31,12 @@ async function loadDeviceData(deviceId) {
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
+						<label for="userAlias" class="form-label">Alias</label>
+						<input type="text" id="userAlias" class="form-control" value="${deviceData.user_alias}" disabled>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-12">
 						<label for="deviceDescription" class="form-label">Description</label>
 						<textarea id="deviceDescription" class="form-control" disabled>${deviceData.description}</textarea>
 					</div>
@@ -45,12 +51,6 @@ async function loadDeviceData(deviceId) {
 					<div class="col-12">
 						<label for="deviceOwner" class="form-label">Owner</label>
 						<input type="text" id="deviceOwner" class="form-control" value="${deviceData.owner_id}" disabled>
-					</div>
-				</div>
-				<div class="row mb-3">
-					<div class="col-12">
-						<label for="userAlias" class="form-label">Alias</label>
-						<input type="text" id="userAlias" class="form-control" value="${deviceData.user_alias}" disabled>
 					</div>
 				</div>
 			</div>
@@ -103,7 +103,67 @@ async function loadParameters(deviceId) {
 }
 
 async function editDevice(deviceId) {
-	window.location.href = `/devices/${deviceId}/edit`;
+	const deviceNameElement = document.getElementById('deviceName');
+	const deviceDescriptionElement = document.getElementById('deviceDescription');
+	const userAliasElement = document.getElementById('userAlias');
+	const deviceManagement = document.getElementById('deviceManagement');
+
+	// Enable the input fields
+	deviceNameElement.removeAttribute('disabled');
+	deviceDescriptionElement.removeAttribute('disabled');
+	userAliasElement.removeAttribute('disabled');
+
+	// Replace the "Edit" button with "Save" and "Cancel" buttons
+	deviceManagement.innerHTML = `
+		<div class="container">
+			<div class="d-flex justify-content-center m-3">
+				<button type="button" class="btn btn-primary mr-3" onclick="saveDeviceChanges(${deviceId})">Save</button>
+				<button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+			</div>
+		</div>
+	`;
+}
+
+
+function cancelEdit() {
+	// Simply reload the page to cancel the edit
+	window.location.reload();
+}
+
+async function saveDeviceChanges(deviceId) {
+	// Retrieve the updated values from the input fields
+	const deviceName = document.getElementById('deviceName').value;
+	const deviceDescription = document.getElementById('deviceDescription').value;
+	const deviceType = document.getElementById('deviceType').value;
+	const deviceOwner = document.getElementById('deviceOwner').value;
+	const userAlias = document.getElementById('userAlias').value;
+
+	try {
+		// Send a PUT request to update the device data
+		const response = await fetch(`/api/devices/${deviceId}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				name: deviceName,
+				description: deviceDescription,
+				type_id: deviceType,
+				owner_id: deviceOwner,
+				user_alias: userAlias,
+			}),
+		});
+
+		if (!response.ok) {
+			alert('Failed to save device changes.\n' + response.error);
+			throw new Error('Network response was not ok');
+		}
+
+		// Reload the page to reflect the updated device information
+		window.location.reload();
+	} catch (error) {
+		console.error('Failed to save device changes:', error);
+	}
 }
 
 async function deleteDevice(deviceId) {

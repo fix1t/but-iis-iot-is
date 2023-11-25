@@ -67,10 +67,9 @@ export const getMyDevices = async (req, res) => {
 export const getDeviceById = async (req, res) => {
 	const user = req.user;
 	const deviceId = req.params.device_id;
-
 	try {
 		const device = await Device.findById(deviceId);
-		const isOwner = device.owner_id === user.id;
+		const isOwner = device.owner_id === user.id || user.isAdmin;
 		DEBUG(`User ${user.id} is owner of device ${deviceId}: ${isOwner}`)
 		res.status(200).json({ ...device, isOwner });
 	} catch (error) {
@@ -104,19 +103,26 @@ export const addDeviceToSystem = async (req, res) => {
 }
 
 export const updateDevice = async (req, res) => {
+	const deviceId = req.params.device_id;
 	const { name, description, user_alias } = req.body;
 	const user = req.user;
 	let deviceToUpdate;
+	INFO(`Updating device ${deviceId}`);
+
+	// Check if the device exists
 	try {
-		deviceToUpdate = await Device.findById(req.params.device_id);
+		deviceToUpdate = await Device.findById(deviceId);
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: 'Internal Server Error' });
+		return;
 	}
+
 	if (!deviceToUpdate) {
 		res.status(404).json({ error: 'Device not found' });
 		return;
 	}
+
 	if (deviceToUpdate.owner_id !== user.id && !user.isAdmin) {
 		res.status(401).json({ error: 'You do not have sufficient rights to edit this device' });
 		return;
@@ -125,6 +131,7 @@ export const updateDevice = async (req, res) => {
 	deviceToUpdate.name = name;
 	deviceToUpdate.description = description;
 	deviceToUpdate.user_alias = user_alias;
+
 	try {
 		await deviceToUpdate.update();
 		res.status(200).json({ message: 'Device updated successfully' });

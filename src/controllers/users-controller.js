@@ -89,9 +89,7 @@ export const loginUser = async (req, res) => {
 			sameSite: 'strict', // CSRF protection
 			maxAge: 3600000 
 		  });
-
-		Broker.simulateBroker();
-
+		  
         res.status(200).json({ message: 'Logged in successfully' });
     } catch (err) {
         console.log(err);

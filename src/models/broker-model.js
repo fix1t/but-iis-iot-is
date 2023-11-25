@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+
 class Broker {
 	static async simulateBroker() {
 		// Fetch all devices and their corresponding parameters in a single query
@@ -42,3 +43,5 @@ class Broker {
 	}	
 }
 export default Broker;
+
+

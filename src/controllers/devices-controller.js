@@ -2,7 +2,7 @@ import Device from '../models/device-model.js';
 import Parameter from '../models/parameter-model.js';
 import System from '../models/system-model.js';
 import Type from '../models/type-model.js';
-import { ERROR, INFO } from '../utils/logger.js';
+import { DEBUG, ERROR, INFO } from '../utils/logger.js';
 
 export const createDevice = async (req, res) => {
 	const user = req.user;
@@ -34,8 +34,10 @@ export const createDevice = async (req, res) => {
 		const parameters = await Parameter.findByTypeId(type_id);
 
 		// Add the parameters to the device
-		for (const parameter of parameters) {
-			device.addParameter(parameter.id);
+		if (parameters) {
+			for (const parameter of parameters) {
+				device.addParameter(parameter.id);
+			}
 		}
 
 		// Add the device to the system
@@ -63,11 +65,13 @@ export const getMyDevices = async (req, res) => {
 }
 
 export const getDeviceById = async (req, res) => {
+	const user = req.user;
 	const deviceId = req.params.device_id;
-
 	try {
 		const device = await Device.findById(deviceId);
-		res.status(200).json(device);
+		const isOwner = device.owner_id === user.id || user.is_admin;
+		DEBUG(`[getDeviceById] User ${user.id} is owner of device ${deviceId}: ${isOwner}, ${device.owner_id} , ${user.id} , ${user.is_admin}`)
+		res.status(200).json({ ...device, isOwner });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
@@ -94,32 +98,45 @@ export const addDeviceToSystem = async (req, res) => {
 		res.status(201).json({ message: 'Device added successfully', device_id: device.id });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
+		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
 
 export const updateDevice = async (req, res) => {
+	const deviceId = req.params.device_id;
 	const { name, description, user_alias } = req.body;
 	const user = req.user;
 	let deviceToUpdate;
+	INFO(`Updating device ${deviceId}`);
+
+	// Check if the device exists
 	try {
-		deviceToUpdate = await Device.findById(req.params.device_id);
+		deviceToUpdate = await Device.findById(deviceId);
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: 'Internal Server Error' });
+		return;
 	}
+
 	if (!deviceToUpdate) {
 		res.status(404).json({ error: 'Device not found' });
 		return;
 	}
-	if (deviceToUpdate.owner_id !== user.id && !user.isAdmin) {
+
+	if (deviceToUpdate.owner_id !== user.id && !user.is_admin) {
 		res.status(401).json({ error: 'You do not have sufficient rights to edit this device' });
 		return;
 	}
 
+	if (!name || name.trim() === '') {
+        res.status(400).json({ error: 'Name is required' });
+        return;
+    }
+
 	deviceToUpdate.name = name;
 	deviceToUpdate.description = description;
 	deviceToUpdate.user_alias = user_alias;
+
 	try {
 		await deviceToUpdate.update();
 		res.status(200).json({ message: 'Device updated successfully' });
@@ -146,7 +163,7 @@ export const deleteDevice = async (req, res) => {
 		res.status(404).json({ error: 'Device not found' });
 		return;
 	}
-	if (deviceToDelete.owner_id !== user.id && !user.isAdmin) {
+	if (deviceToDelete.owner_id !== user.id && !user.is_admin) {
 		res.status(401).json({ error: 'You are not the owner. Only owner can delete a device.' });
 		return;
 	}
@@ -167,5 +184,53 @@ export const getAllTypes = async (req, res) => {
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+export const canEditKpis = async (req, res) => {
+	const user = req.user;
+	const deviceId = req.params.device_id;
+	if (await canEditKpisBool(user, deviceId)) {
+		res.status(200).json({ canEditKpis: true });
+	}
+	else {
+		res.status(200).json({ canEditKpis: false });
+	}
+}
+
+
+export const canEditKpisBool = async (user, deviceId) => {
+	// Check if user is an admin
+	if (user.is_admin) {
+		return true;
+	}
+
+	try {
+		// Check if device is in any system
+		const system = await System.findByDeviceId(deviceId);
+
+		DEBUG(`System: ${JSON.stringify(system, null, 2)}`);
+		DEBUG(`User: ${JSON.stringify(user, null, 2)}`);
+		DEBUG(`Device: ${JSON.stringify(deviceId, null, 2)}`);
+
+		if (system != null) {
+			DEBUG(`Got system ${system.id}`);
+			// Find the system owner
+			if (system.owner_id === user.id) {
+				INFO(`User ${user.id} is owner of system ${system.id}`);
+				return true;
+			}
+		} else {
+			const device = await Device.findById(deviceId);
+			if (device.owner_id === user.id) {
+				INFO(`User ${user.id} is owner of device ${device.id}`);
+				return true;
+			}
+		}
+		INFO(`User ${user.id} is not owner of system or device`);
+		return false;
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		return false;
 	}
 }

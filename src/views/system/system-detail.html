@@ -9,15 +9,17 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <link rel="stylesheet" href="/css/style.css" />
     <title>IoT - System Management</title>
   </head>
 
   <body>
-
     <div id="header"></div>
-  
+
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">System Information</h3>
       <div class="form-group">
@@ -42,15 +44,33 @@
       </div>
       <div class="form-group">
         <label for="systemOwner">System Owner</label>
-        <input type="text" class="form-control" id="systemOwner" name="systemOwner" readonly />
+        <input
+          type="text"
+          class="form-control"
+          id="systemOwner"
+          name="systemOwner"
+          readonly
+        />
       </div>
       <div class="form-group">
-          <label for="systemCreated">System Created</label>
-          <input type="text" class="form-control" id="systemCreated" name="systemCreated" readonly />
+        <label for="systemCreated">System Created</label>
+        <input
+          type="text"
+          class="form-control"
+          id="systemCreated"
+          name="systemCreated"
+          readonly
+        />
       </div>
       <div class="form-group">
-          <label for="systemId">System ID</label>
-          <input type="text" class="form-control" id="systemId" name="systemId" readonly />
+        <label for="systemId">System ID</label>
+        <input
+          type="text"
+          class="form-control"
+          id="systemId"
+          name="systemId"
+          readonly
+        />
       </div>
 
       <div id="addDevice" class="mr-2"></div>
@@ -64,12 +84,14 @@
 
     <div class="container my-4">
       <h2 class="text-danger">Leave System</h2>
-      <p>Once you leave this system, you will need to submit a new join request to regain access. Please be certain.</p>
+      <p>
+        Once you leave this system, you will need to submit a new join request
+        to regain access. Please be certain.
+      </p>
       <button class="btn btn-danger btn-sm" onclick="leaveSystem()">
-          <span class="p-2" style="font-size: 20px;">Leave this system</span>
+        <span class="p-2" style="font-size: 20px">Leave this system</span>
       </button>
     </div>
-    
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

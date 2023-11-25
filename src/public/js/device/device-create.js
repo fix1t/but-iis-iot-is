@@ -4,32 +4,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
- document.getElementById('createDeviceButton').addEventListener('click', async () => {
-    const deviceName = document.getElementById('deviceName').value;
-    const deviceDescription = document.getElementById('deviceDescription').value;
-    const userAlias = document.getElementById('userAlias').value;
-    const deviceType = document.getElementById('deviceType').value;
-    console.log(deviceName, deviceDescription, userAlias, deviceType);
+document.getElementById('createDeviceButton').addEventListener('click', async () => {
+	const deviceName = document.getElementById('deviceName').value;
+	const deviceDescription = document.getElementById('deviceDescription').value;
+	const userAlias = document.getElementById('userAlias').value;
+	const deviceType = document.getElementById('deviceType').value;
+	console.log(deviceName, deviceDescription, userAlias, deviceType);
 
-    const systemId = window.location.pathname.split('/').pop();
+	const systemId = window.location.pathname.split('/').pop();
 	console.log(systemId);
 
-    let url = '/api/devices/create';
-    let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
+	let url = '/api/devices/create';
+	let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
 
-    if (systemId !== 'create') {
-        url += `/${systemId}`;
-        body.system_id = systemId;
-    }
+	if (systemId !== 'create') {
+		url += `/${systemId}`;
+		body.system_id = systemId;
+	}
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		});
 
 		if (!response.ok) {
 			const errorText = await response.json();
@@ -70,27 +70,27 @@ async function loadTypes() {
 }
 
 async function loadFreeDevices() {
-    try {
+	try {
 		const freeDeviceList = document.getElementById('freeDevicesList');
-        const response = await fetch(`/api/devices/all-free`);
-        if (!response.ok) {
+		const response = await fetch(`/api/devices/all-free`);
+		if (!response.ok) {
 			freeDeviceList.classList.add('d-none');
 			return;
-        }
+		}
 
-        const data = await response.json();
+		const data = await response.json();
 
-        // Create the table structure
+		// Create the table structure
 		const heading = document.createElement('h2');
 		heading.textContent = 'Add Device';
 		const box = document.createElement('div');
 		box.classList.add('table-wrapper-scroll-y', 'my-custom-scrollbar', 'table-fix-head');
 
-        const table = document.createElement('table');
-        table.classList.add('table');
-        const thead = document.createElement('thead');
-        thead.classList.add('thead-light');
-        thead.innerHTML = `
+		const table = document.createElement('table');
+		table.classList.add('table');
+		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
+		thead.innerHTML = `
             <tr>
                 <th>User Alias</th>
                 <th>Name</th>
@@ -99,12 +99,12 @@ async function loadFreeDevices() {
             </tr>
         `;
 
-        const tbody = document.createElement('tbody');
+		const tbody = document.createElement('tbody');
 
-        // Fill the table with user data
-        data.forEach(device => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+		// Fill the table with user data
+		data.forEach(device => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
                 <td>${device.user_alias}</td>
                 <td>${device.name}</td>
                 <td>${device.description}</td>
@@ -114,21 +114,21 @@ async function loadFreeDevices() {
                     </button>
                 </td>    
             `;
-            row.id = `deviceRow_${device.id}`;
-            tbody.appendChild(row);
-        });
+			row.id = `deviceRow_${device.id}`;
+			tbody.appendChild(row);
+		});
 
-        table.appendChild(thead);
-        table.appendChild(tbody);
+		table.appendChild(thead);
+		table.appendChild(tbody);
 		box.appendChild(table);
 
-        // Clear existing content in freeDeviceList and append the table
-        freeDeviceList.innerHTML = '';
-        freeDeviceList.appendChild(heading);
-        freeDeviceList.appendChild(box);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+		// Clear existing content in freeDeviceList and append the table
+		freeDeviceList.innerHTML = '';
+		freeDeviceList.appendChild(heading);
+		freeDeviceList.appendChild(box);
+	} catch (error) {
+		console.error('Error fetching data:', error);
+	}
 }
 
 function addDevice(deviceId) {

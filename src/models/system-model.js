@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { DEBUG } from '../utils/logger.js';
 
 class Systems {
 	constructor(owner_id, name, description, created = null, id = null) {
@@ -200,8 +201,28 @@ class Systems {
 		}
 	}
 
+	static async findByDeviceId(device_id) {
+		let sql = `
+			SELECT * 
+			FROM Systems
+			INNER JOIN SystemDevices ON Systems.id = SystemDevices.system_id
+			WHERE SystemDevices.device_id = ?
+		`
+		try {
+			const [rows] = await db.promise().query(sql, [device_id]);
+			const system = rows?.length ? rows.map(Systems.rowToSystems) : null;
+			DEBUG(`[findByDeviceId] rows:  ${JSON.stringify(system, null, 2)}`);
+			return system[0];
+		}
+		catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	// Helper function to convert a database row to a Systems instance
 	static rowToSystems(row) {
+
 		return new Systems(
 			row.owner_id,
 			row.name,

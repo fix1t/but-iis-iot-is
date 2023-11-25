@@ -1,5 +1,6 @@
 import KPI from '../models/kpi-model.js';
 import { ERROR, INFO } from '../utils/logger.js';
+import { canEditKpisBool } from './devices-controller.js';
 
 export const createKpi = async (req, res) => {
 	INFO(`Creating KPI for parameter with id ${req.params.parameter_id} and device with id ${req.params.device_id}`);
@@ -24,6 +25,14 @@ export const createKpi = async (req, res) => {
 export const deleteKpi = async (req, res) => {
 	INFO(`Deleting KPI with id ${req.params.kpi_id}`);
 	const kpiId = req.params.kpi_id;
+	const user = req.user;
+	const deviceId = req.params.device_id;
+
+	const canEdit = await canEditKpisBool(user, deviceId)
+
+	if (!canEdit) {
+		return res.status(403).json({ error: 'Forbidden' });
+	}
 
 	if (!kpiId) {
 		ERROR('Missing required fields');

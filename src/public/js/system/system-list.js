@@ -5,7 +5,6 @@ fetch('/api/systems/in')
 		userSystems.forEach(system => {
 			const row = document.createElement('tr');
 			row.innerHTML = `
-				<td>${system.id}</td>
 				<td>${system.name}</td>
 				<td>${system.owner_name}</td>
 				<td>${system.description}</td>
@@ -46,7 +45,6 @@ fetch('/api/systems/notIn')
 			`;
 			}
 			row.innerHTML = `
-			<td>${system.id}</td>
 			<td>${system.name}</td>
 			<td>${system.owner_name}</td>
 			<td>${system.description}</td>
@@ -99,3 +97,4 @@ function showSystemDetail(systemId) {
 	// Redirect to the system detail view with the specified systemId
 	window.location.href = `/systems/${systemId}`;
 }
+

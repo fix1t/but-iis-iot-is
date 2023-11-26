@@ -104,8 +104,8 @@ class Parameter {
 		}
 	}
 
-	// Retrieve all captured values for a specific parameter of a specific device
-	static async findAllValuesByDeviceIdAndParameterId(deviceId, parameterId = this.id) {
+	// Retrieve 50 captured values for a specific parameter of a specific device
+	static async findValuesByDeviceIdAndParameterId(deviceId, parameterId = this.id) {
 		let sql = `
 		SELECT
 			value AS parameter_value,
@@ -116,11 +116,12 @@ class Parameter {
 			device_id = ?         -- Specify the target device ID
 			AND parameter_id = ?  -- Specify the target parameter ID
 		ORDER BY
-			recorded_at ASC;                -- Order by captured timestamp
+			recorded_at ASC	                -- Order by captured timestamp
+		LIMIT 50;                           -- Limit to 50 entries
 		`;
 		try {
 			const [rows] = await db.promise().query(sql, [deviceId, parameterId]);
-			DEBUG('[findAllValuesByDeviceIdAndParameterId()]:\n' + JSON.stringify(rows, null, 2));
+			DEBUG('[findValuesByDeviceIdAndParameterId()]:\n' + JSON.stringify(rows, null, 2));
 			return rows.length ? rows : null;
 		} catch (error) {
 			console.error('Error executing query:', error.stack);

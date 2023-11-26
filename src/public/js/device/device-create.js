@@ -84,7 +84,7 @@ async function loadTypes() {
 async function loadFreeDevices() {
 	try {
 		const freeDeviceList = document.getElementById('freeDevicesList');
-		const response = await fetch(`/api/devices/all-free`);
+		const response = await fetch(`/api/devices/all-my-free`);
 		if (!response.ok) {
 			freeDeviceList.classList.add('d-none');
 			return;

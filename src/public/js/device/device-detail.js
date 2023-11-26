@@ -117,6 +117,8 @@ async function loadParameters(deviceId) {
 
 			const successData = await successResponse.json();
 			const success = successData.success;
+			let currentUrl = window.location.pathname;
+
 			if (successData.errors)
 				console.log(successData.errors);
 
@@ -131,7 +133,7 @@ async function loadParameters(deviceId) {
 				<td>${name}</td>
 				<td>${value}</td>
 				<td>${unit_name}</td>
-				<td><a href="/${device_id}/${parameter_id}">Detail</a></td>
+				<td><a href="${currentUrl}/${parameter_id}">Detail</a></td>
 			`;
 			tbody.appendChild(row);
 		});

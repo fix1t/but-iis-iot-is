@@ -24,11 +24,11 @@ router.get('/systems/create', verifyToken, systemCreate);
 router.get('/systems/requests', verifyToken, systemRequests);
 router.get('/systems/:system_id', verifyToken, systemDetail);
 router.get('/systems/:system_id/edit', verifyToken, systemEdit);
-//device create in system
+
 router.get('/systems/:system_id/device-create', verifyToken, deviceCreate);
-//device detail
 router.get('/systems/:system_id/:device_id', verifyToken, deviceDetail);
 //device params
+router.get('/systems/:system_id/:device_id/:parameter_id', verifyToken, parameterDetail);
 
 //types
 router.get('/types', verifyToken, typeList);

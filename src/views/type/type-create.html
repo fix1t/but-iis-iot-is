@@ -22,48 +22,30 @@
     <div id="back"></div>
 
     <div class="container mt-4">
-      <h2 class="mb-4 text-center">Create Type</h2>
-      <div
-        id="errorMessage"
-        class="alert alert-danger"
-        role="alert"
-        style="display: none"
-      ></div>
-      <form id="typeForm">
-        <div class="form-group">
-          <label for="typeName">Type Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="typeName"
-            name="typeName"
-          />
-        </div>
-        <div id="parameters">
-          <div class="form-group parameter">
-            <label for="parameterName">Parameter Name:</label>
-            <input
-              type="text"
-              class="form-control parameterName"
-              name="parameterName"
-            />
-            <label for="unitName">Unit Name:</label>
-            <input type="text" class="form-control unitName" name="unitName" />
-          </div>
-        </div>
-        <div>
-          <button
-            type="button"
-            class="btn btn-primary"
-            onclick="addParameter()"
-          >
-            Add Parameter
-          </button>
-        </div>
-        <div class="mt-5">
-          <button type="submit" class="btn btn-success">Create Type</button>
-        </div>
-      </form>
+
+        <h2 class="mb-4 text-center">Create Type</h2>
+        <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <form id="typeForm">
+            <div class="form-group">
+                <label for="typeName">Type Name:</label>
+                <input type="text" class="form-control" id="typeName" name="typeName">
+            </div>
+            <div id="parameters">
+                <div class="form-group parameter">
+                    <label for="parameterName">Parameter Name:</label>
+                    <input type="text" class="form-control parameterName" name="parameterName">
+                    <label for="unitName">Unit Name:</label>
+                    <input type="text" class="form-control unitName" name="unitName">
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" onclick="addParameter()">Add Parameter</button>
+                <button type="button" class="btn btn-danger" id="removeParameterButton" style="display: none;" onclick="removeParameter()">Remove Parameter</button>
+            </div>
+            <div class="mt-5">
+                <button type="submit" class="btn btn-success">Create Type</button>
+            </div>
+        </form>
     </div>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

@@ -511,15 +511,15 @@ async function loadDevices() {
 
 			row.appendChild(userAliasCell);
 			row.innerHTML += `
-				<td>${device.type_id}</td>
-				<td>${device.description}</td>
-				${(userId !== ownerId && !isAdmin) ? '' : `
-					<td>
-						<button class="btn btn-danger btn-sm" onclick="removeDevice(${device.id})">
-							<i class="fas fa-trash"></i>
-						</button>
-					</td>`}
-		`;
+			<td>${device.type_name}</td> <!-- Change this line -->
+			<td>${device.description}</td>
+			${(userId !== ownerId && !isAdmin) ? '' : `
+				<td>
+					<button class="btn btn-danger btn-sm" onclick="removeDevice(${device.id})">
+						<i class="fas fa-trash"></i>
+					</button>
+				</td>`}
+			`;
 
 			row.id = `deviceRow_${device.id}`;
 			tbody.appendChild(row);

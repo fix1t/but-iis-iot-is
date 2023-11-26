@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="content-type" content="text/html; charset=iso-8859-2" />
+	<meta http-equiv="content-type" content="text/html" />
 	<title>Projekt IIS</title>
 	<style type="text/css">
 		table {
@@ -43,12 +43,11 @@
 		</dd>
 		<dd>Jakub Mikyšek <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 			<a href="mailto:xmikys03@stud.fit.vutbr.cz">xmikys03@stud.fit.vutbr.cz</a> -
-			Hostování databáze, Systém-Uživatel operace (uživatelé v systému, přidávání, odebírání, žádosti), stav KPI,
+			Hostování databáze, systém-uživatel operace (uživatelé v systému, přidávání, odebírání, žádosti), stav KPI,
 			přidávání zařízení do systému
 		</dd>
 		<dt>URL aplikace</dt>
-		<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
-		<dd>(pokud má aplikace více vstupních stránek, napište obdobně další URL)</dd>
+		<dd><a href="https://iis-x5wc.onrender.com/login">https://iis-x5wc.onrender.com/login</a></dd>
 	</dl>
 
 	<h2>Uživatelé systému pro testování</h2>
@@ -91,13 +90,26 @@
 		definované zadáním (např. registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). Video nahrajte
 		například na VUT Google Drive, kde ho bude možné přímo spustit z odkazu.</p>
 
+	<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target=”_blank”>Komentované video</a>
+
 	<h2>Implementace</h2>
+	<h3>Základní informace</h3>
+	<ul>
+		<li><b>FE</b>: HTML5, CSS (Bootstrap), Javascript </li>
+		<li><b>BE</b>: Javascript/Node.js a framework Express</li>
+		<li><b>DB</b>: MySQL na hostingu <a href="https://aiven.io/" target=”_blank”>Aiven</a></li>
+	</ul>
+	<h3>Architektura</h3>
+	<p>Návrhový vzor <b>MVC</b> (Model-View-Controller), komunikace FE a BE pomocí endpointů:</p>
+
 	<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují
 		jednotlivé případy použití.</p>
 
 	<h3>Databáze</h3>
 
-	Zde vložte grafické schéma relační databáze (tabulek v databázi).
+	<img style="width: 1000px;" src="https://xs-project.fra1.digitaloceanspaces.com/additional-images/white-database.png"
+		alt="Relational Database Schema"
+		data-src="https://xs-project.fra1.digitaloceanspaces.com/additional-images/white-database.png">
 
 	<h2>Instalace</h2>
 
@@ -106,18 +118,17 @@
 		<li>postup instalace na server</li>
 		<li>V konzoli je třeba zadat následující příkazy: </li>
 		<ul>
-			<li>cd /src </li>
-			<li>npm install </li>
-			<li>npm run start </li>
-			<li></li>
+			<li><code>cd src</code></li>
+			<li><code>npm install</code></li>
+			<li><code>npm run start</code></li>
 		</ul>
 		<li>softwarové požadavky</li>
 		<ul>
 			<li>Node.js verze: </li>
 		</ul>
-		
+
 		<ul>
-		<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+			<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
 		</ul>
 	</ul>
 

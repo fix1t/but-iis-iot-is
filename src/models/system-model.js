@@ -190,6 +190,18 @@ class Systems {
 		}
 	}
 
+	static async removeDeviceFromSystem(system_id, device_id) {
+		let sql = `DELETE FROM SystemDevices WHERE system_id = ? AND device_id = ?
+			`;
+		try {
+			const [result] = await db.promise().execute(sql, [system_id, device_id]);
+			return result.affectedRows ? true : false;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static async isUserInSystem(user_id, system_id) {
 		let sql = `SELECT * FROM SystemUsers WHERE user_id = ? AND system_id = ?`;
 		try {

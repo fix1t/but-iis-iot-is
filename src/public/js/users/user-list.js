@@ -36,6 +36,11 @@ fetch('/api/systems/get')
                         <td>${system.name}</td>
                         <td>${system.description}</td>
                         <td>${new Date(system.created).toLocaleString()}</td>
+						<td>
+							<button class="btn btn-primary btn-sm" onclick="showSystemDetail(${system.id})">
+								<i class="fas fa-info" style="padding: 0.25rem;"></i>
+							</button>
+						</td>
                         <td>
                             <button class="btn btn-danger btn-sm" onclick="deleteSystem(${system.id})">
                                 <i class="fas fa-trash"></i>
@@ -82,4 +87,10 @@ function deleteSystem(systemId) {
 			}
 		})
 		.catch(error => console.error('Error deleting user:', error));
+}
+
+// Function to show system detail and redirect to another view
+function showSystemDetail(systemId) {
+	// Redirect to the system detail view with the specified systemId
+	window.location.href = `/systems/${systemId}`;
 }

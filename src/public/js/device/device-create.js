@@ -1,23 +1,27 @@
+let systemId = null;
+
 document.addEventListener('DOMContentLoaded', function () {
+	if (window.location.pathname !== '/device-create') {
+		systemId = window.location.pathname.split('/').slice(-2, -1)[0];
+	}
 	loadTypes();
 	loadFreeDevices();
 });
 
 
 document.getElementById('createDeviceButton').addEventListener('click', async () => {
+	console.log('Create device button clicked!');
 	const deviceName = document.getElementById('deviceName').value;
 	const deviceDescription = document.getElementById('deviceDescription').value;
 	const userAlias = document.getElementById('userAlias').value;
 	const deviceType = document.getElementById('deviceType').value;
 	console.log(deviceName, deviceDescription, userAlias, deviceType);
 
-	const systemId = window.location.pathname.split('/').pop();
-	console.log(systemId);
-
 	let url = '/api/devices/create';
 	let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
 
-	if (systemId !== 'create') {
+	// Check if we are in a system
+	if (systemId) {
 		url += `/${systemId}`;
 		body.system_id = systemId;
 	}
@@ -40,7 +44,12 @@ document.getElementById('createDeviceButton').addEventListener('click', async ()
 		const responseData = await response.json();
 
 		// go to the device detail page
-		window.location.href = `/device/detail/${responseData.device_id}`;
+		if (inSystem) {
+			window.location.href = `/systems/${systemId}/${responseData.device_id}`;
+		} else {
+			window.location.href = `/${responseData.device_id}`;
+		}
+		return
 	} catch (error) {
 		console.error('Failed to create device:', error);
 	}
@@ -72,7 +81,7 @@ async function loadTypes() {
 async function loadFreeDevices() {
 	try {
 		const freeDeviceList = document.getElementById('freeDevicesList');
-		const response = await fetch(`/api/devices/all-free`);
+		const response = await fetch(`/api/devices/all-my-free`);
 		if (!response.ok) {
 			freeDeviceList.classList.add('d-none');
 			return;
@@ -102,7 +111,7 @@ async function loadFreeDevices() {
 		const tbody = document.createElement('tbody');
 
 		// Fill the table with user data
-		data.forEach(device => {
+		data?.forEach(device => {
 			const row = document.createElement('tr');
 			row.innerHTML = `
                 <td>${device.user_alias}</td>
@@ -132,7 +141,6 @@ async function loadFreeDevices() {
 }
 
 function addDevice(deviceId) {
-	let systemId = window.location.pathname.split('/').pop();
 	// Make a POST request to add User to System
 	fetch(`/api/devices/${systemId}/add-device`, {
 		method: 'POST',

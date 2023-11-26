@@ -44,13 +44,13 @@ async function loadDeviceData(deviceId) {
 				<div class="row mb-3">
 					<div class="col-12">
 						<label for="deviceType" class="form-label">Type</label>
-						<input type="text" id="deviceType" class="form-control" value="${deviceData.type_id}" disabled>
+						<input type="text" id="deviceType" class="form-control" value="${deviceData.type_name}" disabled>
 					</div>
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
 						<label for="deviceOwner" class="form-label">Owner</label>
-						<input type="text" id="deviceOwner" class="form-control" value="${deviceData.owner_id}" disabled>
+						<input type="text" id="deviceOwner" class="form-control" value="${deviceData.owner_name}" disabled>
 					</div>
 				</div>
 			</div>
@@ -117,19 +117,23 @@ async function loadParameters(deviceId) {
 
 			const successData = await successResponse.json();
 			const success = successData.success;
+			let currentUrl = window.location.pathname;
+
 			if (successData.errors)
 				console.log(successData.errors);
 
 			const row = document.createElement('tr');
 			// Add a class based on the success status
-			row.classList.add(success ? 'bg-success' : 'bg-danger');
-			row.classList.add('text-white');
+			if (!successData.message) {
+				row.classList.add(success ? 'bg-success' : 'bg-danger');
+				row.classList.add('text-white');
+			}
 
 			row.innerHTML = `
 				<td>${name}</td>
 				<td>${value}</td>
 				<td>${unit_name}</td>
-				<td><a href="/parameters/${parameter_id}/${device_id}">Detail</a></td>
+				<td><a href="${currentUrl}/${parameter_id}" style="color: #0000FF;">Detail</a></td>
 			`;
 			tbody.appendChild(row);
 		});

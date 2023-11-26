@@ -1,6 +1,7 @@
 import Device from '../models/device-model.js';
 import Parameter from '../models/parameter-model.js';
 import System from '../models/system-model.js';
+import User from '../models/user-model.js';
 import Type from '../models/type-model.js';
 import { DEBUG, ERROR, INFO } from '../utils/logger.js';
 
@@ -65,22 +66,40 @@ export const getMyDevices = async (req, res) => {
 }
 
 export const getDeviceById = async (req, res) => {
-	const user = req.user;
-	const deviceId = req.params.device_id;
+    const user = req.user;
+    const deviceId = req.params.device_id;
+    try {
+        const device = await Device.findById(deviceId);
+        const isOwner = device.owner_id === user.id || user.is_admin;
+        DEBUG(`[getDeviceById] User ${user.id} is owner of device ${deviceId}: ${isOwner}, ${device.owner_id} , ${user.id} , ${user.is_admin}`)
+
+        // Fetch the type name
+        const type = await Type.findById(device.type_id);
+
+        // Fetch the owner name
+        const owner = await User.findById(device.owner_id);
+		
+        res.status(200).json({ ...device, isOwner, type_name: type.name, owner_name: owner.username });
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export const getFreeDevices = async (req, res) => {
 	try {
-		const device = await Device.findById(deviceId);
-		const isOwner = device.owner_id === user.id || user.is_admin;
-		DEBUG(`[getDeviceById] User ${user.id} is owner of device ${deviceId}: ${isOwner}, ${device.owner_id} , ${user.id} , ${user.is_admin}`)
-		res.status(200).json({ ...device, isOwner });
+		const device = await Device.findAllFree();
+		res.status(200).json(device);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
 
-export const getFreeDevices = async (req, res) => {
+export const getMyFreeDevices = async (req, res) => {
+	const user = req.user;
 	try {
-		const device = await Device.findAllFree();
+		const device = await Device.findAllMyFree(user.id);
 		res.status(200).json(device);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -232,5 +251,23 @@ export const canEditKpisBool = async (user, deviceId) => {
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		return false;
+	}
+}
+
+export const removeDeviceFromSystem = async (req, res) => {
+	const deviceId = req.params.device_id;
+	const systemId = req.params.system_id;
+
+	try {
+		const success = await System.removeDeviceFromSystem(systemId, deviceId);
+
+		if (success) {
+			res.status(200).json({ message: 'Device removed successfully' });
+		} else {
+			res.status(404).json({ error: 'System or Device not found' });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }

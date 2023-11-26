@@ -5,8 +5,8 @@ let canEditKpis = false;
 
 document.addEventListener('DOMContentLoaded', async function () {
 	let uri = window.location.pathname.split('/');
-	deviceId = uri.pop();
 	parameterId = uri.pop();
+	deviceId = uri.pop();
 	await loadParameterData();
 	loadGraph();
 	loadKpiCreateArea();
@@ -45,10 +45,10 @@ async function loadParameterData() {
 				</div>
 			</div>
 			<div class="row mb-3">
-				<div class="col-12">
-					<label for="parameterType" class="form-label">Type</label>
-					<input type="text" id="parameterType" class="form-control" value="${parameter.type_id}" disabled>
-				</div>
+			<div class="col-12">
+				<label for="parameterType" class="form-label">Type</label>
+				<input type="text" id="parameterType" class="form-control" value="${parameter.type_name}" disabled>
+			</div>
 			</div>
 		`;
 
@@ -184,8 +184,10 @@ async function loadKpiList() {
 				const row = kpiListElement.insertRow();
 				row.innerHTML = `
 				<td>${kpi.threshold}</td>
-				<td>${kpi.operation}</td>
-				<td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">X</button></td>
+				<td>${kpi.operation.charAt(0).toUpperCase() + kpi.operation.slice(1)}</td>
+				<td><button class="btn btn-danger btn-sm delete-kpi" data-kpi-id="${kpi.id}">
+					<i class="fas fa-trash"></i>
+				</button></td>
 				`;
 			});
 		} else {

@@ -1,6 +1,7 @@
 import User from '../models/user-model.js';
 import Systems from '../models/system-model.js';
 import Devices from '../models/device-model.js';
+import Types from '../models/type-model.js';
 import SystemRequest from '../models/system-request-model.js';
 
 
@@ -126,7 +127,8 @@ export const createSystem = async (req, res) => {
 			return;
 		}
 		await system.save();
-		res.status(201).json({ message: 'System created successfully' });
+		await system.getId();
+		res.status(201).json({ message: 'System created successfully', system_id: system.id });
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: 'Internal Server Error' });
@@ -198,8 +200,22 @@ export const getSystemDevices = async (req, res) => {
 			res.status(404).json({ error: 'System not found' });
 			return;
 		}
+
 		const devices = await Devices.findBySystemId(system.id);
-		res.status(200).json(devices);
+
+		// Join the devices with their types
+		let devicesWithTypes = [];
+		if (devices !== null) {
+			devicesWithTypes = await Promise.all(devices.map(async (device) => {
+				const type = await Types.findById(device.type_id);
+				return {
+					...device,
+					type_name: type.name
+				};
+			}));
+		}
+
+		res.status(200).json(devicesWithTypes);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });

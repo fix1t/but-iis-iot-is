@@ -14,18 +14,14 @@
   </head>
   <body>
     <div id="header"></div>
-    <div class="container mb-3">
-      <button class="btn btn-secondary" onclick="history.back()">&#8592 Go Back</button>
-    </div>
+    <div id="back"></div>
+
     <div class="container" id="deviceInfo"></div>
 
     <!-- Device Management for device owner -->
     <div id="deviceManagement"></div>
 
-    <table
-      class="container table table-striped table-bordered"
-      id="parameterList"
-    ></table>
+    <div id="parameterList"></div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -45,5 +41,6 @@
     ></script>
     <script src="/js/device/device-detail.js"></script>
     <script src="/js/components/header.js"></script>
+    <script src="/js/components/back.js"></script>
   </body>
 </html>

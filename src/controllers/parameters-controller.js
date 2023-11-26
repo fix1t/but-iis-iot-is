@@ -1,22 +1,27 @@
 import Parameter from '../models/parameter-model.js';
 import KPI from '../models/kpi-model.js';
+import Type from '../models/type-model.js';
 import { ERROR, INFO } from '../utils/logger.js';
 
 export const getParameterById = async (req, res) => {
-	try {
-		INFO(`Getting parameter with id ${req.params.parameter_id}`);
-		const parameter = await Parameter.findById(req.params.parameter_id);
-		res.status(200).json(parameter);
-	} catch (error) {
-		ERROR(error.message);
-		res.status(404).json({ message: error.message });
-	}
+    try {
+        INFO(`Getting parameter with id ${req.params.parameter_id}`);
+        const parameter = await Parameter.findById(req.params.parameter_id);
+
+        // Fetch the type name
+        const type = await Type.findById(parameter.type_id);
+
+        res.status(200).json({ ...parameter, type_name: type.name });
+    } catch (error) {
+        ERROR(error.message);
+        res.status(404).json({ message: error.message });
+    }
 }
 
 export const getAllValuesByParameterIdAndDeviceId = async (req, res) => {
 	try {
 		INFO(`Getting all values for parameter with id ${req.params.parameter_id} and device with id ${req.params.device_id}`);
-		const values = await Parameter.findAllValuesByDeviceIdAndParameterId(req.params.device_id, req.params.parameter_id);
+		const values = await Parameter.findValuesByDeviceIdAndParameterId(req.params.device_id, req.params.parameter_id);
 		res.status(200).json(values);
 	} catch (error) {
 		ERROR(error.message);

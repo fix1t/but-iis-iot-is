@@ -6,7 +6,6 @@ let isAdmin;
 document.addEventListener('DOMContentLoaded', function () {
 	systemId = window.location.pathname.split('/').pop();
 	loadSystemData();
-	loadDevices();
 });
 
 async function loadSystemData() {
@@ -29,8 +28,6 @@ async function loadSystemData() {
 		const formattedDate = createdDate.toLocaleDateString();
 		document.getElementById('systemCreated').value = formattedDate;
 
-		document.getElementById('systemId').value = systemData.id;
-
 		// Get logged User
 		const user = await fetch(`/api/users/me`);
 		const userResponse = await user.json();
@@ -42,7 +39,8 @@ async function loadSystemData() {
 		loadSystemEditButton()
 		loadSystemUsers();
 		loadNotSystemUsers();
-		loadSystemRequests()
+		loadSystemRequests();
+		loadDevices();
 	} catch (error) {
 		console.error('Failed to load system data:', error);
 	}
@@ -72,7 +70,7 @@ async function loadSystemEditButton() {
 
 		button.addEventListener('click', function () {
 			// go to the edit system page
-			window.location.href = `/systems/edit/${systemId}`;
+			window.location.href = `/systems/${systemId}/edit`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);
@@ -103,7 +101,7 @@ async function loadSystemAddDeviceButton() {
 
 		button.addEventListener('click', function () {
 			// go to the add device page for this system
-			window.location.href = `/device/create/${systemId}`;
+			window.location.href = `/systems/${systemId}/device-create`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);
@@ -183,6 +181,13 @@ async function loadSystemUsers() {
 async function loadNotSystemUsers() {
 	try {
 		const userNotSystemList = document.getElementById('userNotSystemList');
+
+		if (userId !== ownerId && !isAdmin) {
+			// show the add user input search only for owner or admin
+			userNotSystemList.classList.add('d-none');
+			return;
+		}
+
 		const searchResultsContainer = document.createElement('div');
 		searchResultsContainer.classList.add('list-group', 'mt-2');
 
@@ -428,7 +433,7 @@ function acceptRequest(requestId) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			const deletedRow = document.getElementById(`requestRow_${requestId}`);
 			if (deletedRow) {
 				deletedRow.remove();
 			}
@@ -447,10 +452,11 @@ function rejectRequest(requestId) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			const deletedRow = document.getElementById(`requestRow_${requestId}`);
 			if (deletedRow) {
 				deletedRow.remove();
 			}
+			window.location.reload();
 		})
 		.catch(error => console.error('Error rejecting request:', error));
 }
@@ -477,12 +483,13 @@ async function loadDevices() {
 		const table = document.createElement('table');
 		table.classList.add('table', 'table-bordered', 'p-3', 'mt-3');
 		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
 		thead.innerHTML = `
 		<tr>
 		  <th scope="col">Alias</th>
 		  <th scope="col">Type</th>
 		  <th scope="col">Description</th>
-		  <th scope="col">Status</th>
+		  ${(userId !== ownerId && !isAdmin) ? '' : '<th scope="col">Action</th>'}
 		</tr>
 	  `;
 
@@ -495,7 +502,7 @@ async function loadDevices() {
 			const userAliasCell = document.createElement('td');
 			const anchor = document.createElement('a');
 
-			anchor.href = `/device/detail/${device.id}`; // Set the href attribute to '#' for now
+			anchor.href = `/systems/${systemId}/${device.id}`; // Set the href attribute to '#' for now
 			anchor.textContent = device.user_alias;
 			anchor.setAttribute('data-device-id', device.id);
 
@@ -503,10 +510,15 @@ async function loadDevices() {
 
 			row.appendChild(userAliasCell);
 			row.innerHTML += `
-		  <td>${device.type_id}</td>
-		  <td>${device.description}</td>
-		  <td>KPITODO</td>
-		`;
+			<td>${device.type_name}</td> <!-- Change this line -->
+			<td>${device.description}</td>
+			${(userId !== ownerId && !isAdmin) ? '' : `
+				<td>
+					<button class="btn btn-danger btn-sm" onclick="removeDevice(${device.id})">
+						<i class="fas fa-trash"></i>
+					</button>
+				</td>`}
+			`;
 
 			row.id = `deviceRow_${device.id}`;
 			tbody.appendChild(row);
@@ -522,4 +534,22 @@ async function loadDevices() {
 	} catch (error) {
 		console.error('Failed to load devices:', error);
 	}
+}
+
+function removeDevice(deviceId) {
+	// Make a DELETE request to remove device from System
+	fetch(`/api/devices/${deviceId}/remove/${systemId}`, {
+		method: 'DELETE',
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const deletedRow = document.getElementById(`deviceRow_${deviceId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+		})
+		.catch(error => console.error('Error rejecting request:', error));
 }

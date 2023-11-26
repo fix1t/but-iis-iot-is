@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	backButton.addEventListener('click', function () {
 		const currentUrl = window.location.pathname;
 		const urlSegments = currentUrl.split('/');
-		console.log(urlSegments.length);
 		urlSegments.pop();
 		newUrl = urlSegments.join('/');
 		if (urlSegments.length === 1)

@@ -19,14 +19,16 @@ router.get('/admin', verifyToken, continueIfUserIsAdmin, userList);
 router.get('/users/edit', verifyToken, userEdit);
 
 router.get('/systems', verifyToken, systemList);
-router.get('/systems/edit/:system_id', verifyToken, systemEdit);
+
 router.get('/systems/create', verifyToken, systemCreate);
 router.get('/systems/requests', verifyToken, systemRequests);
 router.get('/systems/:system_id', verifyToken, systemDetail);
+router.get('/systems/:system_id/edit', verifyToken, systemEdit);
 //device create in system
 router.get('/systems/:system_id/device-create', verifyToken, deviceCreate);
 //device detail
 router.get('/systems/:system_id/:device_id', verifyToken, deviceDetail);
+//device params
 
 //types
 router.get('/types', verifyToken, typeList);

@@ -72,7 +72,7 @@ async function loadSystemEditButton() {
 
 		button.addEventListener('click', function () {
 			// go to the edit system page
-			window.location.href = `/systems/edit/${systemId}`;
+			window.location.href = `/systems/${systemId}/edit`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);

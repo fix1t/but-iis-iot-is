@@ -7,6 +7,7 @@ import systemRoutes from './routes/systems-routes.js'
 import userSystemRoutes from './routes/users-systems-routes.js'
 import deviceRoutes from './routes/devices-routes.js'
 import typeRoutes from './routes/types-routes.js'
+import Broker from './models/broker-model.js'
 import path from 'path'
 
 const app = express();
@@ -36,5 +37,15 @@ process.on('SIGINT', () => {
 		process.exit(err ? 1 : 0);
 	});
 });
+
+// Call simulateBroker every minute
+setInterval(async () => {
+	try {
+		await Broker.simulateBroker();
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
+}, 60 * 1000);
+
 
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));

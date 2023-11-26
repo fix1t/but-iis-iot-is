@@ -44,7 +44,7 @@ document.getElementById('createDeviceButton').addEventListener('click', async ()
 		const responseData = await response.json();
 
 		// go to the device detail page
-		if (inSystem) {
+		if (systemId) {
 			window.location.href = `/systems/${systemId}/${responseData.device_id}`;
 		} else {
 			window.location.href = `/${responseData.device_id}`;

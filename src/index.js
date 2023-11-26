@@ -45,7 +45,7 @@ setInterval(async () => {
 	} catch (error) {
 		console.error('An error occurred:', error);
 	}
-}, 60 * 1000);
+}, 60 * 60 * 1000);
 
 
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));

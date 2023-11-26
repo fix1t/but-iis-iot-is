@@ -131,7 +131,7 @@ async function loadParameters(deviceId) {
 				<td>${name}</td>
 				<td>${value}</td>
 				<td>${unit_name}</td>
-				<td><a href="/parameters/${parameter_id}/${device_id}">Detail</a></td>
+				<td><a href="/${device_id}/${parameter_id}">Detail</a></td>
 			`;
 			tbody.appendChild(row);
 		});

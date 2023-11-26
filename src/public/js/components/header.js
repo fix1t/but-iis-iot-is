@@ -24,7 +24,7 @@ async function initializePage() {
 			  <a class="nav-link" href="/systems">Home</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="/systems-requests">My Requests</a>
+			  <a class="nav-link" href="/systems/requests">My Requests</a>
 			</li>
       		<li class="nav-item">
 			  <a class="nav-link" href="/types">Types</a>

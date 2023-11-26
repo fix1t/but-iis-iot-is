@@ -9,15 +9,16 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <link rel="stylesheet" href="/css/style.css" />
     <title>IoT - Create Device</title>
   </head>
   <div id="header"></div>
   <body>
-    <div class="container mb-3">
-      <button class="btn btn-secondary" onclick="history.back()">&#8592 Go Back</button>
-    </div>
+    <div id="back"></div>
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">Create Your Device!</h3>
       <div class="form-group">
@@ -63,15 +64,18 @@
 
     <div class="container mt-4" id="freeDevicesList"></div>
     <script>
-      window.onload = function() {
-        if (window.location.pathname === '/device/create' || window.location.pathname === '/device/create/') {
-            document.getElementById('freeDevicesList').style.display = 'none';
+      window.onload = function () {
+        if (
+          window.location.pathname === "/device-create" ||
+          window.location.pathname === "/device-create/"
+        ) {
+          document.getElementById("freeDevicesList").style.display = "none";
         } else {
-            document.getElementById('freeDevicesList').style.display = 'block';
+          document.getElementById("freeDevicesList").style.display = "block";
         }
-      }
-      </script>
-  
+      };
+    </script>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -90,5 +94,6 @@
     ></script>
     <script src="/js/device/device-create.js"></script>
     <script src="/js/components/header.js"></script>
+    <script src="/js/components/back.js"></script>
   </body>
 </html>

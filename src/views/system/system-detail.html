@@ -19,6 +19,7 @@
 
   <body>
     <div id="header"></div>
+    <div id="back"></div>
 
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">System Information</h3>
@@ -44,7 +45,13 @@
       </div>
       <div class="form-group">
         <label for="systemOwner">System Owner Name</label>
-        <input type="text" class="form-control" id="systemOwner" name="systemOwner" readonly />
+        <input
+          type="text"
+          class="form-control"
+          id="systemOwner"
+          name="systemOwner"
+          readonly
+        />
       </div>
       <div class="form-group">
         <label for="systemCreated">System Created</label>
@@ -105,5 +112,5 @@
     ></script>
     <script src="/js/system/system-detail.js"></script>
     <script src="/js/components/header.js"></script>
-  </body>
+    <script src="/js/components/back.js"></script>
 </html>

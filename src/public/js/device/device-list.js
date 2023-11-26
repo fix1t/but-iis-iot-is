@@ -9,7 +9,7 @@ fetch('/api/devices/my-devices')
 				<td>${device.name}</td>
                 <td>${device.description}</td>
                 <td>${device.user_alias}</td>
-				<td><a href="/device/detail/${device.id}">Detail</a></td>
+				<td><a href="/${device.id}">Detail</a></td>
             `;
 			tableBody.appendChild(row);
 		});

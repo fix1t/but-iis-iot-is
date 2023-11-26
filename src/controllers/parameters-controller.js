@@ -16,7 +16,7 @@ export const getParameterById = async (req, res) => {
 export const getAllValuesByParameterIdAndDeviceId = async (req, res) => {
 	try {
 		INFO(`Getting all values for parameter with id ${req.params.parameter_id} and device with id ${req.params.device_id}`);
-		const values = await Parameter.findAllValuesByDeviceIdAndParameterId(req.params.device_id, req.params.parameter_id);
+		const values = await Parameter.findValuesByDeviceIdAndParameterId(req.params.device_id, req.params.parameter_id);
 		res.status(200).json(values);
 	} catch (error) {
 		ERROR(error.message);

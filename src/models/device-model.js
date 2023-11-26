@@ -115,6 +115,20 @@ class Device {
 		}
 	}
 
+	static async findAllMyFree(id) {
+		let sql = `SELECT *
+					FROM Devices
+					WHERE id NOT IN (SELECT device_id FROM SystemDevices)
+					AND owner_id = ?;`;
+		try {
+			const [rows] = await db.promise().query(sql, [id]);
+			return rows.length ? rows.map(row => Device.rowToDevice(row)) : null;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	static rowToDevice(row) {
 		return new Device(row.owner_id, row.type_id, row.name, row.description, row.user_alias, row.id);
 	}

@@ -88,6 +88,17 @@ export const getFreeDevices = async (req, res) => {
 	}
 }
 
+export const getMyFreeDevices = async (req, res) => {
+	const user = req.user;
+	try {
+		const device = await Device.findAllMyFree(user.id);
+		res.status(200).json(device);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
 export const addDeviceToSystem = async (req, res) => {
 	const systemId = req.params.system_id;
 	const { device_id } = req.body;
@@ -232,5 +243,23 @@ export const canEditKpisBool = async (user, deviceId) => {
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		return false;
+	}
+}
+
+export const removeDeviceFromSystem = async (req, res) => {
+	const deviceId = req.params.device_id;
+	const systemId = req.params.system_id;
+
+	try {
+		const success = await System.removeDeviceFromSystem(systemId, deviceId);
+
+		if (success) {
+			res.status(200).json({ message: 'Device removed successfully' });
+		} else {
+			res.status(404).json({ error: 'System or Device not found' });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
 	}
 }

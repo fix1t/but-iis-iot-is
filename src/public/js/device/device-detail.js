@@ -122,14 +122,16 @@ async function loadParameters(deviceId) {
 
 			const row = document.createElement('tr');
 			// Add a class based on the success status
-			row.classList.add(success ? 'bg-success' : 'bg-danger');
-			row.classList.add('text-white');
+			if (!successData.message) {
+				row.classList.add(success ? 'bg-success' : 'bg-danger');
+				row.classList.add('text-white');
+			}
 
 			row.innerHTML = `
 				<td>${name}</td>
 				<td>${value}</td>
 				<td>${unit_name}</td>
-				<td><a href="/parameters/${parameter_id}/${device_id}">Detail</a></td>
+				<td><a href="/parameters/${parameter_id}/${device_id}" style="color: #0000FF;">Detail</a></td>
 			`;
 			tbody.appendChild(row);
 		});

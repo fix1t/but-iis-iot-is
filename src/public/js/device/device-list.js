@@ -5,7 +5,7 @@ fetch('/api/devices/my-devices')
         if (devices === null) {
             tableBody.innerHTML = '<tr><td colspan="4">You have no devices yet</td></tr>';
         } else {
-            devices.forEach(device => {
+            devices?.forEach(device => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${device.name}</td>

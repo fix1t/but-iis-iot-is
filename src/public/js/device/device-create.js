@@ -114,7 +114,7 @@ async function loadFreeDevices() {
 		const tbody = document.createElement('tbody');
 
 		// Fill the table with user data
-		data.forEach(device => {
+		data?.forEach(device => {
 			const row = document.createElement('tr');
 			row.innerHTML = `
                 <td>${device.user_alias}</td>

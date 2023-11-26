@@ -2,7 +2,7 @@ fetch('/api/devices/my-devices')
 	.then(response => response.json())
 	.then(devices => {
 		const tableBody = document.getElementById('userDevicesTableBody');
-		devices.forEach(device => {
+		devices?.forEach(device => {
 			const row = document.createElement('tr');
 			row.innerHTML = `
 				<td>${device.name}</td>

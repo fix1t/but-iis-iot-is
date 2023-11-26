@@ -122,8 +122,10 @@ async function loadParameters(deviceId) {
 
 			const row = document.createElement('tr');
 			// Add a class based on the success status
-			row.classList.add(success ? 'bg-success' : 'bg-danger');
-			row.classList.add('text-white');
+			if (!successData.message) {
+				row.classList.add(success ? 'bg-success' : 'bg-danger');
+				row.classList.add('text-white');
+			}
 
 			row.innerHTML = `
 				<td>${name}</td>

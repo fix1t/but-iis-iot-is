@@ -90,7 +90,9 @@ class Parameter {
 				AND LatestDP.parameter_id = DP.parameter_id
 				AND LatestDP.latest_recorded_at = DP.recorded_at -- Join with DeviceParameters to get the last captured parameter values
 			WHERE
-				D.id = ?;                 -- Filter by the specified device ID
+				D.id = ?                 -- Filter by the specified device ID
+			ORDER BY 
+				P.name ASC;               -- Order by parameter name
 		`;
 		try {
 			const [rows] = await db.promise().query(sql, [deviceId, deviceId]);

@@ -18,11 +18,10 @@
     <div class="container mb-3">
       <button class="btn btn-secondary" onclick="history.back()">&#8592 Go Back</button>
     </div>
-
     <div class="container border border-secondary rounded-sm p-3">
       <h3 class="text-center text-primary">Create Your Device!</h3>
       <div class="form-group">
-        <label for="deviceName">Device Name</label>
+        <label for="deviceName">* Device Name</label>
         <input
           type="text"
           class="form-control"
@@ -32,7 +31,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="userAlias">Device Alias</label>
+        <label for="userAlias">* Device Alias</label>
         <input
           type="text"
           class="form-control"
@@ -40,6 +39,15 @@
           name="userAlias"
           required
         />
+      </div>
+      <div class="form-group">
+        <label for="deviceType">* Device Type</label>
+        <select
+          class="form-control"
+          id="deviceType"
+          name="deviceType"
+          required
+        ></select>
       </div>
       <div class="form-group">
         <label for="deviceDescription">Device Description</label>
@@ -50,17 +58,6 @@
           rows="3"
         ></textarea>
       </div>
-
-      <div class="form-group">
-        <label for="deviceType">Device Type</label>
-        <select
-          class="form-control"
-          id="deviceType"
-          name="deviceType"
-          required
-        ></select>
-      </div>
-
       <button class="btn btn-primary" id="createDeviceButton">Create</button>
     </div>
 

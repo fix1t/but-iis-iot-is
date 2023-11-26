@@ -85,34 +85,34 @@ export const getCurrentUserSystems = async (req, res) => {
 };
 
 export const getSystemsUserIsNotIn = async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const systems = await Systems.getSystemsUserIsNotIn(userId);
+	try {
+		const userId = req.user.id;
+		const systems = await Systems.getSystemsUserIsNotIn(userId);
 
-        // Fetch owner details and check for pending requests for all systems in parallel
-        const systemsWithOwnersAndRequests = await Promise.all(systems.map(async (system) => {
-            // Fetch the owner's name from the User model
-            const owner = await User.findById(system.owner_id);
+		// Fetch owner details and check for pending requests for all systems in parallel
+		const systemsWithOwnersAndRequests = await Promise.all(systems.map(async (system) => {
+			// Fetch the owner's name from the User model
+			const owner = await User.findById(system.owner_id);
 
-            // Check if a pending request exists
-            const pendingRequest = await SystemRequest.getUsersInSystemRequests(system.id, userId);
+			// Check if a pending request exists
+			const pendingRequest = await SystemRequest.getUsersInSystemRequests(system.id, userId);
 
-            return {
-                id: system.id,
-                owner_id: system.owner_id,
-                owner_name: owner.username, // Add the owner's name to the data
-                name: system.name,
-                description: system.description,
-                created: system.created,
-                requestSent: pendingRequest.length > 0, // Add whether a pending request exists
-            };
-        }));
+			return {
+				id: system.id,
+				owner_id: system.owner_id,
+				owner_name: owner.username, // Add the owner's name to the data
+				name: system.name,
+				description: system.description,
+				created: system.created,
+				requestSent: pendingRequest.length > 0, // Add whether a pending request exists
+			};
+		}));
 
-        res.json(systemsWithOwnersAndRequests);
-    } catch (error) {
-        console.error('Error executing query:', error.stack);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+		res.json(systemsWithOwnersAndRequests);
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 };
 
 export const createSystem = async (req, res) => {
@@ -147,7 +147,7 @@ export const updateSystem = async (req, res) => {
 		res.status(404).json({ error: 'System not found' });
 		return;
 	}
-	if (systemToUpdate.owner_id !== user.id && !user.isAdmin) {
+	if (systemToUpdate.owner_id !== user.id && !user.is_admin) {
 		res.status(401).json({ error: 'Forbidden' });
 		return;
 	}
@@ -176,7 +176,7 @@ export const deleteSystem = async (req, res) => {
 		res.status(404).json({ error: 'System not found' });
 		return;
 	}
-	if (systemToDelete.owner_id !== user.id && !user.isAdmin) {
+	if (systemToDelete.owner_id !== user.id && !user.is_admin) {
 		res.status(401).json({ error: 'You are not the owner. Only owner can delete a system.' });
 		return;
 	}

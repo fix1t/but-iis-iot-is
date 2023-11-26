@@ -45,10 +45,10 @@ async function loadParameterData() {
 				</div>
 			</div>
 			<div class="row mb-3">
-				<div class="col-12">
-					<label for="parameterType" class="form-label">Type</label>
-					<input type="text" id="parameterType" class="form-control" value="${parameter.type_id}" disabled>
-				</div>
+			<div class="col-12">
+				<label for="parameterType" class="form-label">Type</label>
+				<input type="text" id="parameterType" class="form-control" value="${parameter.type_name}" disabled>
+			</div>
 			</div>
 		`;
 

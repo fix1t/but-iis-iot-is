@@ -28,8 +28,6 @@ async function loadSystemData() {
 		const formattedDate = createdDate.toLocaleDateString();
 		document.getElementById('systemCreated').value = formattedDate;
 
-		document.getElementById('systemId').value = systemData.id;
-
 		// Get logged User
 		const user = await fetch(`/api/users/me`);
 		const userResponse = await user.json();

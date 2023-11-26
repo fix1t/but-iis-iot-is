@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, addDeviceToSystem, deleteDevice, updateDevice, canEditKpis, removeDeviceFromSystem } from '../controllers/devices-controller.js';
+import { createDevice, getMyDevices, getDeviceById, getAllTypes, getFreeDevices, getMyFreeDevices, addDeviceToSystem, deleteDevice, updateDevice, canEditKpis, removeDeviceFromSystem } from '../controllers/devices-controller.js';
 import { getParameterById, getAllValuesByParameterIdAndDeviceId, getAllParametersAndValuesByDeviceId, getAllKpisByParameterIdAndDeviceId } from '../controllers/parameters-controller.js';
 import { createKpi, deleteKpi, getLatestKpiStatus } from '../controllers/kpis-controller.js';
 import { verifyToken, continueIfUserIsInSystem } from '../utils/auth.js';
@@ -10,6 +10,7 @@ const router = express.Router();
 router.get('/my-devices', verifyToken, getMyDevices);
 router.get('/types', verifyToken, getAllTypes);
 router.get('/all-free', verifyToken, getFreeDevices);
+router.get('/all-my-free', verifyToken, getMyFreeDevices);
 router.get('/:device_id', verifyToken, getDeviceById);
 router.get('/:device_id/parameters', verifyToken, getAllParametersAndValuesByDeviceId);
 router.get('/:device_id/parameters/:parameter_id', verifyToken, getParameterById)

@@ -221,7 +221,6 @@ async function deleteKpi(kpiId) {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/delete/kpi/${kpiId}`, {
 			method: 'DELETE',
 		});
-		console.log(response);
 		if (!response.ok) {
 			console.log(response);
 			throw new Error('Network response was not ok');
@@ -259,7 +258,6 @@ function addListenerOnKpiCreate() {
 		} catch {
 			console.error('Failed to create KPI');
 		}
-
 
 		loadKpiList();
 	});

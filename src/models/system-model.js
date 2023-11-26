@@ -41,6 +41,22 @@ class Systems {
 		}
 	}
 
+	async getId() {
+		if (this.id != null) {
+			return this.id;
+		}
+		let sql = `SELECT id FROM Systems WHERE owner_id = ? AND name = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [this.owner_id, this.name]);
+			this.id = rows[0].id;
+			return this.id;
+		}
+		catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	async update() {
 		const dataToUpdate = {
 			//owner_id: this.owner_id, //@maybe want to change owner.id as well

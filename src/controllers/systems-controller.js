@@ -127,7 +127,8 @@ export const createSystem = async (req, res) => {
 			return;
 		}
 		await system.save();
-		res.status(201).json({ message: 'System created successfully' });
+		await system.getId();
+		res.status(201).json({ message: 'System created successfully', system_id: system.id });
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: 'Internal Server Error' });

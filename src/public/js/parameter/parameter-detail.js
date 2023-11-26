@@ -5,8 +5,8 @@ let canEditKpis = false;
 
 document.addEventListener('DOMContentLoaded', async function () {
 	let uri = window.location.pathname.split('/');
-	deviceId = uri.pop();
 	parameterId = uri.pop();
+	deviceId = uri.pop();
 	await loadParameterData();
 	loadGraph();
 	loadKpiCreateArea();

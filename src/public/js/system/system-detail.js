@@ -70,7 +70,7 @@ async function loadSystemEditButton() {
 
 		button.addEventListener('click', function () {
 			// go to the edit system page
-			window.location.href = `/systems/edit/${systemId}`;
+			window.location.href = `/systems/${systemId}/edit`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);
@@ -101,7 +101,7 @@ async function loadSystemAddDeviceButton() {
 
 		button.addEventListener('click', function () {
 			// go to the add device page for this system
-			window.location.href = `/device/create/${systemId}`;
+			window.location.href = `/systems/${systemId}/device-create`;
 		});
 	} catch (error) {
 		console.error('Error fetching data:', error);
@@ -187,7 +187,7 @@ async function loadNotSystemUsers() {
 			userNotSystemList.classList.add('d-none');
 			return;
 		}
-		
+
 		const searchResultsContainer = document.createElement('div');
 		searchResultsContainer.classList.add('list-group', 'mt-2');
 
@@ -501,7 +501,7 @@ async function loadDevices() {
 			const userAliasCell = document.createElement('td');
 			const anchor = document.createElement('a');
 
-			anchor.href = `/device/detail/${device.id}`; // Set the href attribute to '#' for now
+			anchor.href = `/systems/${systemId}/${device.id}`; // Set the href attribute to '#' for now
 			anchor.textContent = device.user_alias;
 			anchor.setAttribute('data-device-id', device.id);
 

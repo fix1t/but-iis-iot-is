@@ -433,7 +433,7 @@ function acceptRequest(requestId) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			const deletedRow = document.getElementById(`requestRow_${requestId}`);
 			if (deletedRow) {
 				deletedRow.remove();
 			}
@@ -452,10 +452,11 @@ function rejectRequest(requestId) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const deletedRow = document.getElementById(`userRow_${requestId}`);
+			const deletedRow = document.getElementById(`requestRow_${requestId}`);
 			if (deletedRow) {
 				deletedRow.remove();
 			}
+			window.location.reload();
 		})
 		.catch(error => console.error('Error rejecting request:', error));
 }

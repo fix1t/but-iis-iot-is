@@ -1,6 +1,5 @@
 import db from '../config/db.js';
 import User from '../models/user-model.js';
-import Broker from '../models/broker-model.js';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/auth.js';
 

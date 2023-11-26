@@ -100,6 +100,7 @@ export const addUser = async (req, res) => {
 
 	try {
 		await System.addUserToSystem(system_id, user_id);
+		await SystemRequest.deleteRequest(user_id, system_id);
 		res.status(201).json({ message: 'User added successfully' });
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -112,6 +113,7 @@ export const addUserByRequest = async (req, res) => {
 
 	try {
 		await System.addUserToSystem(system_id, user_id);
+		await SystemRequest.deleteRequest(system_id, user_id);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
 		res.status(500).json({ error: 'Internal Server Error' });

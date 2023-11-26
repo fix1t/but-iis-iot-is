@@ -23,14 +23,14 @@ async function initializePage() {
 			<li class="nav-item">
 			  <a class="nav-link" href="/systems">Home</a>
 			</li>
-			<li class="nav-item" id="usersNavItem">
-			  ${isAdmin ? '<a class="nav-link" href="/users">Users</a>' : ''}
-			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="/systems-requests">My Requests</a>
 			</li>
-      <li class="nav-item">
+      		<li class="nav-item">
 			  <a class="nav-link" href="/types">Types</a>
+			</li>
+			<li class="nav-item" id="usersNavItem">
+				${isAdmin ? '<a class="nav-link" href="/admin">Admin</a>' : ''}
 			</li>
 		  </ul>
 		  <button id="editUserButton" class="btn btn-outline-warning my-2 mr-2 my-sm-0" type="button">

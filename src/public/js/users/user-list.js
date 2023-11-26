@@ -91,6 +91,6 @@ function deleteSystem(systemId) {
 
 // Function to show system detail and redirect to another view
 function showSystemDetail(systemId) {
-    // Redirect to the system detail view with the specified systemId
-    window.location.href = `/systems/detail/${systemId}`;
+	// Redirect to the system detail view with the specified systemId
+	window.location.href = `/systems/${systemId}`;
 }

@@ -65,7 +65,7 @@ async function loadGraph() {
 
 		const unit_name = document.getElementById('parameterUnits').value;
 
-		const labels = data.map(entry => entry.recorded_at);
+		const labels = data.map(entry => new Date(entry.recorded_at).toLocaleString());
 		const values = data.map(entry => parseFloat(entry.parameter_value));
 
 		const canvas = document.getElementById('dataChart');

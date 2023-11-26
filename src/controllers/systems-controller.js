@@ -1,6 +1,7 @@
 import User from '../models/user-model.js';
 import Systems from '../models/system-model.js';
 import Devices from '../models/device-model.js';
+import Types from '../models/type-model.js';
 import SystemRequest from '../models/system-request-model.js';
 
 
@@ -190,20 +191,30 @@ export const deleteSystem = async (req, res) => {
 }
 
 export const getSystemDevices = async (req, res) => {
-	const systemId = req.params.system_id;
+    const systemId = req.params.system_id;
 
-	try {
-		const system = await Systems.findById(systemId);
-		if (!system) {
-			res.status(404).json({ error: 'System not found' });
-			return;
-		}
-		const devices = await Devices.findBySystemId(system.id);
-		res.status(200).json(devices);
-	} catch (error) {
-		console.error('Error executing query:', error.stack);
-		res.status(500).json({ error: 'Internal Server Error' });
-	}
+    try {
+        const system = await Systems.findById(systemId);
+        if (!system) {
+            res.status(404).json({ error: 'System not found' });
+            return;
+        }
+        const devices = await Devices.findBySystemId(system.id);
+
+        // Join the devices with their types
+        const devicesWithTypes = await Promise.all(devices.map(async (device) => {
+            const type = await Types.findById(device.type_id);
+            return {
+                ...device,
+                type_name: type.name
+            };
+        }));
+
+        res.status(200).json(devicesWithTypes);
+    } catch (error) {
+        console.error('Error executing query:', error.stack);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 function isMissingRequiredFields(system) {

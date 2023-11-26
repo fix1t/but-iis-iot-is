@@ -205,7 +205,7 @@ async function loadKpiList() {
 		// Add click event listeners to delete buttons
 		document.querySelectorAll('.delete-kpi').forEach(button => {
 			button.addEventListener('click', function (e) {
-				const kpiId = e.target.getAttribute('data-kpi-id');
+				const kpiId = e.currentTarget.getAttribute('data-kpi-id');
 				deleteKpi(kpiId);
 			});
 		});
@@ -216,20 +216,18 @@ async function loadKpiList() {
 }
 
 async function deleteKpi(kpiId) {
+	console.log(`Deleting KPI with id ${kpiId}`);
 	try {
 		const response = await fetch(`/api/devices/${deviceId}/parameters/${parameterId}/delete/kpi/${kpiId}`, {
 			method: 'DELETE',
 		});
-
+		console.log(response);
 		if (!response.ok) {
 			console.log(response);
 			throw new Error('Network response was not ok');
 		}
-
-		const kpi = await response.json();
-		console.log(kpi);
 	} catch {
-		console.error('Failed to delete KPI');
+		console.error('Failed to delete KPI', error);
 	}
 
 	loadKpiList();

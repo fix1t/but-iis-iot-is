@@ -15,6 +15,8 @@ export const createKpi = async (req, res) => {
 	try {
 		const kpi = new KPI(deviceId, parameterId, threshold, operation);
 		await kpi.save();
+		await kpi.getId(); //now sending id back to client
+		console.log(kpi);
 		res.status(201).json(kpi);
 	} catch (error) {
 		ERROR(error.message);

@@ -87,7 +87,7 @@ document.getElementById('joinRequestForm').addEventListener('submit', function(e
 	.then(data => {
 		console.log('Success:', data);
 		$('#joinRequestModal').modal('hide');
-		Window.location.reload();
+		window.location.reload();
 	})
 	.catch((error) => {
 		console.error('Error:', error);

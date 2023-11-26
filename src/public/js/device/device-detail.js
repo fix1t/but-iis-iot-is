@@ -44,13 +44,13 @@ async function loadDeviceData(deviceId) {
 				<div class="row mb-3">
 					<div class="col-12">
 						<label for="deviceType" class="form-label">Type</label>
-						<input type="text" id="deviceType" class="form-control" value="${deviceData.type_id}" disabled>
+						<input type="text" id="deviceType" class="form-control" value="${deviceData.type_name}" disabled>
 					</div>
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
 						<label for="deviceOwner" class="form-label">Owner</label>
-						<input type="text" id="deviceOwner" class="form-control" value="${deviceData.owner_id}" disabled>
+						<input type="text" id="deviceOwner" class="form-control" value="${deviceData.owner_name}" disabled>
 					</div>
 				</div>
 			</div>

@@ -35,3 +35,8 @@ body {
 .table-wrapper-scroll-y {
     display: block;
 }
+
+#dataChart {
+    width: 100%;
+    max-height: 400px;
+}

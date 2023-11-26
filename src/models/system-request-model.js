@@ -119,6 +119,17 @@ class SystemRequest {
 			throw error;
 		}
 	}
+
+	static async deleteRequest(user_id, system_id) {
+		let sql = `DELETE FROM SystemUserRequests WHERE user_id = ? AND system_id = ?`;
+		try {
+			const [result] = await db.promise().query(sql, [user_id, system_id]);
+			return result.affectedRows ? true : false;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
 }
 
 export default SystemRequest;

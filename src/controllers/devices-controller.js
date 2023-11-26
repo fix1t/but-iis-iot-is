@@ -234,3 +234,21 @@ export const canEditKpisBool = async (user, deviceId) => {
 		return false;
 	}
 }
+
+export const removeDeviceFromSystem = async (req, res) => {
+	const deviceId = req.params.device_id;
+	const systemId = req.params.system_id;
+
+	try {
+		const success = await System.removeDeviceFromSystem(systemId, deviceId);
+
+		if (success) {
+			res.status(200).json({ message: 'Device removed successfully' });
+		} else {
+			res.status(404).json({ error: 'System or Device not found' });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}

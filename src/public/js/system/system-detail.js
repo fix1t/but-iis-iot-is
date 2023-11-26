@@ -6,7 +6,6 @@ let isAdmin;
 document.addEventListener('DOMContentLoaded', function () {
 	systemId = window.location.pathname.split('/').pop();
 	loadSystemData();
-	loadDevices();
 });
 
 async function loadSystemData() {
@@ -42,7 +41,8 @@ async function loadSystemData() {
 		loadSystemEditButton()
 		loadSystemUsers();
 		loadNotSystemUsers();
-		loadSystemRequests()
+		loadSystemRequests();
+		loadDevices();
 	} catch (error) {
 		console.error('Failed to load system data:', error);
 	}
@@ -183,6 +183,13 @@ async function loadSystemUsers() {
 async function loadNotSystemUsers() {
 	try {
 		const userNotSystemList = document.getElementById('userNotSystemList');
+
+		if (userId !== ownerId && !isAdmin) {
+			// show the add user input search only for owner or admin
+			userNotSystemList.classList.add('d-none');
+			return;
+		}
+		
 		const searchResultsContainer = document.createElement('div');
 		searchResultsContainer.classList.add('list-group', 'mt-2');
 
@@ -477,12 +484,13 @@ async function loadDevices() {
 		const table = document.createElement('table');
 		table.classList.add('table', 'table-bordered', 'p-3', 'mt-3');
 		const thead = document.createElement('thead');
+		thead.classList.add('thead-light');
 		thead.innerHTML = `
 		<tr>
 		  <th scope="col">Alias</th>
 		  <th scope="col">Type</th>
 		  <th scope="col">Description</th>
-		  <th scope="col">Status</th>
+		  ${(userId !== ownerId && !isAdmin) ? '' : '<th scope="col">Action</th>'}
 		</tr>
 	  `;
 
@@ -503,9 +511,14 @@ async function loadDevices() {
 
 			row.appendChild(userAliasCell);
 			row.innerHTML += `
-		  <td>${device.type_id}</td>
-		  <td>${device.description}</td>
-		  <td>KPITODO</td>
+				<td>${device.type_id}</td>
+				<td>${device.description}</td>
+				${(userId !== ownerId && !isAdmin) ? '' : `
+					<td>
+						<button class="btn btn-danger btn-sm" onclick="removeDevice(${device.id})">
+							<i class="fas fa-trash"></i>
+						</button>
+					</td>`}
 		`;
 
 			row.id = `deviceRow_${device.id}`;
@@ -522,4 +535,22 @@ async function loadDevices() {
 	} catch (error) {
 		console.error('Failed to load devices:', error);
 	}
+}
+
+function removeDevice(deviceId) {
+	// Make a DELETE request to remove device from System
+	fetch(`/api/devices/${deviceId}/remove/${systemId}`, {
+		method: 'DELETE',
+	})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const deletedRow = document.getElementById(`deviceRow_${deviceId}`);
+			if (deletedRow) {
+				deletedRow.remove();
+			}
+		})
+		.catch(error => console.error('Error rejecting request:', error));
 }

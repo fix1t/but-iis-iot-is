@@ -1,4 +1,9 @@
+let systemId = null;
+
 document.addEventListener('DOMContentLoaded', function () {
+	if (window.location.pathname !== '/device-create') {
+		systemId = window.location.pathname.split('/').slice(-2, -1)[0];
+	}
 	loadTypes();
 	loadFreeDevices();
 });
@@ -14,21 +19,13 @@ document.getElementById('createDeviceButton').addEventListener('click', async ()
 
 	let url = '/api/devices/create';
 	let body = { name: deviceName, description: deviceDescription, type_id: deviceType, userAlias: userAlias };
-	let inSystem = false;
-	let systemId = null;
 
-	console.log(window.location.pathname);
-
-	// /systems/:system_id/device-create
-	if (window.location.pathname !== '/device-create') {
-		systemId = window.location.pathname.split('/').slice(-2, -1)[0];
-		console.log(systemId);
+	// Check if we are in a system
+	if (systemId) {
 		url += `/${systemId}`;
 		body.system_id = systemId;
-		inSystem = true;
 	}
 
-	console.log(url, body);
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
@@ -144,7 +141,6 @@ async function loadFreeDevices() {
 }
 
 function addDevice(deviceId) {
-	let systemId = window.location.pathname.split('/').pop();
 	// Make a POST request to add User to System
 	fetch(`/api/devices/${systemId}/add-device`, {
 		method: 'POST',

@@ -33,8 +33,8 @@ class Broker {
 
 			// Prepare an SQL command to insert the new value
 			inserts.push(`(${device_id}, ${parameter_id}, ${value})`);
+			console.log(`device_id: ${device_id}, parameter_id: ${parameter_id}, value: ${value}`);
 		}
-		console.log(inserts);
 		// Execute all the insert commands in a single query
 		await db.promise().query(`
 			INSERT INTO DeviceParameters(device_id, parameter_id, value)

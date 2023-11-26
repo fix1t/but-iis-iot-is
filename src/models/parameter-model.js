@@ -105,25 +105,19 @@ class Parameter {
 	// Retrieve all captured values for a specific parameter of a specific device
 	static async findAllValuesByDeviceIdAndParameterId(deviceId, parameterId = this.id) {
 		let sql = `
-			SELECT
-				DP.value AS parameter_value,       -- Captured parameter value
-				DP.recorded_at AS recorded_at      -- Captured timestamp
-			FROM
-				Devices AS D                       -- Devices table alias
-			JOIN
-				Parameters AS P                     -- Parameters table alias
-			ON
-				P.id = ?                           -- Specify the target parameter ID
-			JOIN
-				DeviceParameters AS DP              -- DeviceParameters table alias
-			ON
-				D.id = ?                           -- Specify the target device ID
-				AND P.id = DP.parameter_id
-			ORDER BY
-				DP.recorded_at ASC;                -- Order by captured timestamp
+        SELECT
+            value AS parameter_value,
+            recorded_at AS recorded_at
+        FROM
+            DeviceParameters
+        WHERE
+            device_id = ?         -- Specify the target device ID
+            AND parameter_id = ?  -- Specify the target parameter ID
+        ORDER BY
+            recorded_at ASC;                -- Order by captured timestamp
 		`;
 		try {
-			const [rows] = await db.promise().query(sql, [parameterId, deviceId]);
+			const [rows] = await db.promise().query(sql, [deviceId, parameterId]);
 			DEBUG('[findAllValuesByDeviceIdAndParameterId()]:\n' + JSON.stringify(rows, null, 2));
 			return rows.length ? rows : null;
 		} catch (error) {

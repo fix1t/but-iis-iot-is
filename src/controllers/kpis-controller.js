@@ -76,7 +76,8 @@ export const getLatestKpiStatus = async (req, res) => {
 				}
 			}
 		} else {
-			errors.push(`No KPI defined`);
+			res.status(200).json({ success: true, message: "noKPI" });
+			return;
 		}
 
 		if (errors.length > 0) {

@@ -19,6 +19,18 @@ class KPI {
 		return db.promise().execute(sql, [this.device_id, this.parameter_id, this.threshold, this.operation]);
 	}
 
+	async getId() {
+		let sql = `SELECT id FROM KPIs WHERE device_id = ? AND parameter_id = ? AND threshold = ? AND operation = ?`;
+		try {
+			const [rows] = await db.promise().query(sql, [this.device_id, this.parameter_id, this.threshold, this.operation]);
+			this.id = rows[0].id;
+			return this.id;
+		} catch (error) {
+			console.error('Error executing query:', error.stack);
+			throw error;
+		}
+	}
+
 	async update(threshold, operation) {
 		let sql = `
 			UPDATE KPIs

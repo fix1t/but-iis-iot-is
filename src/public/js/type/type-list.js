@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         types.forEach(type => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${type.id}</td>
                 <td>${type.name}</td>
                 <td>${type.parameters.join(', ')}</td>
                 <td></td>

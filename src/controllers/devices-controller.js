@@ -68,6 +68,9 @@ export const getMyDevices = async (req, res) => {
 
 	try {
 		const devices = await Device.findByOwnerId(user.id);
+
+		Broker.simulateBroker();
+
 		res.status(200).json(devices);
 	} catch (error) {
 		console.error('Error executing query:', error.stack);
@@ -88,8 +91,6 @@ export const getDeviceById = async (req, res) => {
 
         // Fetch the owner name
         const owner = await User.findById(device.owner_id);
-
-		Broker.simulateBroker();
 		
         res.status(200).json({ ...device, isOwner, type_name: type.name, owner_name: owner.username });
     } catch (error) {

@@ -43,7 +43,7 @@
 		</dd>
 		<dd>Jakub Mikyšek <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 			<a href="mailto:xmikys03@stud.fit.vutbr.cz">xmikys03@stud.fit.vutbr.cz</a> -
-			Hostování databáze, systém-uživatel operace (uživatelé v systému, přidávání, odebírání, žádosti), stav KPI,
+			Hostování databáze, MVC systém-uživatel (uživatelé v systému, přidávání, odebírání, žádosti), stav KPI,
 			přidávání zařízení do systému
 		</dd>
 		<dt>URL aplikace</dt>
@@ -82,8 +82,6 @@
 		</tbody>
 	</table>
 
-	<p>(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p>
-
 	<h3>Video</h3>
 
 	<p>Přiložte odkaz na komentované video demostrující použití informačního systému. Zaměřte se na případy užití
@@ -100,44 +98,50 @@
 		<li><b>DB</b>: MySQL na hostingu <a href="https://aiven.io/" target=”_blank”>Aiven</a></li>
 	</ul>
 	<h3>Architektura</h3>
-	<p>Návrhový vzor <b>MVC</b> (Model-View-Controller), komunikace FE a BE pomocí endpointů:</p>
+	<p>Návrhový vzor <b>MVC</b> (Model-View-Controller), komunikace FE a BE pomocí endpointů.</p>
 	<p>Používáme <b>Monolitickou</b> architekturu, tedy na jednom serveru řešíme Backend i Frontend.</p>
-
-
-	<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují
-		jednotlivé případy použití.</p>
+	<p>Endpointy, které implementují jednotlivé případy použití jsou v souborech umístěných v složce
+		<code>src/routes</code>,
+		zvlášností je
+		soubor <code>files-routes.js</code>, který se stará o URL samotných HTML souborů.
+	</p>
+	<p>Za zmínku stojí i soubor <code>src/utils/auth.js</code>, který umožňuje kontrolovat token uživatele, získaný při
+		přihlášení
+		nebo registraci, celkově tento soubor řeší utility potřebné pro autorizaci.</p>
 
 	<h3>Databáze</h3>
 
-	<img style="width: 1000px;" src="https://xs-project.fra1.digitaloceanspaces.com/additional-images/white-database.png"
+	<img style="width: 1000px;"
+		src="https://xs-project.fra1.digitaloceanspaces.com/additional-images/white-database.png"
 		alt="Relational Database Schema"
 		data-src="https://xs-project.fra1.digitaloceanspaces.com/additional-images/white-database.png">
 
 	<h2>Instalace</h2>
 
-	Stručně popište:
 	<ul>
-		<li>postup instalace na server</li>
-		<li>V konzoli je třeba zadat následující příkazy: </li>
+		<li>Popis spuštění lokálního serveru:</li>
 		<ul>
 			<li><code>cd src</code></li>
 			<li><code>npm install</code></li>
 			<li><code>npm run start</code></li>
 		</ul>
-		<li>softwarové požadavky</li>
+		<li>Softwarové požadavky</li>
 		<ul>
-			<li>Node.js verze: </li>
+			<li>Node.js verze: 20.0.9 nebo vyšší </li>
+			<li>npm verze: 10.1.0 nebo vyšší </li>
 		</ul>
-
-		<ul>
-			<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
-		</ul>
+		<li>Databázový skript se nachází v souboru <code>database.sql</code></li>
 	</ul>
 
 	<h2>Známé problémy</h2>
-	<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. „Z časových důvodů nebyla
-		implementována správa uživatelů.” Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset
-		dlouze hledat.</p>
+	<p>Byl implementovaný celý rozsah zadání.</p>
+
+	<h2>Rozšíření</h2>
+	<ul>
+		<li>Grafová reprezentace historie hodnoty parametru (Detail parametru)</li>
+		<li>Přidávání uživatelů do systému správcem systému za pomocí vyhledávacího pole na detailu systému</li>
+		<li>Vytváření zařízení mimo systém (volné zařízení) a jejich přiřazení do systému</li>
+	</ul>
 
 </body>
 

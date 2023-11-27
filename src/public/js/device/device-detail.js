@@ -85,7 +85,7 @@ async function loadParameters(deviceId) {
 			throw new Error('Network response was not ok');
 		}
 
-		const parameters = await response.json();
+		let parameters = await response.json();
 
 		parameterList.classList.add('mt-4', 'container');
 
@@ -96,6 +96,8 @@ async function loadParameters(deviceId) {
 		table.classList.add('table', 'table-striped', 'table-bordered');
 
 		const tbody = document.createElement('tbody');
+
+		parameters.sort((a, b) => a.parameter_name.localeCompare(b.parameter_name));
 
 		parameters.forEach(async (parameter) => {
 			const name = parameter.parameter_name;

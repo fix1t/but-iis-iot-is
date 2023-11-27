@@ -48,6 +48,8 @@
 		</dd>
 		<dt>URL aplikace</dt>
 		<dd><a href="https://iis-x5wc.onrender.com/login">https://iis-x5wc.onrender.com/login</a></dd>
+		<p>POZOR: Server po 15 minutách nečisnosti přechází do režimu spánku, proto je možné, že bude chvilku trvat než
+			se Vám server spustí (probudí), prosíme tedy o chvilku trpělivosti (Free Tier Issue...)</p>
 	</dl>
 
 	<h2>Uživatelé systému pro testování</h2>
@@ -84,7 +86,8 @@
 
 	<h3>Video</h3>
 
-	<a href="https://drive.google.com/file/d/1oXYvRAkFq3HCpIi1xnymSxmoWKed5l17/view?usp=drive_link" target=”_blank”>Komentované video</a>
+	<a href="https://drive.google.com/file/d/1oXYvRAkFq3HCpIi1xnymSxmoWKed5l17/view?usp=drive_link"
+		target=”_blank”>Komentované video</a>
 
 	<h2>Implementace</h2>
 	<h3>Základní informace</h3>
@@ -104,6 +107,11 @@
 	<p>Za zmínku stojí i soubor <code>src/utils/auth.js</code>, který umožňuje kontrolovat token uživatele, získaný při
 		přihlášení
 		nebo registraci, celkově tento soubor řeší utility potřebné pro autorizaci.</p>
+	<h3>Broker</h3>
+	<p>Broker je simulován ze strany serveru a obnovuje hodnoty parametrů, každých 20 minut a nebo při návštěvě stránky
+		"Home".
+	</p>
+	<p>Princip simulace je založen na náhodném přičítání hodnot v intervalu <-10,10>.</p>
 
 	<h3>Databáze</h3>
 
@@ -134,7 +142,7 @@
 
 	<h2>Rozšíření</h2>
 	<ul>
-		<li>Grafová reprezentace historie hodnoty parametru (Detail parametru)</li>
+		<li>Grafová reprezentace historie hodnoty parametrů (Detail parametru)</li>
 		<li>Přidávání uživatelů do systému správcem systému za pomocí vyhledávacího pole na detailu systému</li>
 		<li>Vytváření zařízení mimo systém (volné zařízení) a jejich přiřazení do systému</li>
 	</ul>

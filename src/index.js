@@ -38,14 +38,14 @@ process.on('SIGINT', () => {
 	});
 });
 
-// Call simulateBroker every hour
+// Call simulateBroker every 20 minutes
 setInterval(async () => {
 	try {
 		await Broker.simulateBroker();
 	} catch (error) {
 		console.error('An error occurred:', error);
 	}
-},61 * 60 * 1000);
+},20 * 60 * 1000);
 
 
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));

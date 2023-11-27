@@ -60,13 +60,13 @@ class Device {
 		return db.promise().execute(sql, [...values, this.id]);
 	}
 
-	async addParameter(parameterId) {
+	async addParameter(parameterId, recordedAt) {
 		let sql = `
 			INSERT INTO DeviceParameters (
 				device_id, parameter_id, value, recorded_at
 			) VALUES (?, ?, ?, ?)
 		`;
-		return db.promise().execute(sql, [this.id, parameterId, 0, new Date()]);
+		return db.promise().execute(sql, [this.id, parameterId, 0, recordedAt]);
 	}
 
 	static async findById(id) {

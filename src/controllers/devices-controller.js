@@ -36,8 +36,17 @@ export const createDevice = async (req, res) => {
 
 		// Add the parameters to the device
 		if (parameters) {
+			// Get the current date/time in UTC
+			let nowUtc = new Date();
+
+			// Subtract one hour
+			nowUtc.setHours(nowUtc.getHours());
+
+			// Format to MySQL's datetime format
+			let nowUtcFormatted = nowUtc.toISOString().slice(0, 19).replace('T', ' ');
+			
 			for (const parameter of parameters) {
-				device.addParameter(parameter.id);
+				device.addParameter(parameter.id, nowUtcFormatted);
 			}
 		}
 

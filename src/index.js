@@ -38,7 +38,7 @@ process.on('SIGINT', () => {
 	});
 });
 
-// Call simulateBroker every minute
+// Call simulateBroker every hour
 setInterval(async () => {
 	try {
 		await Broker.simulateBroker();

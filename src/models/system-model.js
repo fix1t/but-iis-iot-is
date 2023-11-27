@@ -240,7 +240,7 @@ class Systems {
 			const [rows] = await db.promise().query(sql, [device_id]);
 			const system = rows?.length ? rows.map(Systems.rowToSystems) : null;
 			DEBUG(`[findByDeviceId] rows:  ${JSON.stringify(system, null, 2)}`);
-			return system[0];
+			return system;
 		}
 		catch (error) {
 			console.error('Error executing query:', error.stack);

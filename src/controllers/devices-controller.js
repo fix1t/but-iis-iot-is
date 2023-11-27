@@ -3,6 +3,7 @@ import Parameter from '../models/parameter-model.js';
 import System from '../models/system-model.js';
 import User from '../models/user-model.js';
 import Type from '../models/type-model.js';
+import Broker from '../models/broker-model.js';
 import { DEBUG, ERROR, INFO } from '../utils/logger.js';
 
 export const createDevice = async (req, res) => {
@@ -87,6 +88,8 @@ export const getDeviceById = async (req, res) => {
 
         // Fetch the owner name
         const owner = await User.findById(device.owner_id);
+
+		Broker.simulateBroker();
 		
         res.status(200).json({ ...device, isOwner, type_name: type.name, owner_name: owner.username });
     } catch (error) {

@@ -1,9 +1,3 @@
-/**
- * @file header.js
- * @author Jakub Mikyšek (xmikys03), Gabriel Biel (xbielg00)
- * @brief File for rendering header navigation for HTML files
- */
-
 async function initializePage() {
 	// Get logged User
 	const user = await fetch(`/api/users/me`);

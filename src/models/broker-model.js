@@ -17,7 +17,7 @@ class Broker {
 			const lastValue = lastValues.length > 0 ? parseFloat(lastValues[0].value) : 0;
 	
 			// Generate a random value between 0 and 10
-			let randomValue = Math.floor(Math.random() * 11);
+			let randomValue = Math.floor(Math.random() * 10);
 	
 			// Generate a random boolean
 			let isAdding = Math.random() < 0.5;

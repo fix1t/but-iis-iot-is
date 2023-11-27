@@ -1,3 +1,4 @@
+import { parse } from 'dotenv';
 import KPI from '../models/kpi-model.js';
 import { ERROR, INFO } from '../utils/logger.js';
 import { canEditKpisBool } from './devices-controller.js';
@@ -57,7 +58,7 @@ export const getLatestKpiStatus = async (req, res) => {
 
 	try {
 		const parameterId = id;
-		const parameterValue = value;
+		const parameterValue = parseFloat(value);
 
 		INFO(`Getting latest value (${parameterValue}) status for parameter ID: ${parameterId}`);
 
@@ -66,7 +67,7 @@ export const getLatestKpiStatus = async (req, res) => {
 		if (kpiResults && kpiResults.length > 0) {
 			// Loop through each KPI result and compare with threshold and operation
 			for (let i = 0; i < kpiResults.length; i++) {
-				const threshold = kpiResults[i].threshold;
+				const threshold = parseFloat(kpiResults[i].threshold);
 				const operation = kpiResults[i].operation;
 
 				// Collect errors

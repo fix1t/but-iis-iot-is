@@ -45,7 +45,7 @@ export const createDevice = async (req, res) => {
 
 			// Format to MySQL's datetime format
 			let nowUtcFormatted = nowUtc.toISOString().slice(0, 19).replace('T', ' ');
-			
+
 			for (const parameter of parameters) {
 				device.addParameter(parameter.id, nowUtcFormatted);
 			}
@@ -79,24 +79,26 @@ export const getMyDevices = async (req, res) => {
 }
 
 export const getDeviceById = async (req, res) => {
-    const user = req.user;
-    const deviceId = req.params.device_id;
-    try {
-        const device = await Device.findById(deviceId);
-        const isOwner = device.owner_id === user.id || user.is_admin;
-        DEBUG(`[getDeviceById] User ${user.id} is owner of device ${deviceId}: ${isOwner}, ${device.owner_id} , ${user.id} , ${user.is_admin}`)
+	const user = req.user;
+	const deviceId = req.params.device_id;
+	try {
+		const device = await Device.findById(deviceId);
+		const isOwner = device.owner_id === user.id || user.is_admin;
+		DEBUG(`[getDeviceById] User ${user.id} is owner of device ${deviceId}: ${isOwner}, ${device.owner_id} , ${user.id} , ${user.is_admin}`)
 
-        // Fetch the type name
-        const type = await Type.findById(device.type_id);
+		// Fetch the type name
+		const type = await Type.findById(device.type_id);
 
-        // Fetch the owner name
-        const owner = await User.findById(device.owner_id);
-		
-        res.status(200).json({ ...device, isOwner, type_name: type.name, owner_name: owner.username });
-    } catch (error) {
-        console.error('Error executing query:', error.stack);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+		// Fetch the owner name
+		const owner = await User.findById(device.owner_id);
+
+		Broker.simulateBroker();
+
+		res.status(200).json({ ...device, isOwner, type_name: type.name, owner_name: owner.username });
+	} catch (error) {
+		console.error('Error executing query:', error.stack);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
 }
 
 export const getFreeDevices = async (req, res) => {
@@ -161,9 +163,9 @@ export const updateDevice = async (req, res) => {
 	}
 
 	if (!name || name.trim() === '') {
-        res.status(400).json({ error: 'Name is required' });
-        return;
-    }
+		res.status(400).json({ error: 'Name is required' });
+		return;
+	}
 
 	deviceToUpdate.name = name;
 	deviceToUpdate.description = description;
@@ -246,10 +248,10 @@ export const canEditKpisBool = async (user, deviceId) => {
 		DEBUG(`Device: ${JSON.stringify(deviceId, null, 2)}`);
 
 		if (system != null) {
-			DEBUG(`Got system ${system.id}`);
+			DEBUG(`Got system ${system[0].id}`);
 			// Find the system owner
-			if (system.owner_id === user.id) {
-				INFO(`User ${user.id} is owner of system ${system.id}`);
+			if (system[0].owner_id === user.id) {
+				INFO(`User ${user.id} is owner of system ${system[0].id}`);
 				return true;
 			}
 		} else {

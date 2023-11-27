@@ -39,7 +39,6 @@ fetch('/api/systems/get')
 		userSystems.forEach(system => {
 			const row = document.createElement('tr');
 			row.innerHTML = `
-				<td>${system.id}</td>
 				<td>${system.name}</td>
 				<td>${system.owner_name}</td>
 				<td>${system.description}</td>
